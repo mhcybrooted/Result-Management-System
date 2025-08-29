@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Report Card PDF</title>
+    <style>
+        @page { 
+            size: A4; 
+            margin: 20mm; 
+        }
+        
+        body { 
+            font-family: Arial, sans-serif; 
+            font-size: 12px; 
+            line-height: 1.4;
+            color: #000;
+        }
+        
+        .report-header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid #000;
+            padding-bottom: 15px;
+        }
+        
+        .report-header h1 { 
+            font-size: 24px; 
+            margin: 0 0 10px 0; 
+            font-weight: bold;
+        }
+        
+        .report-header h2 { 
+            font-size: 18px; 
+            margin: 0; 
+            font-weight: normal;
+        }
+        
+        .student-info { 
+            background-color: #f5f5f5; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            border: 1px solid #ddd;
+        }
+        
+        .student-info table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .student-info td {
+            padding: 5px;
+            font-weight: bold;
+        }
+        
+        .marks-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 20px;
+        }
+        
+        .marks-table th, .marks-table td { 
+            border: 1px solid #000; 
+            padding: 8px; 
+            text-align: center;
+        }
+        
+        .marks-table th { 
+            background-color: #e0e0e0; 
+            font-weight: bold;
+        }
+        
+        .marks-table td:first-child {
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .overall-summary { 
+            background-color: #f0f0f0; 
+            padding: 15px; 
+            border: 2px solid #000; 
+            margin-top: 20px;
+        }
+        
+        .overall-summary table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .overall-summary td {
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .footer { 
+            margin-top: 40px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+        }
+        
+        .grade-scale {
+            font-size: 10px;
+            flex: 1;
+        }
+        
+        .signature {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .signature-line {
+            border-bottom: 1px solid #000;
+            width: 200px;
+            margin: 0 auto 5px auto;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="report-header">
+        <h1>SCHOOL REPORT CARD</h1>
+        <h2 th:text="'Academic Session: ' + ${reportCard.session.sessionName}"></h2>
+    </div>
+    
+    <!-- Student Information -->
+    <div class="student-info">
+        <table>
+            <tr>
+                <td>Student Name: <span th:text="${reportCard.student.name}"></span></td>
+                <td>Roll Number: <span th:text="${reportCard.student.rollNumber}"></span></td>
+                <td>Class: <span th:text="${reportCard.student.className}"></span></td>
+            </tr>
+        </table>
+    </div>
+    
+    <!-- Marks Table -->
+    <table class="marks-table">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th th:each="examName : ${reportCard.subjects[0].examMarks.keySet()}" th:text="${examName}"></th>
+                <th>Total</th>
+                <th>Percentage</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="subject : ${reportCard.subjects}">
+                <td th:text="${subject.subjectName}"></td>
+                <td th:each="examName : ${subject.examMarks.keySet()}" th:text="${subject.examMarks.get(examName)}"></td>
+                <td th:text="${subject.totalObtained} + '/' + ${subject.totalMaximum}"></td>
+                <td th:text="${subject.percentage} + '%'"></td>
+                <td th:text="${subject.grade}"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Overall Summary -->
+    <div class="overall-summary">
+        <table>
+            <tr>
+                <td>
+                    <div>Overall Percentage</div>
+                    <div style="font-size: 18px;" th:text="${reportCard.overallPercentage} + '%'"></div>
+                </td>
+                <td>
+                    <div>Overall Grade</div>
+                    <div style="font-size: 18px;" th:text="${reportCard.overallGrade}"></div>
+                </td>
+                <td>
+                    <div>Result</div>
+                    <div style="font-size: 18px;" th:text="${reportCard.result}"></div>
+                </td>
+                <td>
+                    <div>Report Date</div>
+                    <div style="font-size: 14px;" th:text="${#temporals.format(reportCard.reportDate, 'dd-MM-yyyy')}"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="grade-scale">
+            <strong>Grade Scale:</strong><br>
+            A+ (90%+) | A (85-89%) | B (75-84%)<br>
+            C (60-74%) | D (40-59%) | F (Below 40%)
+        </div>
+        <div class="signature">
+            <div class="signature-line"></div>
+            <strong>Class Teacher Signature</strong>
+        </div>
+    </div>
+</body>
+</html>

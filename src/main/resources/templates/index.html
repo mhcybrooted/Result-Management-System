@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Exam Result System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">School Exam System</a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="/">Home</a>
+                <a class="nav-link" href="/sessions">Sessions</a>
+                <a class="nav-link" href="/exams">Exams</a>
+                <a class="nav-link" href="/add-marks">Add Marks</a>
+                <a class="nav-link" href="/view-results">Results</a>
+                <a class="nav-link" href="/reports">Reports</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mt-4">
+        <!-- Session Context -->
+        <div th:if="${activeSession}" class="alert alert-info">
+            <strong>Current Session:</strong> <span th:text="${activeSession.sessionName}"></span>
+            <span class="float-end">
+                <a href="/sessions" class="btn btn-sm btn-outline-primary">Switch Session</a>
+            </span>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="text-center mb-5">
+                    <h1 class="display-4">School Exam Result System</h1>
+                    <p class="lead">Complete academic management with multi-session support</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Sessions</h5>
+                                <p class="card-text">Manage academic sessions and years</p>
+                                <a href="/sessions" class="btn btn-warning">Manage Sessions</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Exams</h5>
+                                <p class="card-text">Create and manage exam types</p>
+                                <a href="/exams" class="btn btn-info">Manage Exams</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Add Marks</h5>
+                                <p class="card-text">Enter exam marks for students</p>
+                                <a href="/add-marks" class="btn btn-primary">Add Marks</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">View Results</h5>
+                                <p class="card-text">Search and view student results</p>
+                                <a href="/view-results" class="btn btn-success">View Results</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Report Cards</h5>
+                                <p class="card-text">Generate and download PDF report cards</p>
+                                <a href="/reports" class="btn btn-danger">Generate Reports</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Student Promotion</h5>
+                                <p class="card-text">Promote students to next academic session</p>
+                                <a href="/students/promote" class="btn btn-outline-primary">Promote Students</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Quick Info</h5>
+                                <p class="card-text">Sample students: 101, 102, 103, 201, 202</p>
+                                <small class="text-muted">Ready with sample data for 2024-25 session</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

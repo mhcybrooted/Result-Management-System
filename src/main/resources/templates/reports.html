@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - School Exam System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">School Exam System</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/sessions">Sessions</a>
+                <a class="nav-link" href="/exams">Exams</a>
+                <a class="nav-link" href="/add-marks">Add Marks</a>
+                <a class="nav-link" href="/view-results">Results</a>
+                <a class="nav-link active" href="/reports">Reports</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mt-4">
+        <!-- Session Context -->
+        <div th:if="${activeSession}" class="alert alert-info">
+            <strong>Current Session:</strong> <span th:text="${activeSession.sessionName}"></span>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Report Cards & PDF Generation</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Error Message -->
+                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                        
+                        <!-- Individual Reports -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Individual Report Cards</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Student</th>
+                                                        <th>Roll No</th>
+                                                        <th>Class</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr th:each="student : ${students}">
+                                                        <td th:text="${student.name}"></td>
+                                                        <td th:text="${student.rollNumber}"></td>
+                                                        <td th:text="${student.className}"></td>
+                                                        <td>
+                                                            <a th:href="@{/reports/{id}(id=${student.id})}" class="btn btn-sm btn-primary">View</a>
+                                                            <a th:href="@{/reports/{id}/pdf(id=${student.id})}" class="btn btn-sm btn-success">PDF</a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                            <div th:if="${#lists.isEmpty(students)}" class="text-center py-4">
+                                                <p class="text-muted">No students found in current session.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Class Reports -->
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Class Reports</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="list-group">
+                                            <a href="/reports/class/Class 9" class="list-group-item list-group-item-action">
+                                                <strong>Class 9</strong> - View all Class 9 reports
+                                            </a>
+                                            <a href="/reports/class/Class 10" class="list-group-item list-group-item-action">
+                                                <strong>Class 10</strong> - View all Class 10 reports
+                                            </a>
+                                            <a href="/reports/class/Class 11" class="list-group-item list-group-item-action">
+                                                <strong>Class 11</strong> - View all Class 11 reports
+                                            </a>
+                                            <a href="/reports/class/Class 12" class="list-group-item list-group-item-action">
+                                                <strong>Class 12</strong> - View all Class 12 reports
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

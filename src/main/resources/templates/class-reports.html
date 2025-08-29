@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Class Reports - ' + ${className}">Class Reports</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">School Exam System</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/sessions">Sessions</a>
+                <a class="nav-link" href="/exams">Exams</a>
+                <a class="nav-link" href="/add-marks">Add Marks</a>
+                <a class="nav-link" href="/view-results">Results</a>
+                <a class="nav-link active" href="/reports">Reports</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mt-4">
+        <!-- Session Context -->
+        <div th:if="${activeSession}" class="alert alert-info">
+            <strong>Current Session:</strong> <span th:text="${activeSession.sessionName}"></span>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 th:text="'Report Cards - ' + ${className}"></h4>
+                        <a href="/reports" class="btn btn-secondary">← Back to Reports</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Roll Number</th>
+                                        <th>Overall %</th>
+                                        <th>Grade</th>
+                                        <th>Result</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="report : ${classReports}">
+                                        <td th:text="${report.student.name}"></td>
+                                        <td th:text="${report.student.rollNumber}"></td>
+                                        <td th:text="${report.overallPercentage} + '%'"></td>
+                                        <td>
+                                            <span class="badge" 
+                                                  th:classappend="${report.overallGrade == 'A+' or report.overallGrade == 'A'} ? 'bg-success' : 
+                                                                 (${report.overallGrade == 'B'} ? 'bg-primary' : 
+                                                                 (${report.overallGrade == 'C'} ? 'bg-warning' : 
+                                                                 (${report.overallGrade == 'D'} ? 'bg-secondary' : 'bg-danger')))"
+                                                  th:text="${report.overallGrade}"></span>
+                                        </td>
+                                        <td>
+                                            <span th:text="${report.result}" 
+                                                  th:class="${report.result == 'PASS'} ? 'text-success fw-bold' : 'text-danger fw-bold'"></span>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/reports/{id}(id=${report.student.id})}" class="btn btn-sm btn-primary">View</a>
+                                            <a th:href="@{/reports/{id}/pdf(id=${report.student.id})}" class="btn btn-sm btn-success">PDF</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <div th:if="${#lists.isEmpty(classReports)}" class="text-center py-4">
+                                <p class="text-muted" th:text="'No report cards found for ' + ${className} + ' in current session.'"></p>
+                            </div>
+                        </div>
+                        
+                        <!-- Class Summary -->
+                        <div th:unless="${#lists.isEmpty(classReports)}" class="mt-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5>Class Summary</h5>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <strong>Total Students:</strong> <span th:text="${#lists.size(classReports)}"></span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <strong>Passed:</strong> 
+                                            <span th:text="${classReports.?[result == 'PASS'].size()}"></span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <strong>Failed:</strong> 
+                                            <span th:text="${classReports.?[result == 'FAIL'].size()}"></span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <strong>Pass Rate:</strong> 
+                                            <span th:text="${#lists.size(classReports) > 0 ? #numbers.formatDecimal((classReports.?[result == 'PASS'].size() * 100.0 / #lists.size(classReports)), 1, 1) + '%' : '0%'}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
