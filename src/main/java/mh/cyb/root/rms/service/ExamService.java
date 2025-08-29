@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ExamService {
@@ -27,6 +28,9 @@ public class ExamService {
     
     @Autowired
     private SessionRepository sessionRepository;
+    
+    @Autowired
+    private ClassRepository classRepository;
     
     // Session management
     public List<Session> getAllSessions() {
@@ -184,6 +188,61 @@ public class ExamService {
             case "Class 11": return "Class 12";
             default: return currentClass;
         }
+    }
+    
+    // Student management
+    public Student saveStudent(Student student) {
+        if (student.getSession() == null) {
+            Optional<Session> activeSession = getActiveSession();
+            if (activeSession.isPresent()) {
+                student.setSession(activeSession.get());
+            }
+        }
+        return studentRepository.save(student);
+    }
+    
+    public boolean deleteStudent(Long id) {
+        Optional<Student> student = studentRepository.findById(id);
+        if (student.isPresent()) {
+            studentRepository.delete(student.get());
+            return true;
+        }
+        return false;
+    }
+    
+    public List<String> getAvailableClasses() {
+        return getAllStudents().stream()
+                .map(Student::getClassName)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+    
+    // Class management
+    public List<mh.cyb.root.rms.entity.Class> getAllClasses() {
+        return classRepository.findAll();
+    }
+    
+    public List<mh.cyb.root.rms.entity.Class> getAllActiveClasses() {
+        return classRepository.findByActiveTrue();
+    }
+    
+    public mh.cyb.root.rms.entity.Class saveClass(mh.cyb.root.rms.entity.Class classEntity) {
+        return classRepository.save(classEntity);
+    }
+    
+    public boolean deleteClass(Long id) {
+        Optional<mh.cyb.root.rms.entity.Class> classEntity = classRepository.findById(id);
+        if (classEntity.isPresent()) {
+            classEntity.get().setActive(false);
+            classRepository.save(classEntity.get());
+            return true;
+        }
+        return false;
+    }
+    
+    public Optional<mh.cyb.root.rms.entity.Class> getClassById(Long id) {
+        return classRepository.findById(id);
     }
     
     // Get student by ID

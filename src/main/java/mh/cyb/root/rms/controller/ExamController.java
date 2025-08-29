@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -200,6 +201,138 @@ public class ExamController {
         }
         
         return "redirect:/add-marks";
+    }
+    
+    // Student management pages
+    @GetMapping("/students")
+    public String listStudents(Model model) {
+        List<Student> students = examService.getAllStudents();
+        model.addAttribute("students", students);
+        return "students";
+    }
+    
+    @GetMapping("/students/add")
+    public String addStudentPage(Model model) {
+        model.addAttribute("student", new Student());
+        
+        // Get available classes from Class entity and existing student classes
+        List<String> availableClasses = new ArrayList<>();
+        
+        // Add classes from Class entity
+        List<mh.cyb.root.rms.entity.Class> classEntities = examService.getAllActiveClasses();
+        availableClasses.addAll(classEntities.stream()
+                .map(mh.cyb.root.rms.entity.Class::getClassName)
+                .collect(Collectors.toList()));
+        
+        // Add existing student classes
+        availableClasses.addAll(examService.getAvailableClasses());
+        
+        // Add standard class options
+        availableClasses.addAll(List.of("Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
+                                       "Class 6", "Class 7", "Class 8", "Class 9", "Class 10", 
+                                       "Class 11", "Class 12"));
+        
+        model.addAttribute("availableClasses", availableClasses.stream().distinct().sorted().collect(Collectors.toList()));
+        return "add-student";
+    }
+    
+    @PostMapping("/students/add")
+    public String addStudent(@ModelAttribute Student student, RedirectAttributes redirectAttributes) {
+        if (student.getName() == null || student.getName().trim().isEmpty() || 
+            student.getRollNumber() == null || student.getRollNumber().trim().isEmpty() ||
+            student.getClassName() == null || student.getClassName().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Please fill all fields");
+            return "redirect:/students/add";
+        }
+        
+        examService.saveStudent(student);
+        redirectAttributes.addFlashAttribute("success", "Student added successfully!");
+        return "redirect:/students";
+    }
+    
+    @GetMapping("/students/edit/{id}")
+    public String editStudentPage(@PathVariable Long id, Model model) {
+        Optional<Student> student = examService.getStudentById(id);
+        if (student.isPresent()) {
+            model.addAttribute("student", student.get());
+            
+            // Get available classes from Class entity and existing student classes
+            List<String> availableClasses = new ArrayList<>();
+            
+            // Add classes from Class entity
+            List<mh.cyb.root.rms.entity.Class> classEntities = examService.getAllActiveClasses();
+            availableClasses.addAll(classEntities.stream()
+                    .map(mh.cyb.root.rms.entity.Class::getClassName)
+                    .collect(Collectors.toList()));
+            
+            // Add existing student classes
+            availableClasses.addAll(examService.getAvailableClasses());
+            
+            // Add standard class options
+            availableClasses.addAll(List.of("Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
+                                           "Class 6", "Class 7", "Class 8", "Class 9", "Class 10", 
+                                           "Class 11", "Class 12"));
+            
+            model.addAttribute("availableClasses", availableClasses.stream().distinct().sorted().collect(Collectors.toList()));
+            return "add-student";
+        }
+        return "redirect:/students";
+    }
+    
+    @PostMapping("/students/delete/{id}")
+    public String deleteStudent(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        if (examService.deleteStudent(id)) {
+            redirectAttributes.addFlashAttribute("success", "Student deleted successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Failed to delete student");
+        }
+        return "redirect:/students";
+    }
+    
+    // Class management pages
+    @GetMapping("/classes")
+    public String listClasses(Model model) {
+        List<mh.cyb.root.rms.entity.Class> classes = examService.getAllClasses();
+        model.addAttribute("classes", classes);
+        return "classes";
+    }
+    
+    @GetMapping("/classes/add")
+    public String addClassPage(Model model) {
+        model.addAttribute("classEntity", new mh.cyb.root.rms.entity.Class());
+        return "add-class";
+    }
+    
+    @PostMapping("/classes/add")
+    public String addClass(@ModelAttribute("classEntity") mh.cyb.root.rms.entity.Class classEntity, RedirectAttributes redirectAttributes) {
+        if (classEntity.getClassName() == null || classEntity.getClassName().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Please fill class name");
+            return "redirect:/classes/add";
+        }
+        
+        examService.saveClass(classEntity);
+        redirectAttributes.addFlashAttribute("success", "Class added successfully!");
+        return "redirect:/classes";
+    }
+    
+    @GetMapping("/classes/edit/{id}")
+    public String editClassPage(@PathVariable Long id, Model model) {
+        Optional<mh.cyb.root.rms.entity.Class> classEntity = examService.getClassById(id);
+        if (classEntity.isPresent()) {
+            model.addAttribute("classEntity", classEntity.get());
+            return "add-class";
+        }
+        return "redirect:/classes";
+    }
+    
+    @PostMapping("/classes/delete/{id}")
+    public String deleteClass(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        if (examService.deleteClass(id)) {
+            redirectAttributes.addFlashAttribute("success", "Class deleted successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Failed to delete class");
+        }
+        return "redirect:/classes";
     }
     
     // View results page
