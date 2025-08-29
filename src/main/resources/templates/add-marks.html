@@ -56,6 +56,14 @@
                             </select>
                         </div>
                         
+                        <!-- Subject Filter Info -->
+                        <div class="mb-3">
+                            <small class="text-info">
+                                <i class="fas fa-info-circle"></i>
+                                Tip: Select a class above to filter both students and subjects for easier selection.
+                            </small>
+                        </div>
+                        
                         <form method="post" action="/add-marks">
                             <div class="mb-3">
                                 <label for="studentId" class="form-label">Select Student</label>
@@ -122,6 +130,45 @@
                 url.searchParams.delete('classFilter');
             }
             window.location.href = url.toString();
+        }
+        
+        // Filter subjects based on selected student's class
+        document.getElementById('studentId').addEventListener('change', function() {
+            const selectedStudent = this.options[this.selectedIndex];
+            if (selectedStudent.value) {
+                const studentClass = selectedStudent.text.match(/\(([^)]+)\)/);
+                if (studentClass) {
+                    filterSubjectsByClass(studentClass[1]);
+                }
+            } else {
+                showAllSubjects();
+            }
+        });
+        
+        function filterSubjectsByClass(className) {
+            const subjectSelect = document.getElementById('subjectId');
+            const options = subjectSelect.options;
+            
+            for (let i = 1; i < options.length; i++) {
+                const option = options[i];
+                const subjectClass = option.text.match(/\(([^)]+)\)/);
+                if (subjectClass && subjectClass[1] === className) {
+                    option.style.display = '';
+                    option.style.fontWeight = 'bold';
+                } else {
+                    option.style.display = 'none';
+                }
+            }
+        }
+        
+        function showAllSubjects() {
+            const subjectSelect = document.getElementById('subjectId');
+            const options = subjectSelect.options;
+            
+            for (let i = 1; i < options.length; i++) {
+                options[i].style.display = '';
+                options[i].style.fontWeight = 'normal';
+            }
         }
     </script>
 </body>

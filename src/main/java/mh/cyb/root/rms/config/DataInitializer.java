@@ -20,6 +20,9 @@ public class DataInitializer implements CommandLineRunner {
     private ExamRepository examRepository;
     
     @Autowired
+    private ClassRepository classRepository;
+    
+    @Autowired
     private SessionRepository sessionRepository;
     
     @Override
@@ -38,6 +41,17 @@ public class DataInitializer implements CommandLineRunner {
         
         sessionRepository.save(session2024);
         sessionRepository.save(session2025);
+        
+        // Create sample classes
+        mh.cyb.root.rms.entity.Class class9 = new mh.cyb.root.rms.entity.Class("Class 9", "Grade 9 - Secondary level");
+        mh.cyb.root.rms.entity.Class class10 = new mh.cyb.root.rms.entity.Class("Class 10", "Grade 10 - Secondary level");
+        mh.cyb.root.rms.entity.Class class11 = new mh.cyb.root.rms.entity.Class("Class 11", "Grade 11 - Higher Secondary");
+        mh.cyb.root.rms.entity.Class class12 = new mh.cyb.root.rms.entity.Class("Class 12", "Grade 12 - Higher Secondary");
+        
+        classRepository.save(class9);
+        classRepository.save(class10);
+        classRepository.save(class11);
+        classRepository.save(class12);
         
         // Create sample students for active session
         Student student1 = new Student("John Doe", "101", "Class 10", session2024);
@@ -76,6 +90,7 @@ public class DataInitializer implements CommandLineRunner {
         
         System.out.println("Sample data initialized successfully!");
         System.out.println("Sessions: 2024-25 (Active), 2025-26");
+        System.out.println("Classes: Class 9, Class 10, Class 11, Class 12");
         System.out.println("Students: John Doe (101), Jane Smith (102), Mike Johnson (103), Sarah Wilson (201), David Brown (202)");
         System.out.println("Subjects: Mathematics, English, Science for Class 9 and 10");
         System.out.println("Exams: Midterm Exam, Final Exam, Quiz 1 (for 2024-25 session)");

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Classes - School Exam System</title>
+    <title>Manage Subjects - School Exam System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -14,7 +14,8 @@
                 <a class="nav-link" href="/">Home</a>
                 <a class="nav-link" href="/sessions">Sessions</a>
                 <a class="nav-link" href="/students">Students</a>
-                <a class="nav-link active" href="/classes">Classes</a>
+                <a class="nav-link" href="/classes">Classes</a>
+                <a class="nav-link active" href="/subjects">Subjects</a>
                 <a class="nav-link" href="/exams">Exams</a>
                 <a class="nav-link" href="/add-marks">Add Marks</a>
                 <a class="nav-link" href="/view-results">Results</a>
@@ -39,8 +40,8 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4>Manage Classes</h4>
-                        <a href="/classes/add" class="btn btn-primary">Add New Class</a>
+                        <h4>Manage Subjects</h4>
+                        <a href="/subjects/add" class="btn btn-primary">Add New Subject</a>
                     </div>
                     <div class="card-body">
                         <!-- Success/Error Messages -->
@@ -51,37 +52,32 @@
                             <table class="table table-striped">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>Class Name</th>
-                                        <th>Description</th>
-                                        <th>Students</th>
-                                        <th>Status</th>
+                                        <th>Subject Name</th>
+                                        <th>Class</th>
+                                        <th>Max Marks</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="classEntity : ${classes}">
-                                        <td th:text="${classEntity.className}"></td>
-                                        <td th:text="${classEntity.description ?: 'No description'}"></td>
+                                    <tr th:each="subject : ${subjects}">
+                                        <td th:text="${subject.subjectName}"></td>
                                         <td>
-                                            <span class="badge bg-info" th:text="${classEntity.className + ' students'}">0 students</span>
+                                            <span class="badge bg-info" th:text="${subject.className}"></span>
                                         </td>
+                                        <td th:text="${subject.maxMarks}"></td>
                                         <td>
-                                            <span th:if="${classEntity.active}" class="badge bg-success">Active</span>
-                                            <span th:unless="${classEntity.active}" class="badge bg-secondary">Inactive</span>
-                                        </td>
-                                        <td>
-                                            <a th:href="@{/classes/edit/{id}(id=${classEntity.id})}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                            <form th:action="@{/classes/delete/{id}(id=${classEntity.id})}" method="post" style="display: inline;">
+                                            <a th:href="@{/subjects/edit/{id}(id=${subject.id})}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                            <form th:action="@{/subjects/delete/{id}(id=${subject.id})}" method="post" style="display: inline;">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger" 
-                                                        onclick="return confirm('Are you sure you want to delete this class?')">Delete</button>
+                                                        onclick="return confirm('Are you sure you want to delete this subject?')">Delete</button>
                                             </form>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             
-                            <div th:if="${#lists.isEmpty(classes)}" class="text-center py-4">
-                                <p class="text-muted">No classes found. <a href="/classes/add">Add your first class</a></p>
+                            <div th:if="${#lists.isEmpty(subjects)}" class="text-center py-4">
+                                <p class="text-muted">No subjects found. <a href="/subjects/add">Add your first subject</a></p>
                             </div>
                         </div>
                     </div>

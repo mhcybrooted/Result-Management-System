@@ -142,7 +142,7 @@ public class ExamController {
         return "redirect:/exams";
     }
     
-    // Add marks page (updated with class filter)
+    // Add marks page (updated with class filter and managed subjects)
     @GetMapping("/add-marks")
     public String addMarksPage(@RequestParam(required = false) String classFilter, Model model) {
         Optional<Session> activeSession = examService.getActiveSession();
@@ -160,7 +160,20 @@ public class ExamController {
             students = examService.getAllStudents();
         }
         
-        List<Subject> subjects = examService.getAllSubjects();
+        // Get subjects - filter by class if class filter is applied
+        List<Subject> subjects;
+        if (classFilter != null && !classFilter.trim().isEmpty()) {
+            subjects = examService.getAllSubjects().stream()
+                    .filter(s -> s.getClassName().equals(classFilter))
+                    .collect(Collectors.toList());
+            // If no subjects for the filtered class, show all subjects
+            if (subjects.isEmpty()) {
+                subjects = examService.getAllSubjects();
+            }
+        } else {
+            subjects = examService.getAllSubjects();
+        }
+        
         List<Exam> exams = examService.getAllActiveExams();
         
         // Get available classes for filter dropdown
@@ -215,22 +228,21 @@ public class ExamController {
     public String addStudentPage(Model model) {
         model.addAttribute("student", new Student());
         
-        // Get available classes from Class entity and existing student classes
+        // Get available classes - prioritize managed classes
         List<String> availableClasses = new ArrayList<>();
         
-        // Add classes from Class entity
+        // First, add active classes from Class entity (managed classes)
         List<mh.cyb.root.rms.entity.Class> classEntities = examService.getAllActiveClasses();
         availableClasses.addAll(classEntities.stream()
                 .map(mh.cyb.root.rms.entity.Class::getClassName)
                 .collect(Collectors.toList()));
         
-        // Add existing student classes
-        availableClasses.addAll(examService.getAvailableClasses());
-        
-        // Add standard class options
-        availableClasses.addAll(List.of("Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
-                                       "Class 6", "Class 7", "Class 8", "Class 9", "Class 10", 
-                                       "Class 11", "Class 12"));
+        // Only add standard classes if no managed classes exist
+        if (availableClasses.isEmpty()) {
+            availableClasses.addAll(List.of("Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
+                                           "Class 6", "Class 7", "Class 8", "Class 9", "Class 10", 
+                                           "Class 11", "Class 12"));
+        }
         
         model.addAttribute("availableClasses", availableClasses.stream().distinct().sorted().collect(Collectors.toList()));
         return "add-student";
@@ -256,22 +268,27 @@ public class ExamController {
         if (student.isPresent()) {
             model.addAttribute("student", student.get());
             
-            // Get available classes from Class entity and existing student classes
+            // Get available classes - prioritize managed classes
             List<String> availableClasses = new ArrayList<>();
             
-            // Add classes from Class entity
+            // First, add active classes from Class entity (managed classes)
             List<mh.cyb.root.rms.entity.Class> classEntities = examService.getAllActiveClasses();
             availableClasses.addAll(classEntities.stream()
                     .map(mh.cyb.root.rms.entity.Class::getClassName)
                     .collect(Collectors.toList()));
             
-            // Add existing student classes
-            availableClasses.addAll(examService.getAvailableClasses());
+            // Add current student's class if not in managed classes (for backward compatibility)
+            String currentClass = student.get().getClassName();
+            if (!availableClasses.contains(currentClass)) {
+                availableClasses.add(currentClass);
+            }
             
-            // Add standard class options
-            availableClasses.addAll(List.of("Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
-                                           "Class 6", "Class 7", "Class 8", "Class 9", "Class 10", 
-                                           "Class 11", "Class 12"));
+            // Only add standard classes if no managed classes exist
+            if (classEntities.isEmpty()) {
+                availableClasses.addAll(List.of("Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
+                                               "Class 6", "Class 7", "Class 8", "Class 9", "Class 10", 
+                                               "Class 11", "Class 12"));
+            }
             
             model.addAttribute("availableClasses", availableClasses.stream().distinct().sorted().collect(Collectors.toList()));
             return "add-student";
@@ -333,6 +350,92 @@ public class ExamController {
             redirectAttributes.addFlashAttribute("error", "Failed to delete class");
         }
         return "redirect:/classes";
+    }
+    
+    // Subject management pages
+    @GetMapping("/subjects")
+    public String listSubjects(Model model) {
+        List<Subject> subjects = examService.getAllSubjects();
+        model.addAttribute("subjects", subjects);
+        return "subjects";
+    }
+    
+    @GetMapping("/subjects/add")
+    public String addSubjectPage(Model model) {
+        model.addAttribute("subject", new Subject());
+        // Get available classes for subject assignment
+        List<mh.cyb.root.rms.entity.Class> classEntities = examService.getAllActiveClasses();
+        List<String> availableClasses = classEntities.stream()
+                .map(mh.cyb.root.rms.entity.Class::getClassName)
+                .collect(Collectors.toList());
+        
+        // Add standard classes if no managed classes
+        if (availableClasses.isEmpty()) {
+            availableClasses.addAll(List.of("Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
+                                           "Class 6", "Class 7", "Class 8", "Class 9", "Class 10", 
+                                           "Class 11", "Class 12"));
+        }
+        
+        model.addAttribute("availableClasses", availableClasses);
+        return "add-subject";
+    }
+    
+    @PostMapping("/subjects/add")
+    public String addSubject(@ModelAttribute Subject subject, RedirectAttributes redirectAttributes) {
+        if (subject.getSubjectName() == null || subject.getSubjectName().trim().isEmpty() ||
+            subject.getClassName() == null || subject.getClassName().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Please fill all required fields");
+            return "redirect:/subjects/add";
+        }
+        
+        if (subject.getMaxMarks() == null || subject.getMaxMarks() <= 0) {
+            subject.setMaxMarks(100); // Default max marks
+        }
+        
+        examService.saveSubject(subject);
+        redirectAttributes.addFlashAttribute("success", "Subject added successfully!");
+        return "redirect:/subjects";
+    }
+    
+    @GetMapping("/subjects/edit/{id}")
+    public String editSubjectPage(@PathVariable Long id, Model model) {
+        Optional<Subject> subject = examService.getSubjectById(id);
+        if (subject.isPresent()) {
+            model.addAttribute("subject", subject.get());
+            
+            // Get available classes
+            List<mh.cyb.root.rms.entity.Class> classEntities = examService.getAllActiveClasses();
+            List<String> availableClasses = classEntities.stream()
+                    .map(mh.cyb.root.rms.entity.Class::getClassName)
+                    .collect(Collectors.toList());
+            
+            // Add current subject's class if not in managed classes
+            String currentClass = subject.get().getClassName();
+            if (!availableClasses.contains(currentClass)) {
+                availableClasses.add(currentClass);
+            }
+            
+            // Add standard classes if no managed classes
+            if (classEntities.isEmpty()) {
+                availableClasses.addAll(List.of("Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
+                                               "Class 6", "Class 7", "Class 8", "Class 9", "Class 10", 
+                                               "Class 11", "Class 12"));
+            }
+            
+            model.addAttribute("availableClasses", availableClasses.stream().distinct().sorted().collect(Collectors.toList()));
+            return "add-subject";
+        }
+        return "redirect:/subjects";
+    }
+    
+    @PostMapping("/subjects/delete/{id}")
+    public String deleteSubject(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        if (examService.deleteSubject(id)) {
+            redirectAttributes.addFlashAttribute("success", "Subject deleted successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Failed to delete subject");
+        }
+        return "redirect:/subjects";
     }
     
     // View results page

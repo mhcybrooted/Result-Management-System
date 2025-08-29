@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Subject - School Exam System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">School Exam System</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/sessions">Sessions</a>
+                <a class="nav-link" href="/students">Students</a>
+                <a class="nav-link" href="/classes">Classes</a>
+                <a class="nav-link" href="/subjects">Subjects</a>
+                <a class="nav-link" href="/exams">Exams</a>
+                <a class="nav-link" href="/add-marks">Add Marks</a>
+                <a class="nav-link" href="/view-results">Results</a>
+                <a class="nav-link" href="/reports">Reports</a>
+            </div>
+            <!-- Global Search Bar -->
+            <form class="d-flex ms-auto" action="/search" method="get">
+                <input class="form-control me-2" type="search" name="q" 
+                       placeholder="Search students..." aria-label="Search">
+                <button class="btn btn-outline-light" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+    
+    <div class="container mt-4">
+        <!-- Session Context -->
+        <div th:if="${activeSession}" class="alert alert-info">
+            <strong>Current Session:</strong> <span th:text="${activeSession.sessionName}"></span>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 th:text="${subject.id != null ? 'Edit Subject' : 'Add New Subject'}">Add New Subject</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Success/Error Messages -->
+                        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                        
+                        <form method="post" action="/subjects/add" th:object="${subject}">
+                            <input type="hidden" th:field="*{id}">
+                            
+                            <div class="mb-3">
+                                <label for="subjectName" class="form-label">Subject Name</label>
+                                <input type="text" class="form-control" id="subjectName" th:field="*{subjectName}" 
+                                       placeholder="e.g., Mathematics, English, Science" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="className" class="form-label">Class</label>
+                                <select class="form-select" id="className" th:field="*{className}" required>
+                                    <option value="">Select Class</option>
+                                    <option th:each="className : ${availableClasses}" 
+                                            th:value="${className}" 
+                                            th:text="${className}">
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="maxMarks" class="form-label">Maximum Marks</label>
+                                <input type="number" class="form-control" id="maxMarks" th:field="*{maxMarks}" 
+                                       placeholder="100" min="1" max="1000" value="100" required>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary" 
+                                        th:text="${subject.id != null ? 'Update Subject' : 'Add Subject'}">Add Subject</button>
+                                <a href="/subjects" class="btn btn-secondary">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

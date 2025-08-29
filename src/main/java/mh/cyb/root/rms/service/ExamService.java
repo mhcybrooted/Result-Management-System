@@ -245,6 +245,26 @@ public class ExamService {
         return classRepository.findById(id);
     }
     
+    // Subject management (additional methods)
+    public Subject saveSubject(Subject subject) {
+        return subjectRepository.save(subject);
+    }
+    
+    public boolean deleteSubject(Long id) {
+        Optional<Subject> subject = subjectRepository.findById(id);
+        if (subject.isPresent()) {
+            subjectRepository.delete(subject.get());
+            return true;
+        }
+        return false;
+    }
+    
+    public long getStudentCountByClass(String className) {
+        return getAllStudents().stream()
+                .filter(s -> s.getClassName().equals(className))
+                .count();
+    }
+    
     // Get student by ID
     public Optional<Student> getStudentById(Long id) {
         return studentRepository.findById(id);
