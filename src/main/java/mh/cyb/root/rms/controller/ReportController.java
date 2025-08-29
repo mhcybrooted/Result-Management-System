@@ -40,7 +40,23 @@ public class ReportController {
     @GetMapping
     public String reportsHome(Model model) {
         List<Student> students = examService.getAllStudents();
+        
+        // Get available classes from both managed classes and student classes
+        List<String> availableClasses = students.stream()
+                .map(Student::getClassName)
+                .distinct()
+                .sorted()
+                .collect(java.util.stream.Collectors.toList());
+        
+        // Add managed classes
+        List<mh.cyb.root.rms.entity.Class> managedClasses = examService.getAllActiveClasses();
+        managedClasses.stream()
+                .map(mh.cyb.root.rms.entity.Class::getClassName)
+                .filter(className -> !availableClasses.contains(className))
+                .forEach(availableClasses::add);
+        
         model.addAttribute("students", students);
+        model.addAttribute("availableClasses", availableClasses.stream().sorted().collect(java.util.stream.Collectors.toList()));
         return "reports";
     }
     

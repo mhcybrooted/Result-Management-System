@@ -79,12 +79,15 @@
                             <div class="mb-3">
                                 <label for="subjectId" class="form-label">Select Subject</label>
                                 <select class="form-select" id="subjectId" name="subjectId" required>
-                                    <option value="">Choose a subject...</option>
+                                    <option value="">Select a student first to see subjects...</option>
                                     <option th:each="subject : ${subjects}" 
                                             th:value="${subject.id}" 
                                             th:text="${subject.subjectName + ' (' + subject.className + ') - Max: ' + subject.maxMarks}">
                                     </option>
                                 </select>
+                                <small th:if="${#lists.isEmpty(subjects)}" class="text-danger">
+                                    No subjects available. Please <a href="/subjects/add">add subjects</a> first.
+                                </small>
                             </div>
                             
                             <div class="mb-3">
@@ -132,22 +135,28 @@
             window.location.href = url.toString();
         }
         
+        // Hide subjects initially and show only when student is selected
+        document.addEventListener('DOMContentLoaded', function() {
+            hideAllSubjects();
+        });
+        
         // Filter subjects based on selected student's class
         document.getElementById('studentId').addEventListener('change', function() {
             const selectedStudent = this.options[this.selectedIndex];
             if (selectedStudent.value) {
-                const studentClass = selectedStudent.text.match(/\(([^)]+)\)/);
+                const studentClass = selectedStudent.text.match(/- ([^)]+)$/);
                 if (studentClass) {
                     filterSubjectsByClass(studentClass[1]);
                 }
             } else {
-                showAllSubjects();
+                hideAllSubjects();
             }
         });
         
         function filterSubjectsByClass(className) {
             const subjectSelect = document.getElementById('subjectId');
             const options = subjectSelect.options;
+            let hasVisibleSubjects = false;
             
             for (let i = 1; i < options.length; i++) {
                 const option = options[i];
@@ -155,20 +164,30 @@
                 if (subjectClass && subjectClass[1] === className) {
                     option.style.display = '';
                     option.style.fontWeight = 'bold';
+                    hasVisibleSubjects = true;
                 } else {
                     option.style.display = 'none';
                 }
             }
+            
+            // Show first option (Choose a subject...)
+            options[0].style.display = '';
+            
+            // Reset selection
+            subjectSelect.selectedIndex = 0;
         }
         
-        function showAllSubjects() {
+        function hideAllSubjects() {
             const subjectSelect = document.getElementById('subjectId');
             const options = subjectSelect.options;
             
+            // Hide all subject options except the first one
             for (let i = 1; i < options.length; i++) {
-                options[i].style.display = '';
-                options[i].style.fontWeight = 'normal';
+                options[i].style.display = 'none';
             }
+            
+            // Reset selection
+            subjectSelect.selectedIndex = 0;
         }
     </script>
 </body>

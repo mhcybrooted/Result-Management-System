@@ -13,6 +13,9 @@
             <div class="navbar-nav">
                 <a class="nav-link" href="/">Home</a>
                 <a class="nav-link" href="/sessions">Sessions</a>
+                <a class="nav-link" href="/students">Students</a>
+                <a class="nav-link" href="/classes">Classes</a>
+                <a class="nav-link" href="/subjects">Subjects</a>
                 <a class="nav-link" href="/exams">Exams</a>
                 <a class="nav-link" href="/add-marks">Add Marks</a>
                 <a class="nav-link" href="/view-results">Results</a>
@@ -37,8 +40,30 @@
                         <!-- Error Message -->
                         <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
                         
-                        <!-- Individual Reports -->
+                        <!-- Class Reports Section -->
                         <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Class Reports</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="text-muted">Generate reports for entire classes</p>
+                                        <div class="list-group">
+                                            <a th:each="className : ${availableClasses}" 
+                                               th:href="@{/reports/class/{className}(className=${className})}" 
+                                               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                                <span th:text="${className}"></span>
+                                                <span class="badge bg-primary rounded-pill">View Class Report</span>
+                                            </a>
+                                        </div>
+                                        <div th:if="${#lists.isEmpty(availableClasses)}" class="text-center py-3">
+                                            <p class="text-muted">No classes with students found</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="col-md-6">
                                 <div class="card">
                                     <div class="card-header">
