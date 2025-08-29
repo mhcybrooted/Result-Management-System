@@ -41,22 +41,27 @@ public class ReportController {
     public String reportsHome(Model model) {
         List<Student> students = examService.getAllStudents();
         
-        // Get available classes from both managed classes and student classes
+        // Get available classes from students
         List<String> availableClasses = students.stream()
                 .map(Student::getClassName)
                 .distinct()
-                .sorted()
                 .collect(java.util.stream.Collectors.toList());
         
-        // Add managed classes
+        // Add managed classes that don't already exist
         List<mh.cyb.root.rms.entity.Class> managedClasses = examService.getAllActiveClasses();
         managedClasses.stream()
                 .map(mh.cyb.root.rms.entity.Class::getClassName)
                 .filter(className -> !availableClasses.contains(className))
                 .forEach(availableClasses::add);
         
+        // Sort the final list and ensure no duplicates
+        List<String> finalClasses = availableClasses.stream()
+                .distinct()
+                .sorted()
+                .collect(java.util.stream.Collectors.toList());
+        
         model.addAttribute("students", students);
-        model.addAttribute("availableClasses", availableClasses.stream().sorted().collect(java.util.stream.Collectors.toList()));
+        model.addAttribute("availableClasses", finalClasses);
         return "reports";
     }
     
