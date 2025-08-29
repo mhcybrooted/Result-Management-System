@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class ExamController {
@@ -140,16 +141,39 @@ public class ExamController {
         return "redirect:/exams";
     }
     
-    // Add marks page (updated)
+    // Add marks page (updated with class filter)
     @GetMapping("/add-marks")
-    public String addMarksPage(Model model) {
-        List<Student> students = examService.getAllStudents();
+    public String addMarksPage(@RequestParam(required = false) String classFilter, Model model) {
+        Optional<Session> activeSession = examService.getActiveSession();
+        if (!activeSession.isPresent()) {
+            model.addAttribute("error", "No active session found");
+            return "add-marks";
+        }
+        
+        List<Student> students;
+        if (classFilter != null && !classFilter.trim().isEmpty()) {
+            students = examService.getAllStudents().stream()
+                    .filter(s -> s.getClassName().equals(classFilter))
+                    .collect(Collectors.toList());
+        } else {
+            students = examService.getAllStudents();
+        }
+        
         List<Subject> subjects = examService.getAllSubjects();
         List<Exam> exams = examService.getAllActiveExams();
+        
+        // Get available classes for filter dropdown
+        List<String> availableClasses = examService.getAllStudents().stream()
+                .map(Student::getClassName)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
         
         model.addAttribute("students", students);
         model.addAttribute("subjects", subjects);
         model.addAttribute("exams", exams);
+        model.addAttribute("availableClasses", availableClasses);
+        model.addAttribute("selectedClass", classFilter);
         return "add-marks";
     }
     

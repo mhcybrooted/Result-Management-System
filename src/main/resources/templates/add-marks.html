@@ -16,7 +16,14 @@
                 <a class="nav-link" href="/exams">Exams</a>
                 <a class="nav-link active" href="/add-marks">Add Marks</a>
                 <a class="nav-link" href="/view-results">Results</a>
+                <a class="nav-link" href="/reports">Reports</a>
             </div>
+            <!-- Global Search Bar -->
+            <form class="d-flex ms-auto" action="/search" method="get">
+                <input class="form-control me-2" type="search" name="q" 
+                       placeholder="Search students..." aria-label="Search">
+                <button class="btn btn-outline-light" type="submit">Search</button>
+            </form>
         </div>
     </nav>
     
@@ -35,6 +42,19 @@
                         <!-- Success/Error Messages -->
                         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
                         <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                        
+                        <!-- Class Filter -->
+                        <div class="mb-3">
+                            <label for="classFilter" class="form-label">Quick Filter by Class:</label>
+                            <select class="form-select" id="classFilter" onchange="filterByClass(this.value)">
+                                <option value="">All Classes</option>
+                                <option th:each="className : ${availableClasses}" 
+                                        th:value="${className}" 
+                                        th:text="${className}"
+                                        th:selected="${className == selectedClass}">
+                                </option>
+                            </select>
+                        </div>
                         
                         <form method="post" action="/add-marks">
                             <div class="mb-3">
@@ -93,5 +113,16 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function filterByClass(className) {
+            const url = new URL(window.location);
+            if (className) {
+                url.searchParams.set('classFilter', className);
+            } else {
+                url.searchParams.delete('classFilter');
+            }
+            window.location.href = url.toString();
+        }
+    </script>
 </body>
 </html>
