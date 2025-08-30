@@ -24,25 +24,36 @@ public class TeacherAssignmentService {
     private SessionRepository sessionRepository;
     
     @Transactional
-    public void assignSubjectsToTeacher(Long teacherId, List<Long> subjectIds, Long sessionId) {
+    public boolean assignSubjectToTeacher(Long teacherId, Long subjectId, Long sessionId) {
         Teacher teacher = teacherRepository.findById(teacherId).orElse(null);
         Session session = sessionRepository.findById(sessionId).orElse(null);
+        Subject subject = subjectRepository.findById(subjectId).orElse(null);
         
-        if (teacher == null || session == null) return;
+        if (teacher == null || session == null || subject == null) {
+            return false;
+        }
         
-        // Deactivate existing assignments for this teacher in this session
+        // Check if this exact assignment already exists
         List<TeacherAssignment> existing = teacherAssignmentRepository
                 .findByTeacherIdAndSessionIdAndActiveTrue(teacherId, sessionId);
-        existing.forEach(assignment -> assignment.setActive(false));
-        teacherAssignmentRepository.saveAll(existing);
         
-        // Create new assignments
+        boolean assignmentExists = existing.stream()
+                .anyMatch(assignment -> assignment.getSubject().getId().equals(subjectId));
+        
+        // Only create if assignment doesn't exist
+        if (!assignmentExists) {
+            TeacherAssignment assignment = new TeacherAssignment(teacher, subject, session);
+            teacherAssignmentRepository.save(assignment);
+            return true;
+        }
+        
+        return false; // Assignment already exists
+    }
+    
+    @Transactional
+    public void assignSubjectsToTeacher(Long teacherId, List<Long> subjectIds, Long sessionId) {
         for (Long subjectId : subjectIds) {
-            Subject subject = subjectRepository.findById(subjectId).orElse(null);
-            if (subject != null) {
-                TeacherAssignment assignment = new TeacherAssignment(teacher, subject, session);
-                teacherAssignmentRepository.save(assignment);
-            }
+            assignSubjectToTeacher(teacherId, subjectId, sessionId);
         }
     }
     

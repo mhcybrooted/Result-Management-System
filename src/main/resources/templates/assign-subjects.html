@@ -218,7 +218,7 @@
                     
                     <form action="/assign-subjects" method="post">
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label for="teacher" class="form-label">
                                     <i class="fas fa-chalkboard-teacher me-2"></i>Select Teacher
                                 </label>
@@ -233,18 +233,36 @@
                                 </select>
                             </div>
                             
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
+                                <label for="classSelect" class="form-label">
+                                    <i class="fas fa-school me-2"></i>Select Class
+                                </label>
+                                <select class="form-select" id="classSelect" onchange="filterSubjectsByClass()" required>
+                                    <option value="">Choose a class...</option>
+                                    <option th:each="class : ${classes}" 
+                                            th:value="${class.id}" 
+                                            th:text="${class.className}">
+                                        Class Name
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
                                 <label for="subject" class="form-label">
                                     <i class="fas fa-book me-2"></i>Select Subject
                                 </label>
                                 <select class="form-select" id="subject" name="subjectId" required>
-                                    <option value="">Choose a subject...</option>
+                                    <option value="">First select a class...</option>
+                                </select>
+                                <!-- Hidden template for subjects -->
+                                <div id="subjectTemplate" style="display: none;">
                                     <option th:each="subject : ${subjects}" 
                                             th:value="${subject.id}" 
-                                            th:text="${subject.subjectName}">
+                                            th:text="${subject.subjectName}"
+                                            th:attr="data-class-id=${subject.classEntity != null ? subject.classEntity.id : ''}">
                                         Subject Name
                                     </option>
-                                </select>
+                                </div>
                             </div>
                         </div>
                         
@@ -257,6 +275,7 @@
                                        th:value="${activeSession != null ? activeSession.sessionName : 'No Active Session'}" 
                                        readonly>
                                 <input type="hidden" name="sessionId" th:value="${activeSession != null ? activeSession.id : ''}">
+                                <input type="hidden" name="classId" id="hiddenClassId" value="">
                             </div>
                         </div>
                         
@@ -295,6 +314,7 @@
                             <thead>
                                 <tr>
                                     <th><i class="fas fa-chalkboard-teacher me-1"></i>Teacher</th>
+                                    <th><i class="fas fa-school me-1"></i>Class</th>
                                     <th><i class="fas fa-book me-1"></i>Subject</th>
                                     <th><i class="fas fa-calendar me-1"></i>Session</th>
                                     <th><i class="fas fa-toggle-on me-1"></i>Status</th>
@@ -303,13 +323,14 @@
                             </thead>
                             <tbody id="assignmentsTable">
                                 <tr th:if="${#lists.isEmpty(assignments)}" class="text-center">
-                                    <td colspan="5" class="py-4">
+                                    <td colspan="6" class="py-4">
                                         <i class="fas fa-info-circle fa-2x text-muted mb-2"></i>
                                         <div class="text-muted">No subject assignments found for current session</div>
                                     </td>
                                 </tr>
                                 <tr th:each="assignment : ${assignments}" class="assignment-row" th:attr="data-teacher=${assignment.teacher.name}">
                                     <td th:text="${assignment.teacher.name}">Teacher Name</td>
+                                    <td th:text="${assignment.subject.classEntity != null ? assignment.subject.classEntity.className : 'N/A'}">Class Name</td>
                                     <td th:text="${assignment.subject.subjectName}">Subject Name</td>
                                     <td th:text="${assignment.session.sessionName}">Session Name</td>
                                     <td>
@@ -393,6 +414,43 @@
                 });
             }, 5000);
         });
+        
+        // Filter subjects by selected class
+        function filterSubjectsByClass() {
+            const classSelect = document.getElementById('classSelect');
+            const subjectSelect = document.getElementById('subject');
+            const hiddenClassId = document.getElementById('hiddenClassId');
+            const selectedClassId = classSelect.value;
+            
+            // Update hidden class ID field
+            hiddenClassId.value = selectedClassId;
+            
+            // Clear current options except the first one
+            subjectSelect.innerHTML = '<option value="">Choose a subject...</option>';
+            
+            if (selectedClassId) {
+                // Get all subject options from template
+                const subjectTemplate = document.getElementById('subjectTemplate');
+                const allSubjectOptions = subjectTemplate.querySelectorAll('option');
+                
+                allSubjectOptions.forEach(option => {
+                    const classId = option.getAttribute('data-class-id');
+                    if (classId === selectedClassId) {
+                        const newOption = document.createElement('option');
+                        newOption.value = option.value;
+                        newOption.textContent = option.textContent;
+                        subjectSelect.appendChild(newOption);
+                    }
+                });
+                
+                // If no subjects found, show message
+                if (subjectSelect.options.length === 1) {
+                    subjectSelect.innerHTML = '<option value="">No subjects available for this class</option>';
+                }
+            } else {
+                subjectSelect.innerHTML = '<option value="">First select a class...</option>';
+            }
+        }
     </script>
 </body>
 </html>

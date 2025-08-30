@@ -87,13 +87,15 @@ public class ExamController {
     public String assignSubjects(Model model, @RequestParam(required = false) Long teacherId) {
         model.addAttribute("teachers", teacherService.getAllActiveTeachers());
         model.addAttribute("subjects", examService.getAllSubjects());
+        model.addAttribute("classes", examService.getAllClasses());
         
         // Get real assignment data from database
         Optional<Session> activeSession = examService.getActiveSession();
         if (activeSession.isPresent()) {
             model.addAttribute("activeSession", activeSession.get());
             // Get all active assignments for current session
-            model.addAttribute("assignments", teacherAssignmentService.getAllActiveAssignments(activeSession.get().getId()));
+            List<TeacherAssignment> assignments = teacherAssignmentService.getAllActiveAssignments(activeSession.get().getId());
+            model.addAttribute("assignments", assignments);
         } else {
             model.addAttribute("assignments", java.util.Collections.emptyList());
         }
@@ -109,11 +111,30 @@ public class ExamController {
     public String processAssignSubjects(@RequestParam Long teacherId, 
                                       @RequestParam Long subjectId,
                                       @RequestParam Long sessionId,
+                                      @RequestParam(required = false) Long classId,
                                       RedirectAttributes redirectAttributes) {
         try {
+            // Validate that the subject belongs to the selected class if classId is provided
+            if (classId != null) {
+                Optional<Subject> subjectOpt = examService.getSubjectById(subjectId);
+                if (subjectOpt.isPresent()) {
+                    Subject subject = subjectOpt.get();
+                    if (subject.getClassEntity() != null && 
+                        !subject.getClassEntity().getId().equals(classId)) {
+                        redirectAttributes.addFlashAttribute("error", "Selected subject does not belong to the selected class!");
+                        return "redirect:/assign-subjects";
+                    }
+                }
+            }
+            
             // Use TeacherAssignmentService to save the assignment
-            teacherAssignmentService.assignSubjectsToTeacher(teacherId, java.util.Arrays.asList(subjectId), sessionId);
-            redirectAttributes.addFlashAttribute("success", "Subject assigned successfully!");
+            boolean assignmentCreated = teacherAssignmentService.assignSubjectToTeacher(teacherId, subjectId, sessionId);
+            
+            if (assignmentCreated) {
+                redirectAttributes.addFlashAttribute("success", "Subject assigned successfully!");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "This teacher is already assigned to this subject!");
+            }
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Failed to assign subject: " + e.getMessage());
         }
