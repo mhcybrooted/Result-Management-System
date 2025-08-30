@@ -22,6 +22,7 @@
                 text-decoration: none;
                 text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
                 transition: all 0.3s ease;
+                margin-left: 30px;
             ">
                 <i class="fas fa-graduation-cap me-2"></i>School Exam System
             </a>
@@ -40,25 +41,47 @@
                     <span th:text="${activeSession.sessionName}">2024-25</span>
                 </div>
                 
-                <div style="position: relative;">
-                    <form class="d-flex" method="post" action="/search-results" style="
+                <!-- Enhanced Search Container -->
+                <div class="search-container position-relative">
+                    <form class="d-flex search-form" method="post" action="/search-results" style="
                         background: rgba(255,255,255,0.15);
                         border-radius: 30px;
                         padding: 6px;
                         border: 2px solid rgba(255,255,255,0.3);
                         align-items: center;
-                    ">
-                        <input type="text" name="rollNumber" class="form-control" placeholder="Search Roll No..." required style="
-                            background: transparent;
-                            border: none;
-                            color: #ffffff;
-                            padding: 10px 18px;
-                            width: 220px;
-                            outline: none;
-                            font-weight: 500;
-                            box-shadow: none;
-                        ">
-                        <button type="submit" class="btn" style="
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.background='rgba(255,255,255,0.2)'" 
+                       onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+                        
+                        <div class="input-group-prepend">
+                            <span style="
+                                color: rgba(255,255,255,0.7);
+                                padding: 10px 5px 10px 15px;
+                                font-size: 0.9rem;
+                            ">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                        
+                        <input type="text" 
+                               name="rollNumber" 
+                               id="searchInput"
+                               class="form-control search-input" 
+                               placeholder="Search by Roll No"
+                               autocomplete="off"
+                               required 
+                               style="
+                                   background: transparent;
+                                   border: none;
+                                   color: #ffffff;
+                                   padding: 10px 5px;
+                                   width: 280px;
+                                   outline: none;
+                                   font-weight: 500;
+                                   box-shadow: none;
+                               ">
+                        
+                        <button type="submit" class="btn search-btn" style="
                             background: linear-gradient(135deg, #8b5cf6, #06b6d4);
                             border: none;
                             border-radius: 50%;
@@ -69,10 +92,64 @@
                             align-items: center;
                             justify-content: center;
                             transition: all 0.3s ease;
+                            margin-left: 5px;
                         ">
-                            <i class="fas fa-search"></i>
+                            <i class="fas fa-arrow-right"></i>
                         </button>
                     </form>
+                    
+                    <!-- Search Suggestions Dropdown -->
+                    <div id="searchSuggestions" class="search-suggestions" style="
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        right: 0;
+                        background: rgba(30, 41, 59, 0.95);
+                        border-radius: 15px;
+                        border: 1px solid rgba(139, 92, 246, 0.3);
+                        backdrop-filter: blur(10px);
+                        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+                        z-index: 1001;
+                        display: none;
+                        margin-top: 5px;
+                        max-height: 300px;
+                        overflow-y: auto;
+                    ">
+                        <!-- Dynamic suggestions will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Quick Actions Dropdown -->
+                <div class="dropdown ms-3">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" 
+                            data-bs-toggle="dropdown" style="
+                                border-radius: 25px;
+                                padding: 8px 16px;
+                                margin-right: 30px;
+                                border: 2px solid rgba(255,255,255,0.3);
+                                transition: all 0.3s ease;
+                            ">
+                        <i class="fas fa-bolt me-1"></i>Quick
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" style="
+                        background: rgba(30, 41, 59, 0.95);
+                        border: 1px solid rgba(139, 92, 246, 0.3);
+                        border-radius: 15px;
+                        backdrop-filter: blur(10px);
+                        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+                    ">
+                        <li><a class="dropdown-item text-light" href="/add-marks">
+                            <i class="fas fa-plus-circle me-2"></i>Add Marks</a></li>
+                        <li><a class="dropdown-item text-light" href="/bulk/marks">
+                            <i class="fas fa-layer-group me-2"></i>Bulk Entry</a></li>
+                        <li><a class="dropdown-item text-light" href="/view-results">
+                            <i class="fas fa-chart-bar me-2"></i>View Results</a></li>
+                        <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.2);"></li>
+                        <li><a class="dropdown-item text-light" href="/students">
+                            <i class="fas fa-user-graduate me-2"></i>Students</a></li>
+                        <li><a class="dropdown-item text-light" href="/teachers">
+                            <i class="fas fa-chalkboard-teacher me-2"></i>Teachers</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -84,20 +161,137 @@
             transform: scale(1.05);
         }
         
-        .form-control::placeholder {
-            color: rgba(255,255,255,0.8) !important;
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.7) !important;
+            font-style: italic;
         }
         
-        .btn:hover {
+        .search-input:focus {
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3) !important;
+        }
+        
+        .search-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
         }
         
+        .search-suggestion-item {
+            padding: 12px 16px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .search-suggestion-item:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+        
+        .search-suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(139, 92, 246, 0.2) !important;
+        }
+        
         @media (max-width: 768px) {
-            .form-control {
+            .search-input {
+                width: 200px !important;
+            }
+            
+            .dropdown {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .search-input {
                 width: 150px !important;
             }
         }
     </style>
+    
+    <script>
+        // Enhanced search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchSuggestions = document.getElementById('searchSuggestions');
+            let searchTimeout;
+            
+            // Sample search suggestions (in real app, fetch from server)
+            const sampleSuggestions = [
+                { type: 'student', text: 'Roll No: 101 - John Doe (Class 10)', value: '101' },
+                { type: 'student', text: 'Roll No: 102 - Jane Smith (Class 10)', value: '102' },
+                { type: 'class', text: 'Class 10 - All Students', value: 'class:10' },
+                { type: 'class', text: 'Class 9 - All Students', value: 'class:9' }
+            ];
+            
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                const query = this.value.trim();
+                
+                if (query.length >= 2) {
+                    searchTimeout = setTimeout(() => {
+                        showSuggestions(query);
+                    }, 300);
+                } else {
+                    hideSuggestions();
+                }
+            });
+            
+            searchInput.addEventListener('focus', function() {
+                if (this.value.trim().length >= 2) {
+                    showSuggestions(this.value.trim());
+                }
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.search-container')) {
+                    hideSuggestions();
+                }
+            });
+            
+            function showSuggestions(query) {
+                const filtered = sampleSuggestions.filter(item => 
+                    item.text.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                if (filtered.length > 0) {
+                    let html = '';
+                    filtered.forEach(item => {
+                        const icon = item.type === 'student' ? 'fa-user-graduate' : 'fa-chalkboard';
+                        html += `
+                            <div class="search-suggestion-item" onclick="selectSuggestion('${item.value}')">
+                                <i class="fas ${icon} me-2" style="color: #8b5cf6;"></i>
+                                ${item.text}
+                            </div>
+                        `;
+                    });
+                    searchSuggestions.innerHTML = html;
+                    searchSuggestions.style.display = 'block';
+                } else {
+                    hideSuggestions();
+                }
+            }
+            
+            function hideSuggestions() {
+                searchSuggestions.style.display = 'none';
+            }
+            
+            window.selectSuggestion = function(value) {
+                searchInput.value = value;
+                hideSuggestions();
+                searchInput.form.submit();
+            };
+            
+            // Keyboard navigation
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    hideSuggestions();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
