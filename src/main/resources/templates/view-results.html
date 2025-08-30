@@ -3,13 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Results - School Exam System</title>
+    <title>Search Student Results - School Exam System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a1a2e;
+            --secondary-dark: #16213e;
+            --accent-blue: #0f3460;
+            --education-blue: #2c5aa0;
+            --learning-teal: #16a085;
+            --modern-purple: #6c5ce7;
+            --success-green: #00b894;
+            --warning-orange: #fdcb6e;
+            --danger-red: #e17055;
+            --text-light: #ddd;
+            --text-muted: #95a5a6;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+        
+        .navbar-dark {
+            background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent-blue) 100%) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .hero-banner {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 50%, var(--modern-purple) 100%);
+            padding: 60px 0;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        
+        .search-card, .results-card {
+            background: var(--secondary-dark);
+            border: 1px solid rgba(44, 90, 160, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .search-card:hover, .results-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(108, 92, 231, 0.3);
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, var(--education-blue) 0%, var(--modern-purple) 100%) !important;
+            border-bottom: 1px solid rgba(108, 92, 231, 0.3);
+            padding: 25px;
+        }
+        
+        .card-header h4 {
+            color: white;
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .card-body {
+            padding: 40px;
+        }
+        
+        .form-label {
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(44, 90, 160, 0.3);
+            color: var(--text-light);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--modern-purple);
+            box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.25);
+            color: var(--text-light);
+        }
+        
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--education-blue) 0%, var(--modern-purple) 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
+        }
+        
+        .session-info {
+            background: rgba(22, 160, 133, 0.1);
+            border: 1px solid var(--learning-teal);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .session-info .session-name {
+            color: var(--learning-teal);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .breadcrumb-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+        }
+        
+        .breadcrumb-item a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .breadcrumb-item a:hover {
+            color: var(--modern-purple);
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--text-muted);
+        }
+        
+        .table-dark {
+            background: var(--secondary-dark);
+            color: var(--text-light);
+        }
+        
+        .table-dark th {
+            background: var(--accent-blue);
+            border-color: rgba(44, 90, 160, 0.3);
+            color: white;
+        }
+        
+        .table-dark td {
+            border-color: rgba(44, 90, 160, 0.2);
+        }
+        
+        .grade-A { color: var(--success-green); font-weight: 700; }
+        .grade-B { color: var(--learning-teal); font-weight: 700; }
+        .grade-C { color: var(--warning-orange); font-weight: 700; }
+        .grade-D { color: var(--danger-red); font-weight: 700; }
+        .grade-F { color: #e74c3c; font-weight: 700; }
+        
+        .student-info {
+            background: rgba(108, 92, 231, 0.1);
+            border: 1px solid var(--modern-purple);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .student-name {
+            color: var(--modern-purple);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .overall-summary {
+            background: rgba(0, 184, 148, 0.1);
+            border: 1px solid var(--success-green);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+            text-align: center;
+        }
+        
+        .overall-grade {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/">School Exam System</a>
+            <a class="navbar-brand" href="/"><i class="fas fa-graduation-cap me-2"></i>School Exam System</a>
             <div class="navbar-nav">
                 <a class="nav-link" href="/">Home</a>
                 <a class="nav-link" href="/sessions">Sessions</a>
@@ -24,118 +255,194 @@
         </div>
     </nav>
     
-    <div class="container mt-4">
-        <!-- Session Context -->
-        <div th:if="${activeSession}" class="alert alert-info">
-            <strong>Current Session:</strong> <span th:text="${activeSession.sessionName}"></span>
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <i class="fas fa-search me-3"></i>Search Student Results
+                </h1>
+                <p class="hero-subtitle">
+                    Find and view detailed exam results for any student
+                </p>
+            </div>
         </div>
+    </div>
+    
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb-nav">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="breadcrumb-item active">Search Results</li>
+            </ol>
+        </nav>
+        
+        <!-- Session Info -->
+        <div th:if="${activeSession}" class="session-info">
+            <i class="fas fa-calendar-alt me-2"></i>
+            <strong>Current Session:</strong> 
+            <span class="session-name" th:text="${activeSession.sessionName}"></span>
+        </div>
+        
         <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card">
+            <div class="col-lg-8 col-xl-6">
+                <div class="search-card">
                     <div class="card-header">
-                        <h4>Search Student Results</h4>
+                        <h4><i class="fas fa-search me-2"></i>Search Student</h4>
                     </div>
                     <div class="card-body">
                         <!-- Search Form -->
                         <form method="post" action="/search-results">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" name="rollNumber" 
-                                           placeholder="Enter student roll number" required>
+                            <div class="mb-4">
+                                <label for="rollNumber" class="form-label">
+                                    <i class="fas fa-id-card"></i>Student Roll Number
+                                </label>
+                                <input type="text" class="form-control" id="rollNumber" name="rollNumber" 
+                                       placeholder="Enter student roll number (e.g., 101, 102)" required>
+                                <div class="form-text text-muted mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Enter the roll number to search for student results
                                 </div>
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-success w-100">Search</button>
-                                </div>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-search me-2"></i>Search Results
+                                </button>
                             </div>
                         </form>
-                        
-                        <!-- Error Message -->
-                        <div th:if="${error}" class="alert alert-warning mt-3" th:text="${error}"></div>
-                        
-                        <!-- Results Display -->
-                        <div th:if="${result}" class="mt-4">
-                            <div class="card">
-                                <div class="card-header bg-success text-white">
-                                    <h5 class="mb-0">Exam Results</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Display -->
+        <div th:if="${result}" class="row justify-content-center mt-4">
+            <div class="col-12">
+                <div class="results-card">
+                    <div class="card-header">
+                        <h4><i class="fas fa-chart-line me-2"></i>Exam Results</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Student Info -->
+                        <div class="student-info">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="student-name" th:text="${result.studentName}"></div>
+                                    <small class="text-muted">Student Name</small>
                                 </div>
-                                <div class="card-body">
-                                    <!-- Student Info -->
-                                    <div class="row mb-3">
-                                        <div class="col-md-4"><strong>Name:</strong> <span th:text="${result.studentName}"></span></div>
-                                        <div class="col-md-4"><strong>Roll Number:</strong> <span th:text="${result.rollNumber}"></span></div>
-                                        <div class="col-md-4"><strong>Class:</strong> <span th:text="${result.className}"></span></div>
+                                <div class="col-md-4">
+                                    <div class="text-light">
+                                        <i class="fas fa-id-card me-1"></i>
+                                        <strong th:text="${result.rollNumber}"></strong>
                                     </div>
-                                    
-                                    <!-- Marks Table -->
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead class="table-dark">
-                                                <tr>
-                                                    <th>Subject</th>
-                                                    <th>Exam</th>
-                                                    <th>Obtained Marks</th>
-                                                    <th>Max Marks</th>
-                                                    <th>Percentage</th>
-                                                    <th>Exam Date</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr th:each="marks : ${result.marksList}">
-                                                    <td th:text="${marks.subject.subjectName}"></td>
-                                                    <td>
-                                                        <span class="badge bg-info" th:text="${marks.exam.examName}"></span>
-                                                    </td>
-                                                    <td th:text="${marks.obtainedMarks}"></td>
-                                                    <td th:text="${marks.subject.maxMarks}"></td>
-                                                    <td th:text="${#numbers.formatDecimal(marks.obtainedMarks * 100.0 / marks.subject.maxMarks, 1, 2)} + '%'"></td>
-                                                    <td th:text="${marks.examDate}"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <small class="text-muted">Roll Number</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-light">
+                                        <i class="fas fa-chalkboard me-1"></i>
+                                        <strong th:text="${result.className}"></strong>
                                     </div>
-                                    
-                                    <!-- Summary -->
-                                    <div class="row mt-3">
-                                        <div class="col-md-12">
-                                            <div class="card bg-light">
-                                                <div class="card-body">
-                                                    <div class="row text-center">
-                                                        <div class="col-md-3">
-                                                            <h6>Total Obtained</h6>
-                                                            <h4 th:text="${result.totalObtained}"></h4>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <h6>Total Maximum</h6>
-                                                            <h4 th:text="${result.totalMax}"></h4>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <h6>Overall Percentage</h6>
-                                                            <h4 th:text="${result.percentage} + '%'"></h4>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <h6>Grade</h6>
-                                                            <h4 class="text-primary" th:text="${result.grade}"></h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <small class="text-muted">Class</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Marks Table -->
+                        <div class="table-responsive">
+                            <table class="table table-dark table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-book me-1"></i>Subject</th>
+                                        <th><i class="fas fa-clipboard-list me-1"></i>Exam</th>
+                                        <th><i class="fas fa-calculator me-1"></i>Obtained</th>
+                                        <th><i class="fas fa-target me-1"></i>Max Marks</th>
+                                        <th><i class="fas fa-percentage me-1"></i>Percentage</th>
+                                        <th><i class="fas fa-calendar me-1"></i>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="marks : ${result.marksList}">
+                                        <td th:text="${marks.subject.subjectName}"></td>
+                                        <td>
+                                            <span class="badge" style="background: var(--modern-purple);" th:text="${marks.exam.examName}"></span>
+                                        </td>
+                                        <td><strong th:text="${marks.obtainedMarks}"></strong></td>
+                                        <td th:text="${marks.subject.maxMarks}"></td>
+                                        <td>
+                                            <strong th:text="${#numbers.formatDecimal(marks.obtainedMarks * 100.0 / marks.subject.maxMarks, 1, 2)} + '%'"></strong>
+                                        </td>
+                                        <td th:text="${marks.examDate}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Overall Summary -->
+                        <div class="overall-summary">
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <div class="text-light">
+                                        <i class="fas fa-plus-circle fa-2x mb-2"></i>
+                                        <h4 th:text="${result.totalObtained}"></h4>
+                                        <small>Total Obtained</small>
                                     </div>
-                                    
-                                    <!-- Grade System Info -->
-                                    <div class="mt-3">
-                                        <small class="text-muted">
-                                            <strong>Grade System:</strong> A (90%+) | B (75-89%) | C (60-74%) | D (40-59%) | F (Below 40%)
-                                        </small>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-light">
+                                        <i class="fas fa-bullseye fa-2x mb-2"></i>
+                                        <h4 th:text="${result.totalMax}"></h4>
+                                        <small>Total Maximum</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-light">
+                                        <i class="fas fa-chart-pie fa-2x mb-2"></i>
+                                        <h4 th:text="${result.percentage} + '%'"></h4>
+                                        <small>Overall Percentage</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-light">
+                                        <i class="fas fa-medal fa-2x mb-2"></i>
+                                        <div class="overall-grade" th:text="${result.grade}" th:classappend="'grade-' + ${result.grade}"></div>
+                                        <small>Final Grade</small>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <!-- Grade System Info -->
+                        <div class="mt-4 p-3" style="background: rgba(108, 92, 231, 0.1); border-radius: 10px; border-left: 4px solid var(--modern-purple);">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                <strong>Grade System:</strong> 
+                                <span class="grade-A">A (90%+)</span> | 
+                                <span class="grade-B">B (75-89%)</span> | 
+                                <span class="grade-C">C (60-74%)</span> | 
+                                <span class="grade-D">D (40-59%)</span> | 
+                                <span class="grade-F">F (Below 40%)</span>
+                            </small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
+        <!-- Error Message -->
+        <div th:if="${error}" class="row justify-content-center mt-4">
+            <div class="col-lg-8 col-xl-6">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span th:text="${error}"></span>
+                </div>
+            </div>
+        </div>
     </div>
+    
+    <!-- Bottom Spacing -->
+    <div style="height: 80px;"></div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -5,11 +5,264 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Subjects - School Exam System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a1a2e;
+            --secondary-dark: #16213e;
+            --accent-blue: #0f3460;
+            --education-blue: #2c5aa0;
+            --learning-teal: #16a085;
+            --modern-purple: #6c5ce7;
+            --success-green: #00b894;
+            --warning-orange: #fdcb6e;
+            --danger-red: #e17055;
+            --text-light: #ddd;
+            --text-muted: #95a5a6;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+        
+        .navbar-dark {
+            background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent-blue) 100%) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .hero-banner {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 50%, var(--modern-purple) 100%);
+            padding: 60px 0;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        
+        .stats-row {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            color: white;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .subjects-card {
+            background: var(--secondary-dark);
+            border: 1px solid rgba(44, 90, 160, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .subjects-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(108, 92, 231, 0.3);
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, var(--education-blue) 0%, var(--modern-purple) 100%) !important;
+            border-bottom: 1px solid rgba(108, 92, 231, 0.3);
+            padding: 25px;
+        }
+        
+        .card-header h4 {
+            color: white;
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .card-body {
+            padding: 40px;
+        }
+        
+        .breadcrumb-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+        }
+        
+        .breadcrumb-item a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .breadcrumb-item a:hover {
+            color: var(--modern-purple);
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--text-muted);
+        }
+        
+        .table-dark {
+            background: var(--secondary-dark);
+            color: var(--text-light);
+        }
+        
+        .table-dark th {
+            background: var(--accent-blue);
+            border-color: rgba(44, 90, 160, 0.3);
+            color: white;
+        }
+        
+        .table-dark td {
+            border-color: rgba(44, 90, 160, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--education-blue) 0%, var(--modern-purple) 100%);
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .btn-success {
+            background: linear-gradient(45deg, var(--success-green) 0%, var(--learning-teal) 100%);
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(45deg, var(--warning-orange) 0%, #f39c12 100%);
+            border: none;
+            border-radius: 8px;
+            color: var(--primary-dark);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(45deg, var(--danger-red) 0%, #d63031 100%);
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .add-subject-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--modern-purple) 0%, var(--education-blue) 100%);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        
+        .add-subject-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(108, 92, 231, 0.6);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--secondary-dark);
+            border-radius: 20px;
+            border: 2px dashed rgba(44, 90, 160, 0.3);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .empty-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        
+        .alert-success {
+            background: linear-gradient(45deg, rgba(0, 184, 148, 0.2) 0%, rgba(22, 160, 133, 0.2) 100%);
+            border: 1px solid var(--success-green);
+            color: var(--text-light);
+            border-radius: 12px;
+            padding: 15px;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(45deg, rgba(225, 112, 85, 0.2) 0%, rgba(211, 48, 49, 0.2) 100%);
+            border: 1px solid var(--danger-red);
+            color: var(--text-light);
+            border-radius: 12px;
+            padding: 15px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/">School Exam System</a>
+            <a class="navbar-brand" href="/"><i class="fas fa-graduation-cap me-2"></i>School Exam System</a>
             <div class="navbar-nav">
                 <a class="nav-link" href="/">Home</a>
                 <a class="nav-link" href="/sessions">Sessions</a>
@@ -25,59 +278,41 @@
             <form class="d-flex ms-auto" action="/search" method="get">
                 <input class="form-control me-2" type="search" name="q" 
                        placeholder="Search students..." aria-label="Search">
-                <button class="btn btn-outline-light" type="submit">Search</button>
+                <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
             </form>
         </div>
     </nav>
     
-    <div class="container mt-4">
-        <!-- Session Context -->
-        <div th:if="${activeSession}" class="alert alert-info">
-            <strong>Current Session:</strong> <span th:text="${activeSession.sessionName}"></span>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4>Manage Subjects</h4>
-                        <a href="/subjects/add" class="btn btn-primary">Add New Subject</a>
-                    </div>
-                    <div class="card-body">
-                        <!-- Success/Error Messages -->
-                        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-                        
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Subject Name</th>
-                                        <th>Class</th>
-                                        <th>Max Marks</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="subject : ${subjects}">
-                                        <td th:text="${subject.subjectName}"></td>
-                                        <td>
-                                            <span class="badge bg-info" th:text="${subject.className}"></span>
-                                        </td>
-                                        <td th:text="${subject.maxMarks}"></td>
-                                        <td>
-                                            <a th:href="@{/subjects/edit/{id}(id=${subject.id})}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                            <form th:action="@{/subjects/delete/{id}(id=${subject.id})}" method="post" style="display: inline;">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" 
-                                                        onclick="return confirm('Are you sure you want to delete this subject?')">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            
-                            <div th:if="${#lists.isEmpty(subjects)}" class="text-center py-4">
-                                <p class="text-muted">No subjects found. <a href="/subjects/add">Add your first subject</a></p>
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <i class="fas fa-book me-3"></i>Manage Subjects
+                </h1>
+                <p class="hero-subtitle">
+                    Configure academic subjects and their assessment criteria
+                </p>
+                
+                <!-- Stats Row -->
+                <div class="stats-row">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stat-item">
+                                <span class="stat-number" th:text="${#lists.size(subjects)}">5</span>
+                                <span class="stat-label">Total Subjects</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-item">
+                                <span class="stat-number">2</span>
+                                <span class="stat-label">Classes Covered</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-item">
+                                <span class="stat-number">100</span>
+                                <span class="stat-label">Max Marks</span>
                             </div>
                         </div>
                     </div>
@@ -85,6 +320,100 @@
             </div>
         </div>
     </div>
+    
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb-nav">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="breadcrumb-item active">Subjects</li>
+            </ol>
+        </nav>
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="subjects-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4><i class="fas fa-book me-2"></i>Subject Management</h4>
+                        <a href="/subjects/add" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Add Subject
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <!-- Success/Error Messages -->
+                        <div th:if="${success}" class="alert alert-success mb-4">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span th:text="${success}"></span>
+                        </div>
+                        <div th:if="${error}" class="alert alert-danger mb-4">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <span th:text="${error}"></span>
+                        </div>
+                        
+                        <!-- Subjects Table -->
+                        <div th:if="${!#lists.isEmpty(subjects)}" class="table-responsive">
+                            <table class="table table-dark table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-book me-1"></i>Subject Name</th>
+                                        <th><i class="fas fa-chalkboard me-1"></i>Class</th>
+                                        <th><i class="fas fa-calculator me-1"></i>Max Marks</th>
+                                        <th><i class="fas fa-cogs me-1"></i>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="subject : ${subjects}">
+                                        <td>
+                                            <strong th:text="${subject.subjectName}"></strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge" style="background: var(--modern-purple);" th:text="${subject.className}"></span>
+                                        </td>
+                                        <td>
+                                            <span class="badge" style="background: var(--learning-teal);" th:text="${subject.maxMarks}"></span>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/subjects/edit/{id}(id=${subject.id})}" class="btn btn-sm btn-warning me-1">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form th:action="@{/subjects/delete/{id}(id=${subject.id})}" method="post" style="display: inline;">
+                                                <button type="submit" class="btn btn-sm btn-danger" 
+                                                        onclick="return confirm('Are you sure you want to delete this subject?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Empty State -->
+                        <div th:if="${#lists.isEmpty(subjects)}" class="empty-state">
+                            <div class="empty-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h3 class="empty-title">No Subjects Found</h3>
+                            <p class="empty-subtitle">
+                                Start by creating subjects to define the academic curriculum for your classes.
+                            </p>
+                            <a href="/subjects/add" class="btn btn-primary btn-lg">
+                                <i class="fas fa-plus me-2"></i>Add First Subject
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Floating Action Button -->
+    <a href="/subjects/add" class="add-subject-fab" title="Add New Subject">
+        <i class="fas fa-plus"></i>
+    </a>
+    
+    <!-- Bottom Spacing -->
+    <div style="height: 80px;"></div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
