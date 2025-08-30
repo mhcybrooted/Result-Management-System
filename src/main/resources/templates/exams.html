@@ -30,7 +30,103 @@
         
         .navbar-dark {
             background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent-blue) 100%) !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 0;
+        }
+        
+        .navbar-brand {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            color: var(--learning-teal) !important;
+        }
+        
+        .navbar-nav .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            padding: 8px 16px !important;
+            margin: 0 2px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .navbar-nav .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .navbar-nav .nav-link:hover::before {
+            left: 100%;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background: linear-gradient(135deg, var(--learning-teal) 0%, var(--success-green) 100%);
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+        }
+        
+        .navbar-nav .nav-link.active:hover {
+            background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
+        }
+        
+        .search-form .form-control {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 25px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .search-form .form-control:focus {
+            background: rgba(255,255,255,0.2);
+            border-color: var(--learning-teal);
+            box-shadow: 0 0 0 0.2rem rgba(6, 182, 212, 0.25);
+            color: white;
+        }
+        
+        .search-form .form-control::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, var(--learning-teal) 0%, var(--success-green) 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 8px 16px;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+            background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
         }
         
         .hero-banner {
@@ -268,24 +364,61 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/">
+            <a class="navbar-brand" href="/">
                 <i class="fas fa-graduation-cap me-2"></i>School Exam System
             </a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Home</a>
-                <a class="nav-link" href="/sessions"><i class="fas fa-calendar-alt me-1"></i>Sessions</a>
-                <a class="nav-link" href="/students"><i class="fas fa-user-graduate me-1"></i>Students</a>
-                <a class="nav-link" href="/classes"><i class="fas fa-chalkboard me-1"></i>Classes</a>
-                <a class="nav-link" href="/subjects"><i class="fas fa-book me-1"></i>Subjects</a>
-                <a class="nav-link active" href="/exams"><i class="fas fa-clipboard-list me-1"></i>Exams</a>
-                <a class="nav-link" href="/add-marks"><i class="fas fa-plus-circle me-1"></i>Add Marks</a>
-                <a class="nav-link" href="/view-results"><i class="fas fa-chart-bar me-1"></i>Results</a>
-                <a class="nav-link" href="/reports"><i class="fas fa-file-alt me-1"></i>Reports</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav me-auto">
+                    <a class="nav-link" href="/">
+                        <i class="fas fa-home me-1"></i>Home
+                    </a>
+                    <a class="nav-link" href="/sessions">
+                        <i class="fas fa-calendar-alt me-1"></i>Sessions
+                    </a>
+                    <a class="nav-link" href="/students">
+                        <i class="fas fa-user-graduate me-1"></i>Students
+                    </a>
+                    <a class="nav-link" href="/classes">
+                        <i class="fas fa-chalkboard me-1"></i>Classes
+                    </a>
+                    <a class="nav-link" href="/subjects">
+                        <i class="fas fa-book me-1"></i>Subjects
+                    </a>
+                    <a class="nav-link active" href="/exams">
+                        <i class="fas fa-clipboard-list me-1"></i>Exams
+                    </a>
+                    <a class="nav-link" href="/add-marks">
+                        <i class="fas fa-plus-circle me-1"></i>Add Marks
+                    </a>
+                    <a class="nav-link" href="/view-results">
+                        <i class="fas fa-chart-bar me-1"></i>Results
+                    </a>
+                    <a class="nav-link" href="/reports">
+                        <i class="fas fa-file-alt me-1"></i>Reports
+                    </a>
+                </div>
+                
+                <!-- Global Search Bar -->
+                <form class="d-flex search-form" action="/search" method="get">
+                    <input class="form-control me-2" type="search" name="q" 
+                           placeholder="Search students..." aria-label="Search" style="width: 200px;">
+                    <button class="btn search-btn" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </nav>
+    
+    <!-- Add padding to body to account for fixed navbar -->
+    <div style="padding-top: 80px;"></div>
     
     <!-- Hero Banner -->
     <section class="hero-banner">
