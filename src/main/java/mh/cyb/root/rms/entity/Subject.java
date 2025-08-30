@@ -17,21 +17,24 @@ public class Subject {
     @Column(name = "subject_name", nullable = false)
     private String subjectName;
     
-    @NotBlank(message = "Class name is required")
-    @Column(name = "class_name", nullable = false)
-    private String className;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_id", nullable = false)
+    private Class classEntity;
     
     @NotNull(message = "Max marks is required")
     @Min(value = 1, message = "Max marks must be at least 1")
     @Column(name = "max_marks", nullable = false)
     private Integer maxMarks;
     
+    @Column(name = "description")
+    private String description;
+    
     // Constructors
     public Subject() {}
     
-    public Subject(String subjectName, String className, Integer maxMarks) {
+    public Subject(String subjectName, Class classEntity, Integer maxMarks) {
         this.subjectName = subjectName;
-        this.className = className;
+        this.classEntity = classEntity;
         this.maxMarks = maxMarks;
     }
     
@@ -42,9 +45,17 @@ public class Subject {
     public String getSubjectName() { return subjectName; }
     public void setSubjectName(String subjectName) { this.subjectName = subjectName; }
     
-    public String getClassName() { return className; }
-    public void setClassName(String className) { this.className = className; }
+    public Class getClassEntity() { return classEntity; }
+    public void setClassEntity(Class classEntity) { this.classEntity = classEntity; }
+    
+    // Helper method for backward compatibility
+    public String getClassName() { 
+        return classEntity != null ? classEntity.getClassName() : null; 
+    }
     
     public Integer getMaxMarks() { return maxMarks; }
     public void setMaxMarks(Integer maxMarks) { this.maxMarks = maxMarks; }
+    
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 }

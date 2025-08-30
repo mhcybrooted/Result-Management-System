@@ -357,6 +357,21 @@ public class ExamController {
     public String listSubjects(Model model) {
         List<Subject> subjects = examService.getAllSubjects();
         model.addAttribute("subjects", subjects);
+        
+        // Calculate dynamic stats
+        long classesCovered = subjects.stream()
+            .map(Subject::getClassName)
+            .distinct()
+            .count();
+        
+        int maxMarks = subjects.stream()
+            .mapToInt(Subject::getMaxMarks)
+            .max()
+            .orElse(0);
+            
+        model.addAttribute("classesCovered", classesCovered);
+        model.addAttribute("maxMarks", maxMarks);
+        
         return "subjects";
     }
     
@@ -364,26 +379,16 @@ public class ExamController {
     public String addSubjectPage(Model model) {
         model.addAttribute("subject", new Subject());
         // Get available classes for subject assignment
-        List<mh.cyb.root.rms.entity.Class> classEntities = examService.getAllActiveClasses();
-        List<String> availableClasses = classEntities.stream()
-                .map(mh.cyb.root.rms.entity.Class::getClassName)
-                .collect(Collectors.toList());
-        
-        // Add standard classes if no managed classes
-        if (availableClasses.isEmpty()) {
-            availableClasses.addAll(List.of("Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
-                                           "Class 6", "Class 7", "Class 8", "Class 9", "Class 10", 
-                                           "Class 11", "Class 12"));
-        }
-        
+        List<mh.cyb.root.rms.entity.Class> availableClasses = examService.getAllActiveClasses();
         model.addAttribute("availableClasses", availableClasses);
         return "add-subject";
     }
     
     @PostMapping("/subjects/add")
-    public String addSubject(@ModelAttribute Subject subject, RedirectAttributes redirectAttributes) {
-        if (subject.getSubjectName() == null || subject.getSubjectName().trim().isEmpty() ||
-            subject.getClassName() == null || subject.getClassName().trim().isEmpty()) {
+    public String addSubject(@ModelAttribute Subject subject, 
+                           @RequestParam Long classId,
+                           RedirectAttributes redirectAttributes) {
+        if (subject.getSubjectName() == null || subject.getSubjectName().trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Please fill all required fields");
             return "redirect:/subjects/add";
         }
@@ -392,8 +397,18 @@ public class ExamController {
             subject.setMaxMarks(100); // Default max marks
         }
         
-        examService.saveSubject(subject);
-        redirectAttributes.addFlashAttribute("success", "Subject added successfully!");
+        // Set class entity
+        Optional<mh.cyb.root.rms.entity.Class> classEntity = examService.getClassById(classId);
+        if (classEntity.isPresent()) {
+            subject.setClassEntity(classEntity.get());
+            examService.saveSubject(subject);
+            
+            String message = subject.getId() != null ? "Subject updated successfully!" : "Subject added successfully!";
+            redirectAttributes.addFlashAttribute("success", message);
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Invalid class selected");
+        }
+        
         return "redirect:/subjects";
     }
     
@@ -404,25 +419,8 @@ public class ExamController {
             model.addAttribute("subject", subject.get());
             
             // Get available classes
-            List<mh.cyb.root.rms.entity.Class> classEntities = examService.getAllActiveClasses();
-            List<String> availableClasses = classEntities.stream()
-                    .map(mh.cyb.root.rms.entity.Class::getClassName)
-                    .collect(Collectors.toList());
-            
-            // Add current subject's class if not in managed classes
-            String currentClass = subject.get().getClassName();
-            if (!availableClasses.contains(currentClass)) {
-                availableClasses.add(currentClass);
-            }
-            
-            // Add standard classes if no managed classes
-            if (classEntities.isEmpty()) {
-                availableClasses.addAll(List.of("Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
-                                               "Class 6", "Class 7", "Class 8", "Class 9", "Class 10", 
-                                               "Class 11", "Class 12"));
-            }
-            
-            model.addAttribute("availableClasses", availableClasses.stream().distinct().sorted().collect(Collectors.toList()));
+            List<mh.cyb.root.rms.entity.Class> availableClasses = examService.getAllActiveClasses();
+            model.addAttribute("availableClasses", availableClasses);
             return "add-subject";
         }
         return "redirect:/subjects";

@@ -3,80 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Subject - School Exam System</title>
+    <title>Add New Subject - School Exam Result System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a1a2e;
+            --secondary-dark: #16213e;
+            --accent-blue: #0f3460;
+            --education-blue: #2c5aa0;
+            --learning-teal: #16a085;
+            --modern-purple: #6c5ce7;
+            --success-green: #00b894;
+            --warning-orange: #fdcb6e;
+            --danger-red: #e17055;
+            --text-light: #ddd;
+            --text-muted: #95a5a6;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+        
+        .navbar-dark {
+            background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent-blue) 100%) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .hero-banner {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 50%, var(--modern-purple) 100%);
+            padding: 60px 0;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        
+        .form-card {
+            background: var(--secondary-dark);
+            border: 1px solid rgba(44, 90, 160, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .form-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(108, 92, 231, 0.3);
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, var(--education-blue) 0%, var(--modern-purple) 100%) !important;
+            border-bottom: 1px solid rgba(108, 92, 231, 0.3);
+            padding: 25px;
+        }
+        
+        .card-header h4 {
+            color: white;
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .card-body {
+            padding: 40px;
+        }
+        
+        .form-label {
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(44, 90, 160, 0.3);
+            color: var(--text-light);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--education-blue);
+            box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+            color: var(--text-light);
+        }
+        
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+        
+        /* Dropdown option styling */
+        .form-control option {
+            background: var(--secondary-dark);
+            color: var(--text-light);
+            padding: 10px;
+        }
+        
+        .form-control option:hover {
+            background: var(--education-blue);
+            color: white;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--education-blue) 0%, var(--modern-purple) 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.6);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(44, 90, 160, 0.3);
+            color: var(--text-light);
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--education-blue);
+            color: var(--text-light);
+            transform: translateY(-2px);
+        }
+        
+        .alert {
+            border: none;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: rgba(0, 184, 148, 0.2);
+            color: var(--success-green);
+            border: 1px solid rgba(0, 184, 148, 0.3);
+        }
+        
+        .alert-danger {
+            background: rgba(225, 112, 85, 0.2);
+            color: var(--danger-red);
+            border: 1px solid rgba(225, 112, 85, 0.3);
+        }
+
+        .breadcrumb-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+        }
+
+        .breadcrumb-item a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--modern-purple);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .card-body {
+                padding: 25px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">School Exam System</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="/">Home</a>
-                <a class="nav-link" href="/sessions">Sessions</a>
-                <a class="nav-link" href="/students">Students</a>
-                <a class="nav-link" href="/classes">Classes</a>
-                <a class="nav-link" href="/subjects">Subjects</a>
-                <a class="nav-link" href="/exams">Exams</a>
-                <a class="nav-link" href="/add-marks">Add Marks</a>
-                <a class="nav-link" href="/view-results">Results</a>
-                <a class="nav-link" href="/reports">Reports</a>
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-graduation-cap me-2"></i>
+                School Exam System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/subjects"><i class="fas fa-book me-1"></i>Subjects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students"><i class="fas fa-users me-1"></i>Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add-marks"><i class="fas fa-plus me-1"></i>Add Marks</a>
+                    </li>
+                </ul>
             </div>
-            <!-- Global Search Bar -->
-            <form class="d-flex ms-auto" action="/search" method="get">
-                <input class="form-control me-2" type="search" name="q" 
-                       placeholder="Search students..." aria-label="Search">
-                <button class="btn btn-outline-light" type="submit">Search</button>
-            </form>
         </div>
     </nav>
-    
-    <div class="container mt-4">
-        <!-- Session Context -->
-        <div th:if="${activeSession}" class="alert alert-info">
-            <strong>Current Session:</strong> <span th:text="${activeSession.sessionName}"></span>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <i class="fas fa-book-open me-3"></i>
+                    Add New Subject
+                </h1>
+                <p class="hero-subtitle">Create a new subject for the curriculum with enhanced functionality</p>
+            </div>
         </div>
-        
+    </section>
+
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb-nav">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="breadcrumb-item"><a href="/subjects"><i class="fas fa-book me-1"></i>Subjects</a></li>
+                <li class="breadcrumb-item active">Add New Subject</li>
+            </ol>
+        </nav>
+
+        <!-- Form Card -->
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
+            <div class="col-lg-8">
+                <div class="form-card">
                     <div class="card-header">
-                        <h4 th:text="${subject.id != null ? 'Edit Subject' : 'Add New Subject'}">Add New Subject</h4>
+                        <h4><i class="fas fa-plus-circle me-2"></i>Subject Information</h4>
                     </div>
                     <div class="card-body">
                         <!-- Success/Error Messages -->
-                        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                        <div th:if="${success}" class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span th:text="${success}"></span>
+                        </div>
                         
-                        <form method="post" action="/subjects/add" th:object="${subject}">
-                            <input type="hidden" th:field="*{id}">
-                            
-                            <div class="mb-3">
-                                <label for="subjectName" class="form-label">Subject Name</label>
-                                <input type="text" class="form-control" id="subjectName" th:field="*{subjectName}" 
-                                       placeholder="e.g., Mathematics, English, Science" required>
+                        <div th:if="${error}" class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <span th:text="${error}"></span>
+                        </div>
+
+                        <!-- Form -->
+                        <form th:action="@{/subjects/add}" method="post">
+                            <input type="hidden" name="id" th:value="${subject.id}">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="subjectName" class="form-label">
+                                        <i class="fas fa-book"></i>Subject Name
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="subjectName" 
+                                           name="subjectName"
+                                           th:value="${subject.subjectName}"
+                                           placeholder="Enter subject name"
+                                           required>
+                                </div>
+                                
+                                <div class="col-md-6 mb-4">
+                                    <label for="classId" class="form-label">
+                                        <i class="fas fa-chalkboard"></i>Class Name
+                                    </label>
+                                    <select class="form-control" 
+                                            id="classId" 
+                                            name="classId"
+                                            required>
+                                        <option value="">Select Class</option>
+                                        <option th:each="classEntity : ${availableClasses}" 
+                                                th:value="${classEntity.id}" 
+                                                th:text="${classEntity.className}"
+                                                th:selected="${subject.classEntity != null and subject.classEntity.id == classEntity.id}">
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
-                            
-                            <div class="mb-3">
-                                <label for="className" class="form-label">Class</label>
-                                <select class="form-select" id="className" th:field="*{className}" required>
-                                    <option value="">Select Class</option>
-                                    <option th:each="className : ${availableClasses}" 
-                                            th:value="${className}" 
-                                            th:text="${className}">
-                                    </option>
-                                </select>
+
+                            <div class="mb-4">
+                                <label for="maxMarks" class="form-label">
+                                    <i class="fas fa-trophy"></i>Maximum Marks
+                                </label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="maxMarks" 
+                                       name="maxMarks"
+                                       th:value="${subject.maxMarks}"
+                                       placeholder="Enter maximum marks"
+                                       min="1"
+                                       max="1000"
+                                       required>
                             </div>
-                            
-                            <div class="mb-3">
-                                <label for="maxMarks" class="form-label">Maximum Marks</label>
-                                <input type="number" class="form-control" id="maxMarks" th:field="*{maxMarks}" 
-                                       placeholder="100" min="1" max="1000" value="100" required>
+
+                            <div class="mb-4">
+                                <label for="description" class="form-label">
+                                    <i class="fas fa-align-left"></i>Description (Optional)
+                                </label>
+                                <textarea class="form-control" 
+                                          id="description" 
+                                          name="description"
+                                          th:text="${subject.description}"
+                                          rows="4"
+                                          placeholder="Enter subject description"></textarea>
                             </div>
-                            
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary" 
-                                        th:text="${subject.id != null ? 'Update Subject' : 'Add Subject'}">Add Subject</button>
-                                <a href="/subjects" class="btn btn-secondary">Cancel</a>
+
+                            <div class="d-flex gap-3 justify-content-end">
+                                <a href="/subjects" class="btn btn-secondary">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Add Subject
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -84,7 +381,10 @@
             </div>
         </div>
     </div>
-    
+
+    <!-- Bottom Spacing -->
+    <div style="height: 80px;"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

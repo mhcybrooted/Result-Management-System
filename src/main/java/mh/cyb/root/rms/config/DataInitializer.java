@@ -67,11 +67,11 @@ public class DataInitializer implements CommandLineRunner {
         studentRepository.save(student5);
         
         // Create sample subjects
-        Subject math10 = new Subject("Mathematics", "Class 10", 100);
-        Subject english10 = new Subject("English", "Class 10", 100);
-        Subject science10 = new Subject("Science", "Class 10", 100);
-        Subject math9 = new Subject("Mathematics", "Class 9", 100);
-        Subject english9 = new Subject("English", "Class 9", 100);
+        Subject math10 = new Subject("Mathematics", class10, 100);
+        Subject english10 = new Subject("English", class10, 100);
+        Subject science10 = new Subject("Science", class10, 100);
+        Subject math9 = new Subject("Mathematics", class9, 100);
+        Subject english9 = new Subject("English", class9, 100);
         
         subjectRepository.save(math10);
         subjectRepository.save(english10);
