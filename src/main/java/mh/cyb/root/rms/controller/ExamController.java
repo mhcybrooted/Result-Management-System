@@ -24,19 +24,39 @@ public class ExamController {
     @Autowired
     private TeacherService teacherService;
     
-    // Add active session to all pages
-    @ModelAttribute
-    public void addActiveSession(Model model) {
+    // Public home page
+    @GetMapping("/")
+    public String homePage(Model model) {
         Optional<Session> activeSession = examService.getActiveSession();
         if (activeSession.isPresent()) {
             model.addAttribute("activeSession", activeSession.get());
         }
-        model.addAttribute("allSessions", examService.getAllSessions());
+        return "public-home";
     }
     
-    // Home page
-    @GetMapping("/")
-    public String home(Model model) {
+    // Public view results (no authentication required)
+    @GetMapping("/view-results")
+    public String publicViewResults(Model model) {
+        Optional<Session> activeSession = examService.getActiveSession();
+        if (activeSession.isPresent()) {
+            model.addAttribute("activeSession", activeSession.get());
+        }
+        return "public-view-results";
+    }
+    
+    // Admin view results (admin authentication required)
+    @GetMapping("/admin/view-results")
+    public String adminViewResults(Model model) {
+        Optional<Session> activeSession = examService.getActiveSession();
+        if (activeSession.isPresent()) {
+            model.addAttribute("activeSession", activeSession.get());
+        }
+        return "view-results";
+    }
+    
+    // Admin dashboard (admin authentication required)
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard(Model model) {
         // Get active session
         Optional<Session> activeSession = examService.getActiveSession();
         if (activeSession.isPresent()) {
@@ -50,6 +70,16 @@ public class ExamController {
         model.addAttribute("totalExams", examService.getAllActiveExams().size());
         
         return "index";
+    }
+    
+    // Add active session to all pages
+    @ModelAttribute
+    public void addActiveSession(Model model) {
+        Optional<Session> activeSession = examService.getActiveSession();
+        if (activeSession.isPresent()) {
+            model.addAttribute("activeSession", activeSession.get());
+        }
+        model.addAttribute("allSessions", examService.getAllSessions());
     }
     
     // Session management pages
@@ -453,12 +483,6 @@ public class ExamController {
             redirectAttributes.addFlashAttribute("error", "Failed to delete subject");
         }
         return "redirect:/subjects";
-    }
-    
-    // View results page
-    @GetMapping("/view-results")
-    public String viewResultsPage() {
-        return "view-results";
     }
     
     // Search results

@@ -21,14 +21,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/admin-login", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/", "/admin-login", "/student-login", "/teacher-login", "/login-portal", "/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/admin/**", "/sessions/**", "/students/promote").hasRole("ADMIN")
-                .anyRequest().permitAll()
+                .requestMatchers("/view-results", "/search-results").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().hasRole("ADMIN")
             )
             .formLogin(form -> form
                 .loginPage("/admin-login")
-                .defaultSuccessUrl("/", true)
+                .defaultSuccessUrl("/admin/dashboard", true)
                 .failureUrl("/admin-login?error=true")
                 .permitAll()
             )
