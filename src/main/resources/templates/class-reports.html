@@ -5,105 +5,478 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'Class Reports - ' + ${className}">Class Reports</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0d1421;
+            --secondary-dark: #1a2332;
+            --accent-blue: #2563eb;
+            --education-blue: #3b82f6;
+            --learning-teal: #06b6d4;
+            --modern-purple: #8b5cf6;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+            --danger-red: #ef4444;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+        
+        .navbar-dark {
+            background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent-blue) 100%) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .hero-banner {
+            background: linear-gradient(135deg, var(--modern-purple) 0%, var(--education-blue) 50%, var(--learning-teal) 100%);
+            padding: 80px 0;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+        .breadcrumb-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+        }
+
+        .breadcrumb-item a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--modern-purple);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-muted);
+        }
+        .session-alert {
+            background: linear-gradient(135deg, var(--education-blue) 0%, var(--modern-purple) 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .class-reports-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .class-reports-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--modern-purple) 0%, var(--education-blue) 100%);
+            border: none;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 25px 30px;
+        }
+        
+        .card-header h4 {
+            color: white;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            padding: 8px 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            transform: translateX(-3px);
+        }
+        
+        .table-dark {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-blue) 100%);
+        }
+        
+        .table-dark th {
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        
+        .table tbody tr {
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: background 0.3s ease;
+            color: var(--text-light);
+        }
+        
+        .table tbody tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .table tbody td {
+            color: var(--text-light);
+            border-color: rgba(255,255,255,0.1);
+            padding: 15px 12px;
+        }
+        
+        .table tbody td strong {
+            color: white;
+            font-weight: 600;
+        }
+        
+        .grade-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .grade-a { background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%); }
+        .grade-b { background: linear-gradient(135deg, var(--education-blue) 0%, var(--modern-purple) 100%); }
+        .grade-c { background: linear-gradient(135deg, var(--warning-orange) 0%, #f97316 100%); }
+        .grade-d { background: linear-gradient(135deg, var(--text-muted) 0%, #6b7280 100%); }
+        .grade-f { background: linear-gradient(135deg, var(--danger-red) 0%, #dc2626 100%); }
+        
+        .result-pass {
+            color: var(--success-green);
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+        
+        .result-fail {
+            color: var(--danger-red);
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--education-blue) 0%, var(--modern-purple) 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+        
+        .summary-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            margin-top: 30px;
+        }
+        
+        .summary-header {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 100%);
+            border-radius: 15px 15px 0 0;
+            padding: 20px 25px;
+        }
+        
+        .summary-header h5 {
+            color: white;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .summary-stats {
+            padding: 25px;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            display: block;
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .pass-rate {
+            color: var(--success-green);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .stats-row {
+            margin-bottom: 40px;
+        }
+        
+        .stat-item {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-item .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            display: block;
+        }
+        
+        .stat-item .stat-label {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">School Exam System</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="/">Home</a>
-                <a class="nav-link" href="/sessions">Sessions</a>
-                <a class="nav-link" href="/students">Students</a>
-                <a class="nav-link" href="/classes">Classes</a>
-                <a class="nav-link" href="/subjects">Subjects</a>
-                <a class="nav-link" href="/exams">Exams</a>
-                <a class="nav-link" href="/add-marks">Add Marks</a>
-                <a class="nav-link" href="/view-results">Results</a>
-                <a class="nav-link active" href="/reports">Reports</a>
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-graduation-cap me-2"></i>School Exam System
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Home</a>
+                <a class="nav-link" href="/sessions"><i class="fas fa-calendar-alt me-1"></i>Sessions</a>
+                <a class="nav-link" href="/students"><i class="fas fa-user-graduate me-1"></i>Students</a>
+                <a class="nav-link" href="/classes"><i class="fas fa-chalkboard me-1"></i>Classes</a>
+                <a class="nav-link" href="/subjects"><i class="fas fa-book me-1"></i>Subjects</a>
+                <a class="nav-link" href="/exams"><i class="fas fa-clipboard-list me-1"></i>Exams</a>
+                <a class="nav-link" href="/add-marks"><i class="fas fa-plus-circle me-1"></i>Add Marks</a>
+                <a class="nav-link" href="/view-results"><i class="fas fa-chart-bar me-1"></i>Results</a>
+                <a class="nav-link active" href="/reports"><i class="fas fa-file-alt me-1"></i>Reports</a>
             </div>
         </div>
     </nav>
     
-    <div class="container mt-4">
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <i class="fas fa-users me-3"></i>
+                    <span th:text="'Class Report - ' + ${className}">Class Report</span>
+                </h1>
+                <p class="hero-subtitle">Comprehensive academic performance analysis for the entire class</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mb-5">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb-nav">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="breadcrumb-item"><a href="/reports"><i class="fas fa-file-alt me-1"></i>Reports</a></li>
+                <li class="breadcrumb-item active" th:text="${className}">Class</li>
+            </ol>
+        </nav>
+
         <!-- Session Context -->
-        <div th:if="${activeSession}" class="alert alert-info">
+        <div th:if="${activeSession}" class="session-alert">
+            <i class="fas fa-info-circle me-2"></i>
             <strong>Current Session:</strong> <span th:text="${activeSession.sessionName}"></span>
         </div>
-        
+
+        <!-- Quick Stats -->
+        <div class="row stats-row" th:unless="${#lists.isEmpty(classReports)}">
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${#lists.size(classReports)}">0</span>
+                    <span class="stat-label">Total Students</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${classReports.?[result == 'PASS'].size()}">0</span>
+                    <span class="stat-label">Students Passed</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${classReports.?[result == 'FAIL'].size()}">0</span>
+                    <span class="stat-label">Students Failed</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number pass-rate" th:text="${#lists.size(classReports) > 0 ? #numbers.formatDecimal((classReports.?[result == 'PASS'].size() * 100.0 / #lists.size(classReports)), 1, 1) + '%' : '0%'}">0%</span>
+                    <span class="stat-label">Pass Rate</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Reports Table -->
         <div class="row">
-            <div class="col-md-12">
-                <div class="card">
+            <div class="col-12">
+                <div class="card class-reports-card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 th:text="'Report Cards - ' + ${className}"></h4>
-                        <a href="/reports" class="btn btn-secondary">← Back to Reports</a>
+                        <h4>
+                            <i class="fas fa-chart-line me-2"></i>
+                            <span th:text="'Academic Performance - ' + ${className}">Academic Performance</span>
+                        </h4>
+                        <a href="/reports" class="back-btn">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Reports
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
+                    <div class="card-body p-0">
+                        <div class="table-responsive" th:unless="${#lists.isEmpty(classReports)}">
+                            <table class="table table-hover mb-0">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>Student Name</th>
-                                        <th>Roll Number</th>
-                                        <th>Overall %</th>
-                                        <th>Grade</th>
-                                        <th>Result</th>
-                                        <th>Actions</th>
+                                        <th><i class="fas fa-user me-2"></i>Student Name</th>
+                                        <th><i class="fas fa-id-badge me-2"></i>Roll Number</th>
+                                        <th><i class="fas fa-percentage me-2"></i>Overall %</th>
+                                        <th><i class="fas fa-medal me-2"></i>Grade</th>
+                                        <th><i class="fas fa-check-circle me-2"></i>Result</th>
+                                        <th><i class="fas fa-cogs me-2"></i>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr th:each="report : ${classReports}">
-                                        <td th:text="${report.student.name}"></td>
-                                        <td th:text="${report.student.rollNumber}"></td>
-                                        <td th:text="${report.overallPercentage} + '%'"></td>
                                         <td>
-                                            <span class="badge" 
-                                                  th:classappend="${report.overallGrade == 'A+' or report.overallGrade == 'A'} ? 'bg-success' : 
-                                                                 (${report.overallGrade == 'B'} ? 'bg-primary' : 
-                                                                 (${report.overallGrade == 'C'} ? 'bg-warning' : 
-                                                                 (${report.overallGrade == 'D'} ? 'bg-secondary' : 'bg-danger')))"
+                                            <strong th:text="${report.student.name}"></strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary" th:text="${report.student.rollNumber}"></span>
+                                        </td>
+                                        <td>
+                                            <strong th:text="${report.overallPercentage} + '%'"></strong>
+                                        </td>
+                                        <td>
+                                            <span class="grade-badge"
+                                                  th:classappend="${report.overallGrade == 'A+' or report.overallGrade == 'A'} ? 'grade-a' : 
+                                                                 (${report.overallGrade == 'B'} ? 'grade-b' : 
+                                                                 (${report.overallGrade == 'C'} ? 'grade-c' : 
+                                                                 (${report.overallGrade == 'D'} ? 'grade-d' : 'grade-f')))"
                                                   th:text="${report.overallGrade}"></span>
                                         </td>
                                         <td>
                                             <span th:text="${report.result}" 
-                                                  th:class="${report.result == 'PASS'} ? 'text-success fw-bold' : 'text-danger fw-bold'"></span>
+                                                  th:class="${report.result == 'PASS'} ? 'result-pass' : 'result-fail'">
+                                                <i th:class="${report.result == 'PASS'} ? 'fas fa-check-circle me-1' : 'fas fa-times-circle me-1'"></i>
+                                            </span>
                                         </td>
                                         <td>
-                                            <a th:href="@{/reports/{id}(id=${report.student.id})}" class="btn btn-sm btn-primary">View</a>
-                                            <a th:href="@{/reports/{id}/pdf(id=${report.student.id})}" class="btn btn-sm btn-success">PDF</a>
+                                            <a th:href="@{/reports/{id}(id=${report.student.id})}" class="btn btn-sm btn-primary me-1">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </a>
+                                            <a th:href="@{/reports/{id}/pdf(id=${report.student.id})}" class="btn btn-sm btn-success">
+                                                <i class="fas fa-file-pdf me-1"></i>PDF
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            
-                            <div th:if="${#lists.isEmpty(classReports)}" class="text-center py-4">
-                                <p class="text-muted" th:text="'No report cards found for ' + ${className} + ' in current session.'"></p>
-                            </div>
                         </div>
                         
-                        <!-- Class Summary -->
-                        <div th:unless="${#lists.isEmpty(classReports)}" class="mt-4">
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <h5>Class Summary</h5>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <strong>Total Students:</strong> <span th:text="${#lists.size(classReports)}"></span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <strong>Passed:</strong> 
-                                            <span th:text="${classReports.?[result == 'PASS'].size()}"></span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <strong>Failed:</strong> 
-                                            <span th:text="${classReports.?[result == 'FAIL'].size()}"></span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <strong>Pass Rate:</strong> 
-                                            <span th:text="${#lists.size(classReports) > 0 ? #numbers.formatDecimal((classReports.?[result == 'PASS'].size() * 100.0 / #lists.size(classReports)), 1, 1) + '%' : '0%'}"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div th:if="${#lists.isEmpty(classReports)}" class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <h5>No Report Cards Found</h5>
+                            <p class="mb-0" th:text="'No report cards found for ' + ${className} + ' in current session.'"></p>
                         </div>
                     </div>
                 </div>
