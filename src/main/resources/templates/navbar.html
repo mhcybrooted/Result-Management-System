@@ -50,9 +50,7 @@
                         border: 2px solid rgba(255,255,255,0.3);
                         align-items: center;
                         transition: all 0.3s ease;
-                    " onmouseover="this.style.background='rgba(255,255,255,0.2)'" 
-                       onmouseout="this.style.background='rgba(255,255,255,0.15)'">
-                        
+                    ">
                         <div class="input-group-prepend">
                             <span style="
                                 color: rgba(255,255,255,0.7);
@@ -67,9 +65,8 @@
                                name="rollNumber" 
                                id="searchInput"
                                class="form-control search-input" 
-                               placeholder="Search by Roll No"
+                               placeholder="Search Roll No..." 
                                autocomplete="off"
-                               required 
                                style="
                                    background: transparent;
                                    border: none;
@@ -94,7 +91,7 @@
                             transition: all 0.3s ease;
                             margin-left: 5px;
                         ">
-                            <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-search"></i>
                         </button>
                     </form>
                     
@@ -161,18 +158,33 @@
             transform: scale(1.05);
         }
         
+        .search-form:hover {
+            background: rgba(255,255,255,0.2) !important;
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+        
+        .search-form:focus-within {
+            background: rgba(255,255,255,0.25) !important;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+        
         .search-input::placeholder {
             color: rgba(255,255,255,0.7) !important;
             font-style: italic;
         }
         
         .search-input:focus {
-            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3) !important;
+            box-shadow: none !important;
         }
         
         .search-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+        }
+        
+        .search-btn:active {
+            transform: scale(0.95);
         }
         
         .search-suggestion-item {
