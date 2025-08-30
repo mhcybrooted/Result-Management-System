@@ -72,6 +72,12 @@ public class ExamController {
         return "index";
     }
     
+    // Developer page (public access)
+    @GetMapping("/developer")
+    public String developerPage() {
+        return "developer";
+    }
+    
     // Add active session to all pages
     @ModelAttribute
     public void addActiveSession(Model model) {
