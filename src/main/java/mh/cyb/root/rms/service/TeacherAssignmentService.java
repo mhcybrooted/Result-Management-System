@@ -52,4 +52,20 @@ public class TeacherAssignmentService {
                 .map(TeacherAssignment::getSubject)
                 .collect(Collectors.toList());
     }
+    
+    public List<TeacherAssignment> getAllActiveAssignments(Long sessionId) {
+        // Get all assignments and filter by session and active status
+        return teacherAssignmentRepository.findAll().stream()
+                .filter(assignment -> assignment.getSession().getId().equals(sessionId) && assignment.getActive())
+                .collect(Collectors.toList());
+    }
+    
+    @Transactional
+    public void removeAssignment(Long assignmentId) {
+        TeacherAssignment assignment = teacherAssignmentRepository.findById(assignmentId).orElse(null);
+        if (assignment != null) {
+            assignment.setActive(false);
+            teacherAssignmentRepository.save(assignment);
+        }
+    }
 }

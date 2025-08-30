@@ -4,6 +4,7 @@ import mh.cyb.root.rms.dto.Result;
 import mh.cyb.root.rms.entity.*;
 import mh.cyb.root.rms.service.ExamService;
 import mh.cyb.root.rms.service.TeacherService;
+import mh.cyb.root.rms.service.TeacherAssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,9 @@ public class ExamController {
     
     @Autowired
     private TeacherService teacherService;
+    
+    @Autowired
+    private TeacherAssignmentService teacherAssignmentService;
     
     // Public home page
     @GetMapping("/")
@@ -76,6 +80,63 @@ public class ExamController {
     @GetMapping("/developer")
     public String developerPage() {
         return "developer";
+    }
+    
+    // Assign subjects page
+    @GetMapping("/assign-subjects")
+    public String assignSubjects(Model model, @RequestParam(required = false) Long teacherId) {
+        model.addAttribute("teachers", teacherService.getAllActiveTeachers());
+        model.addAttribute("subjects", examService.getAllSubjects());
+        
+        // Get real assignment data from database
+        Optional<Session> activeSession = examService.getActiveSession();
+        if (activeSession.isPresent()) {
+            model.addAttribute("activeSession", activeSession.get());
+            // Get all active assignments for current session
+            model.addAttribute("assignments", teacherAssignmentService.getAllActiveAssignments(activeSession.get().getId()));
+        } else {
+            model.addAttribute("assignments", java.util.Collections.emptyList());
+        }
+        
+        if (teacherId != null) {
+            model.addAttribute("selectedTeacherId", teacherId);
+        }
+        return "assign-subjects";
+    }
+    
+    // Process subject assignment
+    @PostMapping("/assign-subjects")
+    public String processAssignSubjects(@RequestParam Long teacherId, 
+                                      @RequestParam Long subjectId,
+                                      @RequestParam Long sessionId,
+                                      RedirectAttributes redirectAttributes) {
+        try {
+            // Use TeacherAssignmentService to save the assignment
+            teacherAssignmentService.assignSubjectsToTeacher(teacherId, java.util.Arrays.asList(subjectId), sessionId);
+            redirectAttributes.addFlashAttribute("success", "Subject assigned successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to assign subject: " + e.getMessage());
+        }
+        return "redirect:/assign-subjects";
+    }
+    
+    // Edit teacher page
+    @GetMapping("/teachers/edit/{id}")
+    public String editTeacher(@PathVariable Long id, Model model) {
+        // Redirect to add-teacher page with teacher data for editing
+        return "redirect:/add-teacher?id=" + id;
+    }
+    
+    // Remove assignment
+    @PostMapping("/assign-subjects/remove")
+    public String removeAssignment(@RequestParam Long assignmentId, RedirectAttributes redirectAttributes) {
+        try {
+            teacherAssignmentService.removeAssignment(assignmentId);
+            redirectAttributes.addFlashAttribute("success", "Assignment removed successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to remove assignment: " + e.getMessage());
+        }
+        return "redirect:/assign-subjects";
     }
     
     // Add active session to all pages
