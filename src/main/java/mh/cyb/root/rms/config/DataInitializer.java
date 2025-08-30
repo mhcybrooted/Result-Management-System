@@ -2,6 +2,7 @@ package mh.cyb.root.rms.config;
 
 import mh.cyb.root.rms.entity.*;
 import mh.cyb.root.rms.repository.*;
+import mh.cyb.root.rms.service.AdminUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -28,11 +29,22 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private TeacherRepository teacherRepository;
     
+    @Autowired
+    private AdminUserRepository adminUserRepository;
+    
+    @Autowired
+    private AdminUserService adminUserService;
+    
     @Override
     public void run(String... args) throws Exception {
         // Initialize sample data if database is empty
         if (sessionRepository.count() == 0) {
             initializeData();
+        }
+        
+        // Create default admin user if none exists
+        if (adminUserRepository.count() == 0) {
+            createDefaultAdmin();
         }
     }
     
@@ -109,5 +121,15 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("Subjects: Mathematics, English, Science for Class 9 and 10");
         System.out.println("Exams: Midterm Exam, Final Exam, Quiz 1 (for 2024-25 session)");
         System.out.println("Teachers: Dr. Sarah Johnson, Prof. Michael Chen, Ms. Emily Davis, Mr. Robert Wilson");
+    }
+    
+    private void createDefaultAdmin() {
+        // Create default admin user
+        adminUserService.createAdmin("admin", "admin123");
+        
+        System.out.println("Default admin user created:");
+        System.out.println("Username: admin");
+        System.out.println("Password: admin123");
+        System.out.println("Access admin functions at: /admin-login");
     }
 }
