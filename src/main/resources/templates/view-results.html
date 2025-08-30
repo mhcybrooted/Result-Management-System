@@ -494,6 +494,7 @@
                                         <th><i class="fas fa-calculator me-1"></i>Obtained</th>
                                         <th><i class="fas fa-target me-1"></i>Max Marks</th>
                                         <th><i class="fas fa-percentage me-1"></i>Percentage</th>
+                                        <th><i class="fas fa-chalkboard-teacher me-1"></i>Entered By</th>
                                         <th><i class="fas fa-calendar me-1"></i>Date</th>
                                     </tr>
                                 </thead>
@@ -507,6 +508,10 @@
                                         <td th:text="${marks.subject.maxMarks}"></td>
                                         <td>
                                             <strong th:text="${#numbers.formatDecimal(marks.obtainedMarks * 100.0 / marks.subject.maxMarks, 1, 2)} + '%'"></strong>
+                                        </td>
+                                        <td>
+                                            <span th:text="${marks.enteredBy != null ? marks.enteredBy.name : 'Unknown'}" 
+                                                  class="text-muted small"></span>
                                         </td>
                                         <td th:text="${marks.examDate}"></td>
                                     </tr>

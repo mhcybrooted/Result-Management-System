@@ -32,6 +32,9 @@ public class ExamService {
     @Autowired
     private ClassRepository classRepository;
     
+    @Autowired
+    private TeacherRepository teacherRepository;
+    
     // Session management
     public List<Session> getAllSessions() {
         return sessionRepository.findAll();
@@ -104,12 +107,13 @@ public class ExamService {
     }
     
     // Add marks for a student (updated for session support)
-    public boolean addMarks(Long studentId, Long subjectId, Long examId, Integer obtainedMarks) {
+    public boolean addMarks(Long studentId, Long subjectId, Long examId, Integer obtainedMarks, Long teacherId) {
         Optional<Student> student = studentRepository.findById(studentId);
         Optional<Subject> subject = subjectRepository.findById(subjectId);
         Optional<Exam> exam = examRepository.findById(examId);
+        Optional<Teacher> teacher = teacherRepository.findById(teacherId);
         
-        if (student.isPresent() && subject.isPresent() && exam.isPresent()) {
+        if (student.isPresent() && subject.isPresent() && exam.isPresent() && teacher.isPresent()) {
             // Validate marks don't exceed max marks
             if (obtainedMarks > subject.get().getMaxMarks()) {
                 return false;
@@ -124,15 +128,23 @@ public class ExamService {
                 marks = existingMarks.get();
                 marks.setObtainedMarks(obtainedMarks);
                 marks.setExamDate(LocalDate.now());
+                marks.setEnteredBy(teacher.get());
+                marks.setEnteredDate(java.time.LocalDateTime.now());
             } else {
                 // Create new marks entry
                 marks = new Marks(student.get(), subject.get(), exam.get(), obtainedMarks, LocalDate.now());
+                marks.setEnteredBy(teacher.get());
             }
             
             marksRepository.save(marks);
             return true;
         }
         return false;
+    }
+    
+    // Get all active teachers
+    public List<Teacher> getAllActiveTeachers() {
+        return teacherRepository.findByActiveTrue();
     }
     
     // Get result by roll number (active session)

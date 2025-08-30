@@ -25,6 +25,9 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private SessionRepository sessionRepository;
     
+    @Autowired
+    private TeacherRepository teacherRepository;
+    
     @Override
     public void run(String... args) throws Exception {
         // Initialize sample data if database is empty
@@ -88,11 +91,23 @@ public class DataInitializer implements CommandLineRunner {
         examRepository.save(finalExam);
         examRepository.save(quiz1);
         
+        // Create sample teachers
+        Teacher teacher1 = new Teacher("Dr. Sarah Johnson", "sarah.johnson@school.edu", "+1-555-0101");
+        Teacher teacher2 = new Teacher("Prof. Michael Chen", "michael.chen@school.edu", "+1-555-0102");
+        Teacher teacher3 = new Teacher("Ms. Emily Davis", "emily.davis@school.edu", "+1-555-0103");
+        Teacher teacher4 = new Teacher("Mr. Robert Wilson", "robert.wilson@school.edu", "+1-555-0104");
+        
+        teacherRepository.save(teacher1);
+        teacherRepository.save(teacher2);
+        teacherRepository.save(teacher3);
+        teacherRepository.save(teacher4);
+        
         System.out.println("Sample data initialized successfully!");
         System.out.println("Sessions: 2024-25 (Active), 2025-26");
         System.out.println("Classes: Class 9, Class 10, Class 11, Class 12");
         System.out.println("Students: John Doe (101), Jane Smith (102), Mike Johnson (103), Sarah Wilson (201), David Brown (202)");
         System.out.println("Subjects: Mathematics, English, Science for Class 9 and 10");
         System.out.println("Exams: Midterm Exam, Final Exam, Quiz 1 (for 2024-25 session)");
+        System.out.println("Teachers: Dr. Sarah Johnson, Prof. Michael Chen, Ms. Emily Davis, Mr. Robert Wilson");
     }
 }

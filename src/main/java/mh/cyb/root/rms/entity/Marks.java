@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "marks", uniqueConstraints = {
@@ -35,6 +36,13 @@ public class Marks {
     @Column(name = "exam_date")
     private LocalDate examDate;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "entered_by_teacher_id")
+    private Teacher enteredBy;
+    
+    @Column(name = "entered_date")
+    private LocalDateTime enteredDate = LocalDateTime.now();
+    
     // Constructors
     public Marks() {}
     
@@ -44,6 +52,7 @@ public class Marks {
         this.exam = exam;
         this.obtainedMarks = obtainedMarks;
         this.examDate = examDate;
+        this.enteredDate = LocalDateTime.now();
     }
     
     // Getters and Setters
@@ -64,4 +73,10 @@ public class Marks {
     
     public LocalDate getExamDate() { return examDate; }
     public void setExamDate(LocalDate examDate) { this.examDate = examDate; }
+    
+    public Teacher getEnteredBy() { return enteredBy; }
+    public void setEnteredBy(Teacher enteredBy) { this.enteredBy = enteredBy; }
+    
+    public LocalDateTime getEnteredDate() { return enteredDate; }
+    public void setEnteredDate(LocalDateTime enteredDate) { this.enteredDate = enteredDate; }
 }

@@ -175,6 +175,7 @@ public class ExamController {
         }
         
         List<Exam> exams = examService.getAllActiveExams();
+        List<Teacher> teachers = examService.getAllActiveTeachers();
         
         // Get available classes for filter dropdown
         List<String> availableClasses = examService.getAllStudents().stream()
@@ -186,6 +187,7 @@ public class ExamController {
         model.addAttribute("students", students);
         model.addAttribute("subjects", subjects);
         model.addAttribute("exams", exams);
+        model.addAttribute("teachers", teachers);
         model.addAttribute("availableClasses", availableClasses);
         model.addAttribute("selectedClass", classFilter);
         return "add-marks";
@@ -197,15 +199,16 @@ public class ExamController {
                           @RequestParam Long subjectId,
                           @RequestParam Long examId,
                           @RequestParam Integer obtainedMarks,
+                          @RequestParam Long teacherId,
                           RedirectAttributes redirectAttributes) {
         
         // Validate input
-        if (studentId == null || subjectId == null || examId == null || obtainedMarks == null || obtainedMarks < 0) {
+        if (studentId == null || subjectId == null || examId == null || obtainedMarks == null || obtainedMarks < 0 || teacherId == null) {
             redirectAttributes.addFlashAttribute("error", "Please fill all fields with valid values");
             return "redirect:/add-marks";
         }
         
-        boolean success = examService.addMarks(studentId, subjectId, examId, obtainedMarks);
+        boolean success = examService.addMarks(studentId, subjectId, examId, obtainedMarks, teacherId);
         
         if (success) {
             redirectAttributes.addFlashAttribute("success", "Marks added successfully!");
