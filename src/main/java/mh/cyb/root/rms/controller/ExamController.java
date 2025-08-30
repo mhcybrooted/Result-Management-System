@@ -3,6 +3,7 @@ package mh.cyb.root.rms.controller;
 import mh.cyb.root.rms.dto.Result;
 import mh.cyb.root.rms.entity.*;
 import mh.cyb.root.rms.service.ExamService;
+import mh.cyb.root.rms.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,9 @@ public class ExamController {
     @Autowired
     private ExamService examService;
     
+    @Autowired
+    private TeacherService teacherService;
+    
     // Add active session to all pages
     @ModelAttribute
     public void addActiveSession(Model model) {
@@ -32,7 +36,19 @@ public class ExamController {
     
     // Home page
     @GetMapping("/")
-    public String home() {
+    public String home(Model model) {
+        // Get active session
+        Optional<Session> activeSession = examService.getActiveSession();
+        if (activeSession.isPresent()) {
+            model.addAttribute("activeSession", activeSession.get());
+        }
+        
+        // Add statistics
+        model.addAttribute("totalStudents", examService.getAllStudents().size());
+        model.addAttribute("totalTeachers", teacherService.getAllActiveTeachers().size());
+        model.addAttribute("totalSubjects", examService.getAllSubjects().size());
+        model.addAttribute("totalExams", examService.getAllActiveExams().size());
+        
         return "index";
     }
     

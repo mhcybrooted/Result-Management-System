@@ -109,21 +109,10 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">
-                <i class="fas fa-graduation-cap me-2"></i>School Exam System
-            </a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Home</a>
-                <a class="nav-link" href="/sessions"><i class="fas fa-calendar me-1"></i>Sessions</a>
-                <a class="nav-link" href="/exams"><i class="fas fa-clipboard-list me-1"></i>Exams</a>
-                <a class="nav-link" href="/teachers"><i class="fas fa-chalkboard-teacher me-1"></i>Teachers</a>
-                <a class="nav-link" href="/add-marks"><i class="fas fa-plus-circle me-1"></i>Add Marks</a>
-                <a class="nav-link" href="/view-results"><i class="fas fa-chart-bar me-1"></i>Results</a>
-            </div>
-        </div>
-    </nav>
+
+    <!-- Central Navbar -->
+    <div th:replace="navbar :: navbar"></div>
+    <div style="padding-top: 80px;"></div>
 
     <div class="container mt-5">
         <div class="row justify-content-center">

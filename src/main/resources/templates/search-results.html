@@ -342,61 +342,11 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <i class="fas fa-graduation-cap me-2"></i>School Exam System
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav me-auto">
-                    <a class="nav-link" href="/">
-                        <i class="fas fa-home me-1"></i>Home
-                    </a>
-                    <a class="nav-link" href="/sessions">
-                        <i class="fas fa-calendar-alt me-1"></i>Sessions
-                    </a>
-                    <a class="nav-link" href="/students">
-                        <i class="fas fa-user-graduate me-1"></i>Students
-                    </a>
-                    <a class="nav-link" href="/classes">
-                        <i class="fas fa-chalkboard me-1"></i>Classes
-                    </a>
-                    <a class="nav-link" href="/subjects">
-                        <i class="fas fa-book me-1"></i>Subjects
-                    </a>
-                    <a class="nav-link" href="/exams">
-                        <i class="fas fa-clipboard-list me-1"></i>Exams
-                    </a>
-                    <a class="nav-link" href="/add-marks">
-                        <i class="fas fa-plus-circle me-1"></i>Add Marks
-                    </a>
-                    <a class="nav-link active" href="/view-results">
-                        <i class="fas fa-chart-bar me-1"></i>Results
-                    </a>
-                    <a class="nav-link" href="/reports">
-                        <i class="fas fa-file-alt me-1"></i>Reports
-                    </a>
-                </div>
-                
-                <!-- Global Search Bar -->
-                <form class="d-flex search-form" action="/search" method="get">
-                    <input class="form-control me-2" type="search" name="q" 
-                           th:value="${query}" placeholder="Search students..." aria-label="Search" style="width: 200px;">
-                    <button class="btn search-btn" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </nav>
-    
-    <!-- Add padding to body to account for fixed navbar -->
+
+    <!-- Central Navbar -->
+    <div th:replace="navbar :: navbar"></div>
     <div style="padding-top: 80px;"></div>
+    
     
     <!-- Hero Banner -->
     <section class="hero-banner">

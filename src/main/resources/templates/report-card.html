@@ -321,25 +321,11 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark no-print">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">
-                <i class="fas fa-graduation-cap me-2"></i>School Exam System
-            </a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Home</a>
-                <a class="nav-link" href="/sessions"><i class="fas fa-calendar-alt me-1"></i>Sessions</a>
-                <a class="nav-link" href="/students"><i class="fas fa-user-graduate me-1"></i>Students</a>
-                <a class="nav-link" href="/classes"><i class="fas fa-chalkboard me-1"></i>Classes</a>
-                <a class="nav-link" href="/subjects"><i class="fas fa-book me-1"></i>Subjects</a>
-                <a class="nav-link" href="/exams"><i class="fas fa-clipboard-list me-1"></i>Exams</a>
-                <a class="nav-link" href="/add-marks"><i class="fas fa-plus-circle me-1"></i>Add Marks</a>
-                <a class="nav-link" href="/view-results"><i class="fas fa-chart-bar me-1"></i>Results</a>
-                <a class="nav-link active" href="/reports"><i class="fas fa-file-alt me-1"></i>Reports</a>
-            </div>
-        </div>
-    </nav>
-    
+
+    <!-- Central Navbar -->
+    <div th:replace="navbar :: navbar"></div>
+    <div style="padding-top: 80px;"></div>
+
     <!-- Hero Banner -->
     <section class="hero-banner no-print">
         <div class="container">
