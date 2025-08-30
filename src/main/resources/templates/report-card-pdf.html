@@ -54,7 +54,8 @@
         .school-logo {
             width: 60px;
             height: 60px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.9);
+            border: 3px solid rgba(255,255,255,0.8);
             border-radius: 50%;
             margin: 0 auto 15px auto;
             display: flex;
@@ -62,6 +63,8 @@
             justify-content: center;
             font-size: 24px;
             font-weight: bold;
+            color: #2c3e50;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         
         .student-info { 
@@ -279,9 +282,12 @@
     <div class="report-container">
         <!-- Header -->
         <div class="report-header">
-            <div class="school-logo">🎓</div>
-            <h1>SCHOOL REPORT CARD</h1>
-            <h2 th:text="'Academic Session: ' + ${reportCard.session.sessionName}"></h2>
+            <div class="school-logo">
+                <img src="/images/school-logo.png" alt="School Logo" />
+            </div>
+            <h1>Ramgoti Rabbania Fazil Madrasah</h1>
+            <h2>REPORT CARD</h2>
+            <h3 th:text="'Academic Session: ' + ${reportCard.session.sessionName}"></h3>
             <div class="report-id" th:text="'Report ID: RC-' + ${reportCard.student.rollNumber} + '-' + ${#temporals.format(reportCard.reportDate, 'yyyyMMdd')}"></div>
         </div>
         
