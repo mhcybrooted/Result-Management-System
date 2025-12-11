@@ -35,6 +35,9 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private AdminUserService adminUserService;
 
+    @Autowired
+    private MarksRepository marksRepository;
+
     @Override
     public void run(String... args) throws Exception {
         // Initialize sample data if database is empty
@@ -74,26 +77,38 @@ public class DataInitializer implements CommandLineRunner {
         // Create sample students for active session
         Student student1 = new Student("John Doe", "101", "Class 10", session2024);
         Student student2 = new Student("Jane Smith", "102", "Class 10", session2024);
-        Student student3 = new Student("Mike Johnson", "103", "Class 10", session2024);
+        Student student3 = new Student("Mike Johnson", "103", "Class 10", session2024); // To verify Fail Logic
         Student student4 = new Student("Sarah Wilson", "201", "Class 9", session2024);
         Student student5 = new Student("David Brown", "202", "Class 9", session2024);
+        Student student6 = new Student("Emily Optional-Fail", "104", "Class 10", session2024); // To verify Optional
+                                                                                               // Fail
 
         studentRepository.save(student1);
         studentRepository.save(student2);
         studentRepository.save(student3);
         studentRepository.save(student4);
         studentRepository.save(student5);
+        studentRepository.save(student6);
 
         // Create sample subjects
         Subject math10 = new Subject("Mathematics", class10, 100);
+        math10.setOptional(false);
         Subject english10 = new Subject("English", class10, 100);
+        english10.setOptional(false);
         Subject science10 = new Subject("Science", class10, 100);
+        science10.setOptional(false);
+
+        // Optional Subject
+        Subject compSci10 = new Subject("Computer Science", class10, 100);
+        compSci10.setOptional(true);
+
         Subject math9 = new Subject("Mathematics", class9, 100);
         Subject english9 = new Subject("English", class9, 100);
 
         subjectRepository.save(math10);
         subjectRepository.save(english10);
         subjectRepository.save(science10);
+        subjectRepository.save(compSci10);
         subjectRepository.save(math9);
         subjectRepository.save(english9);
 
@@ -105,6 +120,31 @@ public class DataInitializer implements CommandLineRunner {
         examRepository.save(midterm);
         examRepository.save(finalExam);
         examRepository.save(quiz1);
+
+        // --- Marks Initialization ---
+
+        // 1. John Doe (Excellent Performance - Golden A+ Candidate)
+        marksRepository.save(new Marks(student1, math10, finalExam, 95, LocalDate.now()));
+        marksRepository.save(new Marks(student1, english10, finalExam, 92, LocalDate.now()));
+        marksRepository.save(new Marks(student1, science10, finalExam, 98, LocalDate.now()));
+        marksRepository.save(new Marks(student1, compSci10, finalExam, 90, LocalDate.now())); // Optional A+
+
+        // 2. Jane Smith (Average Performance)
+        marksRepository.save(new Marks(student2, math10, finalExam, 65, LocalDate.now()));
+        marksRepository.save(new Marks(student2, english10, finalExam, 70, LocalDate.now()));
+        marksRepository.save(new Marks(student2, science10, finalExam, 60, LocalDate.now()));
+        // No optional subject for Jane
+
+        // 3. Mike Johnson (Fail Scenario - Compulsory Fail)
+        marksRepository.save(new Marks(student3, math10, finalExam, 25, LocalDate.now())); // F
+        marksRepository.save(new Marks(student3, english10, finalExam, 60, LocalDate.now()));
+        marksRepository.save(new Marks(student3, science10, finalExam, 65, LocalDate.now()));
+
+        // 4. Emily Optional-Fail (Optional Fail -> Pass Scenario)
+        marksRepository.save(new Marks(student6, math10, finalExam, 60, LocalDate.now()));
+        marksRepository.save(new Marks(student6, english10, finalExam, 65, LocalDate.now()));
+        marksRepository.save(new Marks(student6, science10, finalExam, 70, LocalDate.now()));
+        marksRepository.save(new Marks(student6, compSci10, finalExam, 20, LocalDate.now())); // F (Ignored)
 
         // Create sample teachers
         Teacher teacher1 = new Teacher("Dr. Sarah Johnson", "sarah.johnson@school.edu", "+1-555-0101");
@@ -121,10 +161,9 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("Sessions: 2024-25 (Active), 2025-26");
         System.out.println("Classes: Class 9, Class 10, Class 11, Class 12");
         System.out.println(
-                "Students: John Doe (101), Jane Smith (102), Mike Johnson (103), Sarah Wilson (201), David Brown (202)");
-        System.out.println("Subjects: Mathematics, English, Science for Class 9 and 10");
-        System.out.println("Exams: Midterm Exam, Final Exam, Quiz 1 (for 2024-25 session)");
-        System.out.println("Teachers: Dr. Sarah Johnson, Prof. Michael Chen, Ms. Emily Davis, Mr. Robert Wilson");
+                "Students: John Doe (101), Jane Smith (102), Mike Johnson (103), Sarah Wilson (201), David Brown (202), Emily (104)");
+        System.out.println("Subjects: Math, English, Science (Compulsory), Comp Sci (Optional)");
+        System.out.println("Marks initialized for various scenarios (Best, Avg, Fail, Opt-Fail)");
     }
 
     private void createDefaultAdmin() {

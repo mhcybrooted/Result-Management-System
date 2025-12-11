@@ -8,352 +8,207 @@
     <style>
         @page {
             size: A4;
-            margin: 15mm;
+            margin: 20mm;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 11px;
-            line-height: 1.5;
-            color: #2c3e50;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #000000;
             background: #ffffff;
         }
 
         .report-container {
-            border: 3px solid #3498db;
-            border-radius: 8px;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #000000;
+            padding: 30px;
+            height: 95%;
+            position: relative;
         }
 
-        .report-header {
+        .header-section {
             text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 15px;
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            color: white;
-            margin: -20px -20px 25px -20px;
-            padding: 25px 20px 15px 20px;
-            border-radius: 5px 5px 0 0;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 20px;
         }
 
-        .report-header h1 {
-            font-size: 28px;
-            margin: 0 0 8px 0;
-            font-weight: 700;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        .school-name {
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
             letter-spacing: 1px;
         }
 
-        .report-header h2 {
-            font-size: 16px;
-            margin: 0;
-            font-weight: 400;
-            opacity: 0.95;
+        .school-address {
+            font-size: 14px;
+            margin-bottom: 15px;
         }
 
-        .school-logo {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 3px solid rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            margin: 0 auto 15px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
+        .report-title {
+            font-size: 18px;
             font-weight: bold;
-            color: #2c3e50;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
+            text-decoration: underline;
+            margin-top: 15px;
+            text-transform: uppercase;
         }
 
-        .student-info {
-            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
-            padding: 18px;
-            margin-bottom: 25px;
-            border: 2px solid #95a5a6;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .student-details {
+            margin-bottom: 30px;
+            width: 100%;
         }
 
-        .student-info table {
+        .student-details table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .student-info td {
-            padding: 8px 12px;
-            font-weight: 600;
-            color: #2c3e50;
-            border-right: 1px solid #95a5a6;
+        .student-details td {
+            padding: 5px;
+            font-size: 14px;
         }
 
-        .student-info td:last-child {
-            border-right: none;
-        }
-
-        .student-info .label {
-            color: #3498db;
-            font-weight: 700;
+        .label {
+            font-weight: bold;
+            width: 150px;
         }
 
         .marks-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
+            margin-bottom: 30px;
         }
 
         .marks-table th,
         .marks-table td {
-            border: 1px solid #bdc3c7;
-            padding: 12px 8px;
+            border: 1px solid #000000;
+            padding: 8px;
             text-align: center;
         }
 
         .marks-table th {
-            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
-            color: white;
-            font-weight: 700;
-            font-size: 12px;
+            background-color: #f0f0f0;
+            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .marks-table td:first-child {
             text-align: left;
-            font-weight: 700;
-            background: #f8f9fa;
-            color: #2c3e50;
+            font-weight: bold;
         }
 
-        .marks-table tbody tr:nth-child(even) {
-            background: #f8f9fa;
+        .summary-section {
+            margin-top: 30px;
+            border: 1px solid #000000;
+            padding: 15px;
         }
 
-        .marks-table tbody tr:hover {
-            background: #e8f4fd;
-        }
-
-        .grade-cell {
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-        .grade-a {
-            color: #27ae60;
-        }
-
-        .grade-b {
-            color: #3498db;
-        }
-
-        .grade-c {
-            color: #f39c12;
-        }
-
-        .grade-d {
-            color: #95a5a6;
-        }
-
-        .grade-f {
-            color: #e74c3c;
-        }
-
-        .overall-summary {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 25px;
-            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
-        }
-
-        .overall-summary table {
+        .summary-table {
             width: 100%;
-            border-collapse: collapse;
-        }
-
-        .overall-summary td {
             text-align: center;
-            padding: 15px 10px;
-            font-weight: 600;
-            border-right: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .overall-summary td:last-child {
-            border-right: none;
+        .summary-table td {
+            padding: 10px;
+            font-size: 14px;
         }
 
         .summary-label {
-            font-size: 11px;
-            opacity: 0.9;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: bold;
+            display: block;
             margin-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 10px;
         }
 
         .summary-value {
-            font-size: 20px;
-            font-weight: 700;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            font-weight: bold;
         }
 
-        .result-pass {
-            color: #2ecc71;
-            text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
-        }
-
-        .result-fail {
-            color: #e74c3c;
-            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
-        }
-
-        .footer {
-            margin-top: 35px;
+        .footer-section {
+            margin-top: 50px;
             display: flex;
             justify-content: space-between;
-            align-items: end;
-            border-top: 2px solid #ecf0f1;
-            padding-top: 20px;
+            align-items: flex-end;
         }
 
-        .grade-scale {
-            font-size: 10px;
-            flex: 1;
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #dee2e6;
-        }
-
-        .grade-scale-title {
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 8px;
-            font-size: 11px;
-        }
-
-        .grade-item {
-            display: inline-block;
-            margin: 2px 4px;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 9px;
-        }
-
-        .grade-item.a {
-            background: #d5f4e6;
-            color: #27ae60;
-        }
-
-        .grade-item.b {
-            background: #d6eaf8;
-            color: #3498db;
-        }
-
-        .grade-item.c {
-            background: #fdeaa7;
-            color: #f39c12;
-        }
-
-        .grade-item.d {
-            background: #f4f6f7;
-            color: #95a5a6;
-        }
-
-        .grade-item.f {
-            background: #fadbd8;
-            color: #e74c3c;
-        }
-
-        .signature {
+        .signature-box {
             text-align: center;
-            flex: 1;
-            margin-left: 30px;
         }
 
         .signature-line {
-            border-bottom: 2px solid #2c3e50;
-            width: 180px;
-            margin: 0 auto 8px auto;
-            height: 40px;
-        }
-
-        .signature-text {
-            font-weight: 700;
-            color: #2c3e50;
-            font-size: 11px;
+            width: 200px;
+            border-top: 1px solid #000000;
+            margin-bottom: 5px;
         }
 
         .watermark {
-            position: fixed;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 120px;
-            color: rgba(52, 152, 219, 0.05);
-            font-weight: 900;
+            font-size: 100px;
+            color: rgba(0, 0, 0, 0.05);
+            font-weight: bold;
             z-index: -1;
-            pointer-events: none;
+            white-space: nowrap;
         }
 
-        .report-id {
+        .system-footer {
             position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 8px;
-            color: rgba(255, 255, 255, 0.7);
+            bottom: 10px;
+            left: 30px;
+            right: 30px;
+            text-align: center;
+            font-size: 9px;
+            font-style: italic;
+            border-top: 1px solid #cccccc;
+            padding-top: 5px;
         }
     </style>
 </head>
 
 <body>
-
-    <!-- Central Navbar -->
-
-    <div style="padding-top: 20px;"></div>
-    <div class="watermark">OFFICIAL</div>
-
     <div class="report-container">
-        <!-- Header -->
-        <div class="report-header">
-            <div class="school-logo">SCHOOL</div>
-            <h1>Ramgoti Rabbania Fazil Madrasah</h1>
-            <h2>REPORT CARD</h2>
-            <h3 th:text="'Academic Session: ' + ${reportCard.session.sessionName}"></h3>
-            <div class="report-id"
-                th:text="'Report ID: RC-' + ${reportCard.student.rollNumber} + '-' + ${#temporals.format(reportCard.reportDate, 'yyyyMMdd')}">
+        <div class="watermark" th:text="${schoolName}"></div>
+
+        <div class="header-section">
+            <div class="school-name" th:text="${schoolName}">SCHOOL NAME</div>
+            <div class="school-address" th:text="${schoolAddress}">Address</div>
+            <div class="report-title" th:text="${reportTitle}">ACADEMIC TRANSCRIPT</div>
+            <div style="margin-top: 10px; font-size: 12px;">
+                Session: <span th:text="${reportCard.session.sessionName}"></span>
             </div>
         </div>
 
-        <!-- Student Information -->
-        <div class="student-info">
+        <div class="student-details">
             <table>
                 <tr>
-                    <td><span class="label">Student Name:</span> <span th:text="${reportCard.student.name}"></span></td>
-                    <td><span class="label">Roll Number:</span> <span th:text="${reportCard.student.rollNumber}"></span>
-                    </td>
-                    <td><span class="label">Class:</span> <span th:text="${reportCard.student.className}"></span></td>
+                    <td class="label">Student Name:</td>
+                    <td th:text="${reportCard.student.name}"></td>
+                    <td class="label">Roll Number:</td>
+                    <td th:text="${reportCard.student.rollNumber}"></td>
+                </tr>
+                <tr>
+                    <td class="label">Class:</td>
+                    <td th:text="${reportCard.student.className}"></td>
+                    <td class="label">Date:</td>
+                    <td th:text="${#temporals.format(reportCard.reportDate, 'dd-MM-yyyy')}"></td>
                 </tr>
             </table>
         </div>
 
-        <!-- Marks Table -->
         <table class="marks-table">
             <thead>
                 <tr>
-                    <th>📚 Subject</th>
+                    <th>Subject</th>
                     <th th:each="examName : ${reportCard.subjects[0].examMarks.keySet()}" th:text="${examName}"></th>
-                    <th>📊 Total</th>
-                    <th>📈 Percentage</th>
-                    <th>🏆 Grade</th>
+                    <th>Total</th>
+                    <th>%</th>
+                    <th>Grade</th>
+                    <th>GP</th>
                 </tr>
             </thead>
             <tbody>
@@ -362,56 +217,60 @@
                     <td th:each="examName : ${subject.examMarks.keySet()}" th:text="${subject.examMarks.get(examName)}">
                     </td>
                     <td th:text="${subject.totalObtained} + '/' + ${subject.totalMaximum}"></td>
-                    <td th:text="${subject.percentage} + '%'"></td>
-                    <td class="grade-cell" th:text="${subject.grade}" th:classappend="${subject.grade == 'A+' or subject.grade == 'A'} ? 'grade-a' : 
-                                       (${subject.grade == 'B'} ? 'grade-b' : 
-                                       (${subject.grade == 'C'} ? 'grade-c' : 
-                                       (${subject.grade == 'D'} ? 'grade-d' : 'grade-f')))"></td>
+                    <td th:text="${subject.percentage}"></td>
+                    <td th:text="${subject.grade}"></td>
+                    <td th:text="${subject.gradePoint}"></td>
                 </tr>
             </tbody>
         </table>
 
-        <!-- Overall Summary -->
-        <div class="overall-summary">
-            <table>
+        <div class="summary-section">
+            <table class="summary-table">
                 <tr>
                     <td>
-                        <div class="summary-label">📊 Overall Percentage</div>
-                        <div class="summary-value" th:text="${reportCard.overallPercentage} + '%'"></div>
+                        <span class="summary-label">Percentage</span>
+                        <span class="summary-value" th:text="${reportCard.overallPercentage} + '%'"></span>
                     </td>
                     <td>
-                        <div class="summary-label">🏆 Overall Grade</div>
-                        <div class="summary-value" th:text="${reportCard.overallGrade}"></div>
+                        <span class="summary-label">GPA</span>
+                        <span class="summary-value" th:text="${reportCard.gpa}"></span>
                     </td>
                     <td>
-                        <div class="summary-label">✅ Result</div>
-                        <div class="summary-value" th:text="${reportCard.result}"
-                            th:classappend="${reportCard.result == 'PASS'} ? 'result-pass' : 'result-fail'"></div>
+                        <span class="summary-label">Grade</span>
+                        <span class="summary-value" th:text="${reportCard.overallGrade}"></span>
                     </td>
                     <td>
-                        <div class="summary-label">📅 Report Date</div>
-                        <div class="summary-value" style="font-size: 16px;"
-                            th:text="${#temporals.format(reportCard.reportDate, 'dd-MM-yyyy')}"></div>
+                        <span class="summary-label">Result</span>
+                        <span class="summary-value" th:text="${reportCard.result}"></span>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            <div class="grade-scale">
-                <div class="grade-scale-title">📋 Grade Scale:</div>
-                <span class="grade-item a">A+ (90%+)</span>
-                <span class="grade-item a">A (85-89%)</span>
-                <span class="grade-item b">B (75-84%)</span>
-                <span class="grade-item c">C (60-74%)</span>
-                <span class="grade-item d">D (40-59%)</span>
-                <span class="grade-item f">F (Below 40%)</span>
+        <div class="footer-section" style="flex-direction: column; align-items: flex-start;">
+            <div style="margin-bottom: 20px; width: 100%;">
+                <div style="font-weight: bold; margin-bottom: 5px; font-size: 10px;">GRADE SCALE:</div>
+                <div style="font-size: 9px;">
+                    <span th:each="entry : ${gradeLegend}" style="margin-right: 10px; display: inline-block;">
+                        <span th:text="${entry.key} + ': ' + ${entry.value}"></span>
+                    </span>
+                </div>
             </div>
-            <div class="signature">
-                <div class="signature-line"></div>
-                <div class="signature-text">✍️ Class Teacher Signature</div>
+
+            <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 20px;">
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <div>Principal's Signature</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <div>Class Teacher's Signature</div>
+                </div>
             </div>
+        </div>
+
+        <div class="system-footer">
+            This is a computer-generated document. System developed by RMS.
         </div>
     </div>
 </body>
