@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Report Card PDF</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <style>
-        @page { 
-            size: A4; 
-            margin: 15mm; 
+        @page {
+            size: A4;
+            margin: 15mm;
         }
-        
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            font-size: 11px; 
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11px;
             line-height: 1.5;
             color: #2c3e50;
             background: #ffffff;
         }
-        
+
         .report-container {
             border: 3px solid #3498db;
             border-radius: 8px;
             padding: 20px;
             background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
         }
-        
-        .report-header { 
-            text-align: center; 
-            margin-bottom: 25px; 
+
+        .report-header {
+            text-align: center;
+            margin-bottom: 25px;
             border-bottom: 3px solid #3498db;
             padding-bottom: 15px;
             background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
@@ -36,27 +37,27 @@
             padding: 25px 20px 15px 20px;
             border-radius: 5px 5px 0 0;
         }
-        
-        .report-header h1 { 
-            font-size: 28px; 
-            margin: 0 0 8px 0; 
+
+        .report-header h1 {
+            font-size: 28px;
+            margin: 0 0 8px 0;
             font-weight: 700;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
             letter-spacing: 1px;
         }
-        
-        .report-header h2 { 
-            font-size: 16px; 
-            margin: 0; 
+
+        .report-header h2 {
+            font-size: 16px;
+            margin: 0;
             font-weight: 400;
             opacity: 0.95;
         }
-        
+
         .school-logo {
             width: 60px;
             height: 60px;
-            background: rgba(255,255,255,0.9);
-            border: 3px solid rgba(255,255,255,0.8);
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid rgba(255, 255, 255, 0.8);
             border-radius: 50%;
             margin: 0 auto 15px auto;
             display: flex;
@@ -65,56 +66,57 @@
             font-size: 10px;
             font-weight: bold;
             color: #2c3e50;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
-        
-        .student-info { 
+
+        .student-info {
             background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
-            padding: 18px; 
-            margin-bottom: 25px; 
+            padding: 18px;
+            margin-bottom: 25px;
             border: 2px solid #95a5a6;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
+
         .student-info table {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         .student-info td {
             padding: 8px 12px;
             font-weight: 600;
             color: #2c3e50;
             border-right: 1px solid #95a5a6;
         }
-        
+
         .student-info td:last-child {
             border-right: none;
         }
-        
+
         .student-info .label {
             color: #3498db;
             font-weight: 700;
         }
-        
-        .marks-table { 
-            width: 100%; 
-            border-collapse: collapse; 
+
+        .marks-table {
+            width: 100%;
+            border-collapse: collapse;
             margin-bottom: 25px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
         }
-        
-        .marks-table th, .marks-table td { 
-            border: 1px solid #bdc3c7; 
-            padding: 12px 8px; 
+
+        .marks-table th,
+        .marks-table td {
+            border: 1px solid #bdc3c7;
+            padding: 12px 8px;
             text-align: center;
         }
-        
-        .marks-table th { 
+
+        .marks-table th {
             background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
             color: white;
             font-weight: 700;
@@ -122,58 +124,72 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        
+
         .marks-table td:first-child {
             text-align: left;
             font-weight: 700;
             background: #f8f9fa;
             color: #2c3e50;
         }
-        
+
         .marks-table tbody tr:nth-child(even) {
             background: #f8f9fa;
         }
-        
+
         .marks-table tbody tr:hover {
             background: #e8f4fd;
         }
-        
+
         .grade-cell {
             font-weight: 700;
             font-size: 13px;
         }
-        
-        .grade-a { color: #27ae60; }
-        .grade-b { color: #3498db; }
-        .grade-c { color: #f39c12; }
-        .grade-d { color: #95a5a6; }
-        .grade-f { color: #e74c3c; }
-        
-        .overall-summary { 
+
+        .grade-a {
+            color: #27ae60;
+        }
+
+        .grade-b {
+            color: #3498db;
+        }
+
+        .grade-c {
+            color: #f39c12;
+        }
+
+        .grade-d {
+            color: #95a5a6;
+        }
+
+        .grade-f {
+            color: #e74c3c;
+        }
+
+        .overall-summary {
             background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: white;
-            padding: 20px; 
+            padding: 20px;
             border-radius: 8px;
             margin-top: 25px;
             box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
         }
-        
+
         .overall-summary table {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         .overall-summary td {
             text-align: center;
             padding: 15px 10px;
             font-weight: 600;
-            border-right: 1px solid rgba(255,255,255,0.3);
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
         }
-        
+
         .overall-summary td:last-child {
             border-right: none;
         }
-        
+
         .summary-label {
             font-size: 11px;
             opacity: 0.9;
@@ -181,32 +197,32 @@
             letter-spacing: 0.5px;
             margin-bottom: 5px;
         }
-        
+
         .summary-value {
             font-size: 20px;
             font-weight: 700;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
-        
+
         .result-pass {
             color: #2ecc71;
             text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
         }
-        
+
         .result-fail {
             color: #e74c3c;
             text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
         }
-        
-        .footer { 
-            margin-top: 35px; 
+
+        .footer {
+            margin-top: 35px;
             display: flex;
             justify-content: space-between;
             align-items: end;
             border-top: 2px solid #ecf0f1;
             padding-top: 20px;
         }
-        
+
         .grade-scale {
             font-size: 10px;
             flex: 1;
@@ -215,14 +231,14 @@
             border-radius: 6px;
             border: 1px solid #dee2e6;
         }
-        
+
         .grade-scale-title {
             font-weight: 700;
             color: #2c3e50;
             margin-bottom: 8px;
             font-size: 11px;
         }
-        
+
         .grade-item {
             display: inline-block;
             margin: 2px 4px;
@@ -231,32 +247,51 @@
             font-weight: 600;
             font-size: 9px;
         }
-        
-        .grade-item.a { background: #d5f4e6; color: #27ae60; }
-        .grade-item.b { background: #d6eaf8; color: #3498db; }
-        .grade-item.c { background: #fdeaa7; color: #f39c12; }
-        .grade-item.d { background: #f4f6f7; color: #95a5a6; }
-        .grade-item.f { background: #fadbd8; color: #e74c3c; }
-        
+
+        .grade-item.a {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .grade-item.b {
+            background: #d6eaf8;
+            color: #3498db;
+        }
+
+        .grade-item.c {
+            background: #fdeaa7;
+            color: #f39c12;
+        }
+
+        .grade-item.d {
+            background: #f4f6f7;
+            color: #95a5a6;
+        }
+
+        .grade-item.f {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
         .signature {
             text-align: center;
             flex: 1;
             margin-left: 30px;
         }
-        
+
         .signature-line {
             border-bottom: 2px solid #2c3e50;
             width: 180px;
             margin: 0 auto 8px auto;
             height: 40px;
         }
-        
+
         .signature-text {
             font-weight: 700;
             color: #2c3e50;
             font-size: 11px;
         }
-        
+
         .watermark {
             position: fixed;
             top: 50%;
@@ -268,23 +303,24 @@
             z-index: -1;
             pointer-events: none;
         }
-        
+
         .report-id {
             position: absolute;
             top: 10px;
             right: 15px;
             font-size: 8px;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
         }
     </style>
 </head>
+
 <body>
 
     <!-- Central Navbar -->
-    <div th:replace="navbar :: navbar"></div>
-    <div style="padding-top: 80px;"></div>
+
+    <div style="padding-top: 20px;"></div>
     <div class="watermark">OFFICIAL</div>
-    
+
     <div class="report-container">
         <!-- Header -->
         <div class="report-header">
@@ -292,20 +328,23 @@
             <h1>Ramgoti Rabbania Fazil Madrasah</h1>
             <h2>REPORT CARD</h2>
             <h3 th:text="'Academic Session: ' + ${reportCard.session.sessionName}"></h3>
-            <div class="report-id" th:text="'Report ID: RC-' + ${reportCard.student.rollNumber} + '-' + ${#temporals.format(reportCard.reportDate, 'yyyyMMdd')}"></div>
+            <div class="report-id"
+                th:text="'Report ID: RC-' + ${reportCard.student.rollNumber} + '-' + ${#temporals.format(reportCard.reportDate, 'yyyyMMdd')}">
+            </div>
         </div>
-        
+
         <!-- Student Information -->
         <div class="student-info">
             <table>
                 <tr>
                     <td><span class="label">Student Name:</span> <span th:text="${reportCard.student.name}"></span></td>
-                    <td><span class="label">Roll Number:</span> <span th:text="${reportCard.student.rollNumber}"></span></td>
+                    <td><span class="label">Roll Number:</span> <span th:text="${reportCard.student.rollNumber}"></span>
+                    </td>
                     <td><span class="label">Class:</span> <span th:text="${reportCard.student.className}"></span></td>
                 </tr>
             </table>
         </div>
-        
+
         <!-- Marks Table -->
         <table class="marks-table">
             <thead>
@@ -320,19 +359,18 @@
             <tbody>
                 <tr th:each="subject : ${reportCard.subjects}">
                     <td th:text="${subject.subjectName}"></td>
-                    <td th:each="examName : ${subject.examMarks.keySet()}" th:text="${subject.examMarks.get(examName)}"></td>
+                    <td th:each="examName : ${subject.examMarks.keySet()}" th:text="${subject.examMarks.get(examName)}">
+                    </td>
                     <td th:text="${subject.totalObtained} + '/' + ${subject.totalMaximum}"></td>
                     <td th:text="${subject.percentage} + '%'"></td>
-                    <td class="grade-cell" 
-                        th:text="${subject.grade}"
-                        th:classappend="${subject.grade == 'A+' or subject.grade == 'A'} ? 'grade-a' : 
+                    <td class="grade-cell" th:text="${subject.grade}" th:classappend="${subject.grade == 'A+' or subject.grade == 'A'} ? 'grade-a' : 
                                        (${subject.grade == 'B'} ? 'grade-b' : 
                                        (${subject.grade == 'C'} ? 'grade-c' : 
                                        (${subject.grade == 'D'} ? 'grade-d' : 'grade-f')))"></td>
                 </tr>
             </tbody>
         </table>
-        
+
         <!-- Overall Summary -->
         <div class="overall-summary">
             <table>
@@ -347,18 +385,18 @@
                     </td>
                     <td>
                         <div class="summary-label">✅ Result</div>
-                        <div class="summary-value" 
-                             th:text="${reportCard.result}"
-                             th:classappend="${reportCard.result == 'PASS'} ? 'result-pass' : 'result-fail'"></div>
+                        <div class="summary-value" th:text="${reportCard.result}"
+                            th:classappend="${reportCard.result == 'PASS'} ? 'result-pass' : 'result-fail'"></div>
                     </td>
                     <td>
                         <div class="summary-label">📅 Report Date</div>
-                        <div class="summary-value" style="font-size: 16px;" th:text="${#temporals.format(reportCard.reportDate, 'dd-MM-yyyy')}"></div>
+                        <div class="summary-value" style="font-size: 16px;"
+                            th:text="${#temporals.format(reportCard.reportDate, 'dd-MM-yyyy')}"></div>
                     </td>
                 </tr>
             </table>
         </div>
-        
+
         <!-- Footer -->
         <div class="footer">
             <div class="grade-scale">
@@ -377,4 +415,5 @@
         </div>
     </div>
 </body>
+
 </html>

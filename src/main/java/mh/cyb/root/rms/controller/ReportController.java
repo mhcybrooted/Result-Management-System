@@ -19,13 +19,13 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/reports")
 public class ReportController {
-    
+
     @Autowired
     private ReportService reportService;
-    
+
     @Autowired
     private ExamService examService;
-    
+
     // Add active session to all pages
     @ModelAttribute
     public void addActiveSession(Model model) {
@@ -35,36 +35,36 @@ public class ReportController {
         }
         model.addAttribute("allSessions", examService.getAllSessions());
     }
-    
+
     // Reports home page
     @GetMapping
     public String reportsHome(Model model) {
         List<Student> students = examService.getAllStudents();
-        
+
         // Get available classes from students
         List<String> availableClasses = students.stream()
                 .map(Student::getClassName)
                 .distinct()
                 .collect(java.util.stream.Collectors.toList());
-        
+
         // Add managed classes that don't already exist
         List<mh.cyb.root.rms.entity.Class> managedClasses = examService.getAllActiveClasses();
         managedClasses.stream()
                 .map(mh.cyb.root.rms.entity.Class::getClassName)
                 .filter(className -> !availableClasses.contains(className))
                 .forEach(availableClasses::add);
-        
+
         // Sort the final list and ensure no duplicates
         List<String> finalClasses = availableClasses.stream()
                 .distinct()
                 .sorted()
                 .collect(java.util.stream.Collectors.toList());
-        
+
         model.addAttribute("students", students);
         model.addAttribute("availableClasses", finalClasses);
         return "reports";
     }
-    
+
     // View individual report card
     @GetMapping("/{studentId}")
     public String viewReportCard(@PathVariable Long studentId, Model model) {
@@ -73,9 +73,9 @@ public class ReportController {
             model.addAttribute("error", "No active session found");
             return "reports";
         }
-        
+
         Optional<ReportCardData> reportCard = reportService.generateReportCard(studentId, activeSession.get().getId());
-        
+
         if (reportCard.isPresent()) {
             model.addAttribute("reportCard", reportCard.get());
             return "report-card";
@@ -84,7 +84,7 @@ public class ReportController {
             return "reports";
         }
     }
-    
+
     // Download PDF report card
     @GetMapping("/{studentId}/pdf")
     public ResponseEntity<byte[]> downloadReportCardPDF(@PathVariable Long studentId) {
@@ -92,24 +92,24 @@ public class ReportController {
         if (!activeSession.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
-        
+
         Optional<ReportCardData> reportCard = reportService.generateReportCard(studentId, activeSession.get().getId());
-        
+
         if (reportCard.isPresent()) {
             byte[] pdfBytes = reportService.generatePDF(reportCard.get());
-            
-            String filename = reportCard.get().getStudent().getName().toLowerCase().replace(" ", "-") 
-                            + "-report-" + activeSession.get().getSessionName() + ".pdf";
-            
+
+            String filename = reportCard.get().getStudent().getName().toLowerCase().replace(" ", "-")
+                    + "-report-" + activeSession.get().getSessionName() + ".pdf";
+
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(pdfBytes);
         }
-        
+
         return ResponseEntity.notFound().build();
     }
-    
+
     // Class reports page
     @GetMapping("/class/{className}")
     public String viewClassReports(@PathVariable String className, Model model) {
@@ -118,9 +118,9 @@ public class ReportController {
             model.addAttribute("error", "No active session found");
             return "reports";
         }
-        
+
         List<ReportCardData> classReports = reportService.generateClassReports(className, activeSession.get().getId());
-        
+
         model.addAttribute("classReports", classReports);
         model.addAttribute("className", className);
         return "class-reports";
