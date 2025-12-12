@@ -38,15 +38,27 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private MarksRepository marksRepository;
 
+    @org.springframework.beans.factory.annotation.Value("${admin.default.username}")
+    private String defaultAdminUsername;
+
+    @org.springframework.beans.factory.annotation.Value("${admin.default.password}")
+    private String defaultAdminPassword;
+
+    @org.springframework.beans.factory.annotation.Value("${admin.default.enabled}")
+    private boolean adminCreationEnabled;
+
+    @org.springframework.beans.factory.annotation.Value("${app.initialize.sample.data}")
+    private boolean initializeSampleData;
+
     @Override
     public void run(String... args) throws Exception {
-        // Initialize sample data if database is empty
-        if (sessionRepository.count() == 0) {
+        // Initialize sample data if database is empty and enabled
+        if (sessionRepository.count() == 0 && initializeSampleData) {
             initializeData();
         }
 
-        // Create default admin user if none exists
-        if (adminUserRepository.count() == 0) {
+        // Create default admin user if none exists and enabled
+        if (adminUserRepository.count() == 0 && adminCreationEnabled) {
             createDefaultAdmin();
         }
     }
@@ -167,12 +179,12 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void createDefaultAdmin() {
-        // Create default admin user
-        adminUserService.createAdmin("admin", "admin123");
+        // Create default admin user from configuration
+        adminUserService.createAdmin(defaultAdminUsername, defaultAdminPassword);
 
         System.out.println("Default admin user created:");
-        System.out.println("Username: admin");
-        System.out.println("Password: admin123");
+        System.out.println("Username: " + defaultAdminUsername);
+        System.out.println("Password: " + defaultAdminPassword);
         System.out.println("Access admin functions at: /admin-login");
     }
 }

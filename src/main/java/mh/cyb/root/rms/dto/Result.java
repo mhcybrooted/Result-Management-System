@@ -176,23 +176,47 @@ public class Result {
         return totalObtained;
     }
 
+    public void setTotalObtained(double totalObtained) {
+        this.totalObtained = totalObtained;
+    }
+
     public double getTotalMax() {
         return totalMax;
+    }
+
+    public void setTotalMax(double totalMax) {
+        this.totalMax = totalMax;
     }
 
     public double getPercentage() {
         return Math.round(percentage * 100.0) / 100.0;
     }
 
+    public void setPercentage(double percentage) {
+        this.percentage = percentage;
+    }
+
     public String getGrade() {
         return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 
     public double getGpa() {
         return gpa;
     }
 
+    public void setGpa(double gpa) {
+        this.gpa = gpa;
+    }
+
     public String getResult() {
         return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 }
