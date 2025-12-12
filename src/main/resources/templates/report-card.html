@@ -313,30 +313,216 @@
             margin: 30px auto 10px;
         }
 
+
         @media print {
+            @page {
+                size: A4;
+                margin: 20mm;
+            }
+
             .no-print {
                 display: none !important;
             }
 
             body {
                 background: white !important;
-                color: black !important;
+                color: #000000 !important;
+                font-family: 'Times New Roman', Times, serif !important;
+                font-size: 12px !important;
+            }
+
+            /* Remove all gradients and decorations */
+            * {
+                background-image: none !important;
+                box-shadow: none !important;
+                text-shadow: none !important;
             }
 
             .report-card {
-                box-shadow: none !important;
+                background: white !important;
+                border: 2px solid #000000 !important;
+                padding: 30px !important;
+                page-break-inside: avoid;
+            }
+
+            /* Header styling to match PDF */
+            .report-header {
+                background: white !important;
+                color: #000000 !important;
+                border-bottom: 2px solid #000000 !important;
+                padding-bottom: 20px !important;
+                text-align: center !important;
+            }
+
+            .report-header h2 {
+                font-size: 24px !important;
+                font-weight: bold !important;
+                text-transform: uppercase !important;
+                margin-bottom: 5px !important;
+            }
+
+            /* Student info section */
+            .student-info {
+                background: white !important;
+                color: #000000 !important;
+                border: none !important;
+                margin-bottom: 30px !important;
+            }
+
+            /* Table styling to match PDF */
+            .marks-table table,
+            .table {
+                border-collapse: collapse !important;
+                width: 100% !important;
+                margin-bottom: 30px !important;
+            }
+
+            .marks-table th,
+            .marks-table td,
+            .table th,
+            .table td {
+                border: 1px solid #000000 !important;
+                padding: 8px !important;
+                text-align: center !important;
+                color: #000000 !important;
                 background: white !important;
             }
 
-            .student-info,
-            .overall-summary {
-                background: #f8f9fa !important;
-                color: black !important;
+            .marks-table thead th,
+            .table thead th,
+            .table-dark th {
+                background-color: #f0f0f0 !important;
+                color: #000000 !important;
+                font-weight: bold !important;
+                text-transform: uppercase !important;
             }
 
-            .table tbody td,
-            .table tbody tr {
-                color: black !important;
+            .marks-table td:first-child,
+            .table td:first-child {
+                text-align: left !important;
+                font-weight: bold !important;
+            }
+
+            /* Summary section to match PDF */
+            .overall-summary {
+                background: white !important;
+                border: 1px solid #000000 !important;
+                padding: 15px !important;
+                margin-top: 30px !important;
+                page-break-inside: avoid;
+            }
+
+            .summary-item {
+                background: white !important;
+                color: #000000 !important;
+                border: none !important;
+            }
+
+            .summary-item i {
+                display: none !important;
+            }
+
+            .summary-item h3 {
+                font-size: 10px !important;
+                font-weight: bold !important;
+                text-transform: uppercase !important;
+            }
+
+            .summary-item .h4 {
+                font-size: 16px !important;
+                font-weight: bold !important;
+            }
+
+            /* Grade scale section */
+            .grade-scale {
+                margin-top: 20px !important;
+                page-break-inside: avoid;
+                font-size: 9px !important;
+            }
+
+            .grade-scale .badge {
+                background: white !important;
+                color: #000000 !important;
+                border: 1px solid #000000 !important;
+                font-weight: normal !important;
+            }
+
+            /* Add watermark */
+            .report-card::before {
+                content: attr(data-school-name) !important;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(-45deg);
+                font-size: 100px;
+                color: rgba(0, 0, 0, 0.05);
+                font-weight: bold;
+                z-index: -1;
+                white-space: nowrap;
+                pointer-events: none;
+            }
+
+            /* Add signature section at bottom */
+            .report-card::after {
+                content: '';
+                display: block;
+                margin-top: 50px;
+                page-break-inside: avoid;
+            }
+
+            /* Page break controls */
+            .marks-table {
+                page-break-inside: avoid;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                page-break-after: avoid;
+                color: #000000 !important;
+            }
+
+            /* System footer */
+            .system-footer-print {
+                display: block !important;
+                position: fixed;
+                bottom: 10px;
+                left: 30px;
+                right: 30px;
+                text-align: center;
+                font-size: 9px;
+                font-style: italic;
+                border-top: 1px solid #cccccc;
+                padding-top: 5px;
+            }
+        }
+
+        /* Signature section for print only */
+        .signature-section-print,
+        .system-footer-print {
+            display: none;
+        }
+
+        @media print {
+            .signature-section-print {
+                display: flex !important;
+                justify-content: space-between;
+                margin-top: 50px;
+                page-break-inside: avoid;
+            }
+
+            .signature-box-print {
+                text-align: center;
+            }
+
+            .signature-line-print {
+                width: 200px;
+                border-top: 1px solid #000000;
+                margin-bottom: 5px;
+                margin-top: 30px;
             }
         }
     </style>
@@ -380,14 +566,15 @@
                 <a th:href="@{/reports/{id}/pdf(id=${reportCard.student.id})}" class="btn btn-success me-2">
                     <i class="fas fa-file-pdf me-2"></i>Download PDF
                 </a>
-                <button onclick="window.print()" class="btn btn-primary">
+                <!-- <button onclick="window.print()" class="btn btn-primary">
                     <i class="fas fa-print me-2"></i>Print Report
-                </button>
+                </button> -->
             </div>
         </div>
 
         <!-- Report Card -->
-        <div class="card report-card">
+        <div class="card report-card"
+            th:attr="data-school-name=${reportCard.student.session != null ? 'School' : 'School'}">
             <!-- Header -->
             <div class="report-header">
                 <h2><i class="fas fa-certificate me-3"></i>SCHOOL REPORT CARD</h2>
@@ -502,9 +689,29 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Signature Section (Print Only) -->
+                <div class="signature-section-print">
+                    <div class="signature-box-print">
+                        <div class="signature-line-print"></div>
+                        <div>Principal's Signature</div>
+                    </div>
+                    <div class="signature-box-print">
+                        <div class="signature-line-print"></div>
+                        <div>Class Teacher's Signature</div>
+                    </div>
+                </div>
+
+                <!-- System Footer (Print Only) -->
+                <div class="system-footer-print">
+                    This is a computer-generated document. System developed by RMS.
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Bottom Spacing -->
+    <div style="height: 80px;"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
