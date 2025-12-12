@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,19 +21,19 @@
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
         }
-        
+
         body {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
             color: var(--text-light);
             min-height: 100vh;
             padding-bottom: 60px;
         }
-        
+
         .navbar-dark {
             background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent-blue) 100%) !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
-        
+
         .hero-banner {
             background: linear-gradient(135deg, var(--modern-purple) 0%, var(--education-blue) 50%, var(--learning-teal) 100%);
             padding: 60px 0;
@@ -40,7 +41,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero-banner::before {
             content: '';
             position: absolute;
@@ -50,20 +51,20 @@
             bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
         }
-        
+
         .hero-content {
             position: relative;
             z-index: 2;
             text-align: center;
         }
-        
+
         .hero-title {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
-        
+
         .hero-subtitle {
             font-size: 1.1rem;
             opacity: 0.9;
@@ -91,27 +92,28 @@
         .breadcrumb-item.active {
             color: var(--text-muted);
         }
+
         .action-buttons {
             margin-bottom: 30px;
         }
-        
+
         .btn-secondary {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 25px;
             padding: 10px 20px;
             color: var(--text-light);
             font-weight: 500;
             transition: all 0.3s ease;
         }
-        
+
         .btn-secondary:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
             color: var(--text-light);
             transform: translateX(-3px);
         }
-        
+
         .btn-success {
             background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
             border: none;
@@ -121,12 +123,12 @@
             transition: all 0.3s ease;
             box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
         }
-        
+
         .btn-success:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, var(--education-blue) 0%, var(--modern-purple) 100%);
             border: none;
@@ -136,21 +138,21 @@
             transition: all 0.3s ease;
             box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
         }
-        
+
         .report-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
-        
+
         .report-header {
             background: linear-gradient(135deg, var(--modern-purple) 0%, var(--education-blue) 100%);
             padding: 40px 30px;
@@ -158,7 +160,7 @@
             color: white;
             position: relative;
         }
-        
+
         .report-header::before {
             content: '';
             position: absolute;
@@ -168,50 +170,50 @@
             bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="15" height="15" patternUnits="userSpaceOnUse"><circle cx="7.5" cy="7.5" r="0.8" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
         }
-        
-        .report-header > * {
+
+        .report-header>* {
             position: relative;
             z-index: 2;
         }
-        
+
         .report-header h2 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
-        
+
         .report-header h4 {
             font-size: 1.3rem;
             opacity: 0.9;
             margin: 0;
         }
-        
+
         .student-info {
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             padding: 25px 30px;
             margin: 30px;
             border-radius: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        .student-info .row > div {
+
+        .student-info .row>div {
             margin-bottom: 15px;
         }
-        
+
         .student-info strong {
             color: var(--education-blue);
             font-weight: 600;
         }
-        
+
         .marks-table {
             margin: 30px;
         }
-        
+
         .table-dark {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-blue) 100%);
         }
-        
+
         .table-dark th {
             border: none;
             font-weight: 600;
@@ -220,50 +222,50 @@
             letter-spacing: 1px;
             padding: 15px 12px;
         }
-        
+
         .table tbody tr {
-            background: rgba(255,255,255,0.02);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: background 0.3s ease;
             color: var(--text-light);
         }
-        
+
         .table tbody tr:hover {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
         }
-        
+
         .table tbody td {
             color: var(--text-light);
-            border-color: rgba(255,255,255,0.1);
+            border-color: rgba(255, 255, 255, 0.1);
             padding: 15px 12px;
         }
-        
+
         .table tbody td strong {
             color: white;
             font-weight: 600;
         }
-        
+
         .overall-summary {
             background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 100%);
             padding: 30px;
             margin: 30px;
             border-radius: 15px;
             color: white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
-        
+
         .summary-item {
             text-align: center;
             padding: 20px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             transition: transform 0.3s ease;
         }
-        
+
         .summary-item:hover {
             transform: translateY(-3px);
         }
-        
+
         .summary-item h5 {
             font-size: 0.9rem;
             text-transform: uppercase;
@@ -271,55 +273,75 @@
             margin-bottom: 10px;
             opacity: 0.8;
         }
-        
+
         .summary-item h3 {
             font-size: 2rem;
             font-weight: 700;
             margin: 0;
         }
-        
+
         .result-pass {
             color: var(--success-green);
             text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
         }
-        
+
         .result-fail {
             color: var(--danger-red);
             text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
         }
-        
+
         .report-footer {
             padding: 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .grade-scale {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             padding: 20px;
             border-radius: 12px;
             font-size: 0.9rem;
         }
-        
+
         .signature-section {
             text-align: center;
             padding: 20px;
         }
-        
+
         .signature-line {
             border-bottom: 2px solid var(--text-muted);
             width: 200px;
             margin: 30px auto 10px;
         }
-        
+
         @media print {
-            .no-print { display: none !important; }
-            body { background: white !important; color: black !important; }
-            .report-card { box-shadow: none !important; background: white !important; }
-            .student-info, .overall-summary { background: #f8f9fa !important; color: black !important; }
-            .table tbody td, .table tbody tr { color: black !important; }
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .report-card {
+                box-shadow: none !important;
+                background: white !important;
+            }
+
+            .student-info,
+            .overall-summary {
+                background: #f8f9fa !important;
+                color: black !important;
+            }
+
+            .table tbody td,
+            .table tbody tr {
+                color: black !important;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Central Navbar -->
@@ -363,7 +385,7 @@
                 </button>
             </div>
         </div>
-        
+
         <!-- Report Card -->
         <div class="card report-card">
             <!-- Header -->
@@ -371,7 +393,7 @@
                 <h2><i class="fas fa-certificate me-3"></i>SCHOOL REPORT CARD</h2>
                 <h4 th:text="'Academic Session: ' + ${reportCard.session.sessionName}"></h4>
             </div>
-            
+
             <div class="card-body p-0">
                 <!-- Student Information -->
                 <div class="student-info">
@@ -390,14 +412,15 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Marks Table -->
                 <div class="table-responsive marks-table">
                     <table class="table table-hover mb-0">
                         <thead class="table-dark">
                             <tr>
                                 <th><i class="fas fa-book me-2"></i>Subject</th>
-                                <th th:each="examName : ${reportCard.subjects[0].examMarks.keySet()}" th:text="${examName}">
+                                <th th:each="examName : ${reportCard.subjects[0].examMarks.keySet()}"
+                                    th:text="${examName}">
                                     <i class="fas fa-clipboard-list me-1"></i>
                                 </th>
                                 <th><i class="fas fa-calculator me-2"></i>Total</th>
@@ -408,15 +431,17 @@
                         <tbody>
                             <tr th:each="subject : ${reportCard.subjects}">
                                 <td><strong th:text="${subject.subjectName}"></strong></td>
-                                <td th:each="examName : ${subject.examMarks.keySet()}" th:text="${subject.examMarks.get(examName)}"></td>
-                                <td><strong th:text="${subject.totalObtained} + '/' + ${subject.totalMaximum}"></strong></td>
+                                <td th:each="examName : ${subject.examMarks.keySet()}"
+                                    th:text="${subject.examMarks.get(examName)}"></td>
+                                <td><strong th:text="${subject.totalObtained} + '/' + ${subject.totalMaximum}"></strong>
+                                </td>
                                 <td><strong th:text="${subject.percentage} + '%'"></strong></td>
                                 <td><strong th:text="${subject.grade}"></strong></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                
+
                 <!-- Overall Summary -->
                 <div class="overall-summary">
                     <div class="row g-3">
@@ -435,9 +460,10 @@
                         <div class="col-md-3">
                             <div class="summary-item">
                                 <h5><i class="fas fa-check-circle me-1"></i>Result</h5>
-                                <h3 th:text="${reportCard.result}" 
+                                <h3 th:text="${reportCard.result}"
                                     th:class="${reportCard.result == 'PASS'} ? 'result-pass' : 'result-fail'">
-                                    <i th:class="${reportCard.result == 'PASS'} ? 'fas fa-check-circle me-1' : 'fas fa-times-circle me-1'"></i>
+                                    <i
+                                        th:class="${reportCard.result == 'PASS'} ? 'fas fa-check-circle me-1' : 'fas fa-times-circle me-1'"></i>
                                 </h3>
                             </div>
                         </div>
@@ -449,7 +475,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Footer -->
                 <div class="report-footer">
                     <div class="row">
@@ -457,19 +483,21 @@
                             <div class="grade-scale">
                                 <h6><i class="fas fa-info-circle me-2"></i>Grade Scale:</h6>
                                 <p class="mb-0">
-                                    <span class="badge bg-success me-2">A+ (90%+)</span>
-                                    <span class="badge bg-success me-2">A (85-89%)</span>
-                                    <span class="badge bg-primary me-2">B (75-84%)</span>
-                                    <span class="badge bg-warning me-2">C (60-74%)</span>
-                                    <span class="badge bg-secondary me-2">D (40-59%)</span>
-                                    <span class="badge bg-danger">F (Below 40%)</span>
+                                    <span class="badge bg-success me-2">A+ (80%+)</span>
+                                    <span class="badge bg-success me-2">A (70-79%)</span>
+                                    <span class="badge bg-success me-2">A- (60-69%)</span>
+                                    <span class="badge bg-primary me-2">B (50-59%)</span>
+                                    <span class="badge bg-warning me-2">C (40-49%)</span>
+                                    <span class="badge bg-secondary me-2">D (33-39%)</span>
+                                    <span class="badge bg-danger">F (Below 33%)</span>
                                 </p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="signature-section">
                                 <div class="signature-line"></div>
-                                <p class="mb-0"><strong><i class="fas fa-pen me-2"></i>Class Teacher Signature</strong></p>
+                                <p class="mb-0"><strong><i class="fas fa-pen me-2"></i>Class Teacher Signature</strong>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -477,7 +505,8 @@
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
