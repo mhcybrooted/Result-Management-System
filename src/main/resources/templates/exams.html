@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,37 +21,37 @@
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
         }
-        
+
         body {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
             color: var(--text-light);
             min-height: 100vh;
             padding-bottom: 60px;
         }
-        
+
         .navbar-dark {
             background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent-blue) 100%) !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding: 15px 0;
         }
-        
+
         .navbar-brand {
             font-size: 1.4rem;
             font-weight: 700;
             color: white !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
-        
+
         .navbar-brand:hover {
             transform: scale(1.05);
             color: var(--learning-teal) !important;
         }
-        
+
         .navbar-nav .nav-link {
-            color: rgba(255,255,255,0.9) !important;
+            color: rgba(255, 255, 255, 0.9) !important;
             font-weight: 500;
             padding: 8px 16px !important;
             margin: 0 2px;
@@ -59,7 +60,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .navbar-nav .nav-link::before {
             content: '';
             position: absolute;
@@ -67,52 +68,52 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s ease;
         }
-        
+
         .navbar-nav .nav-link:hover::before {
             left: 100%;
         }
-        
+
         .navbar-nav .nav-link:hover {
             color: white !important;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
-        
+
         .navbar-nav .nav-link.active {
             color: white !important;
             background: linear-gradient(135deg, var(--learning-teal) 0%, var(--success-green) 100%);
             box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
         }
-        
+
         .navbar-nav .nav-link.active:hover {
             background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
         }
-        
+
         .search-form .form-control {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
             border-radius: 25px;
             padding: 8px 16px;
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
         }
-        
+
         .search-form .form-control:focus {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border-color: var(--learning-teal);
             box-shadow: 0 0 0 0.2rem rgba(6, 182, 212, 0.25);
             color: white;
         }
-        
+
         .search-form .form-control::placeholder {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
         }
-        
+
         .search-btn {
             background: linear-gradient(135deg, var(--learning-teal) 0%, var(--success-green) 100%);
             border: none;
@@ -122,13 +123,13 @@
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);
         }
-        
+
         .search-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
             background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
         }
-        
+
         .hero-banner {
             background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 50%, var(--modern-purple) 100%);
             padding: 80px 0;
@@ -136,7 +137,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero-banner::before {
             content: '';
             position: absolute;
@@ -146,20 +147,20 @@
             bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
         }
-        
+
         .hero-content {
             position: relative;
             z-index: 2;
             text-align: center;
         }
-        
+
         .hero-title {
             font-size: 3rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
-        
+
         .hero-subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
@@ -191,60 +192,60 @@
         .stats-row {
             margin-bottom: 40px;
         }
-        
+
         .stat-item {
             background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 100%);
             padding: 30px;
             border-radius: 15px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease;
         }
-        
+
         .stat-item:hover {
             transform: translateY(-5px);
         }
-        
+
         .stat-number {
             font-size: 2.5rem;
             font-weight: 700;
             color: white;
             display: block;
         }
-        
+
         .stat-label {
             font-size: 1rem;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             margin-top: 10px;
         }
-        
+
         .exams-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .exams-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
-        
+
         .card-header {
             background: linear-gradient(135deg, var(--education-blue) 0%, var(--modern-purple) 100%);
             border: none;
             border-radius: 20px 20px 0 0 !important;
             padding: 25px 30px;
         }
-        
+
         .card-header h4 {
             color: white;
             margin: 0;
             font-weight: 600;
         }
-        
+
         .add-exam-fab {
             background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
             border: none;
@@ -254,19 +255,19 @@
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,184,148,0.3);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
         }
-        
+
         .add-exam-fab:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,184,148,0.4);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
             color: white;
         }
-        
+
         .table-dark {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-blue) 100%);
         }
-        
+
         .table-dark th {
             border: none;
             font-weight: 600;
@@ -274,35 +275,35 @@
             font-size: 0.85rem;
             letter-spacing: 1px;
         }
-        
+
         .table tbody tr {
-            background: rgba(255,255,255,0.02);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: background 0.3s ease;
             color: var(--text-light);
         }
-        
+
         .table tbody tr:hover {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
         }
-        
+
         .table tbody td {
             color: var(--text-light);
-            border-color: rgba(255,255,255,0.1);
+            border-color: rgba(255, 255, 255, 0.1);
         }
-        
+
         .table tbody td strong {
             color: white;
             font-weight: 600;
         }
-        
+
         .badge {
             padding: 8px 15px;
             border-radius: 20px;
             font-weight: 500;
             font-size: 0.8rem;
         }
-        
+
         .btn-outline-primary {
             border-color: var(--education-blue);
             color: var(--education-blue);
@@ -311,13 +312,13 @@
             font-size: 0.85rem;
             transition: all 0.3s ease;
         }
-        
+
         .btn-outline-primary:hover {
             background: var(--education-blue);
             border-color: var(--education-blue);
             transform: translateY(-1px);
         }
-        
+
         .btn-outline-danger {
             border-color: var(--danger-red);
             color: var(--danger-red);
@@ -326,50 +327,51 @@
             font-size: 0.85rem;
             transition: all 0.3s ease;
         }
-        
+
         .btn-outline-danger:hover {
             background: var(--danger-red);
             border-color: var(--danger-red);
             transform: translateY(-1px);
         }
-        
+
         .empty-state {
             text-align: center;
             padding: 60px 20px;
             color: var(--text-muted);
         }
-        
+
         .empty-state i {
             font-size: 4rem;
             margin-bottom: 20px;
             opacity: 0.5;
         }
-        
+
         .alert {
             border: none;
             border-radius: 15px;
             padding: 15px 20px;
             margin-bottom: 25px;
         }
-        
+
         .alert-success {
             background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
             color: white;
         }
-        
+
         .alert-danger {
             background: linear-gradient(135deg, var(--danger-red) 0%, #d63031 100%);
             color: white;
         }
     </style>
 </head>
+
 <body>
 
     <!-- Central Navbar -->
     <div th:replace="navbar :: navbar"></div>
     <div style="padding-top: 80px;"></div>
-    
-    
+
+
     <!-- Hero Banner -->
     <section class="hero-banner">
         <div class="container">
@@ -387,7 +389,7 @@
         <!-- Breadcrumb -->
         <nav class="breadcrumb-nav">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="breadcrumb-item"><a href="/admin/dashboard"><i class="fas fa-home me-1"></i>Home</a></li>
                 <li class="breadcrumb-item active">Exams</li>
             </ol>
         </nav>
@@ -408,7 +410,8 @@
             </div>
             <div class="col-md-4">
                 <div class="stat-item">
-                    <span class="stat-number" th:text="${activeSession != null ? activeSession.sessionName : 'None'}">Current Session</span>
+                    <span class="stat-number"
+                        th:text="${activeSession != null ? activeSession.sessionName : 'None'}">Current Session</span>
                     <span class="stat-label">Active Session</span>
                 </div>
             </div>
@@ -430,7 +433,7 @@
                             <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
                             <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
                         </div>
-                        
+
                         <div class="table-responsive">
                             <table class="table table-hover mb-0" th:if="${!#lists.isEmpty(exams)}">
                                 <thead class="table-dark">
@@ -459,12 +462,15 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a th:href="@{/exams/edit/{id}(id=${exam.id})}" class="btn btn-sm btn-outline-primary me-2">
+                                            <a th:href="@{/exams/edit/{id}(id=${exam.id})}"
+                                                class="btn btn-sm btn-outline-primary me-2">
                                                 <i class="fas fa-edit me-1"></i>Edit
                                             </a>
-                                            <form th:if="${exam.active}" th:action="@{/exams/delete/{id}(id=${exam.id})}" method="post" style="display: inline;">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" 
-                                                        onclick="return confirm('Are you sure you want to delete this exam?')">
+                                            <form th:if="${exam.active}"
+                                                th:action="@{/exams/delete/{id}(id=${exam.id})}" method="post"
+                                                style="display: inline;">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Are you sure you want to delete this exam?')">
                                                     <i class="fas fa-trash me-1"></i>Delete
                                                 </button>
                                             </form>
@@ -472,7 +478,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            
+
                             <div th:if="${#lists.isEmpty(exams)}" class="empty-state">
                                 <i class="fas fa-clipboard-list"></i>
                                 <h5>No Exams Found</h5>
@@ -487,7 +493,8 @@
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

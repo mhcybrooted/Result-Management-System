@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,37 +21,37 @@
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
         }
-        
+
         body {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
             color: var(--text-light);
             min-height: 100vh;
             padding-bottom: 60px;
         }
-        
+
         .navbar-dark {
             background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent-blue) 100%) !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding: 15px 0;
         }
-        
+
         .navbar-brand {
             font-size: 1.4rem;
             font-weight: 700;
             color: white !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
-        
+
         .navbar-brand:hover {
             transform: scale(1.05);
             color: var(--learning-teal) !important;
         }
-        
+
         .navbar-nav .nav-link {
-            color: rgba(255,255,255,0.9) !important;
+            color: rgba(255, 255, 255, 0.9) !important;
             font-weight: 500;
             padding: 8px 16px !important;
             margin: 0 2px;
@@ -59,7 +60,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .navbar-nav .nav-link::before {
             content: '';
             position: absolute;
@@ -67,52 +68,52 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s ease;
         }
-        
+
         .navbar-nav .nav-link:hover::before {
             left: 100%;
         }
-        
+
         .navbar-nav .nav-link:hover {
             color: white !important;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
-        
+
         .navbar-nav .nav-link.active {
             color: white !important;
             background: linear-gradient(135deg, var(--learning-teal) 0%, var(--success-green) 100%);
             box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
         }
-        
+
         .navbar-nav .nav-link.active:hover {
             background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
         }
-        
+
         .search-form .form-control {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
             border-radius: 25px;
             padding: 8px 16px;
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
         }
-        
+
         .search-form .form-control:focus {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border-color: var(--learning-teal);
             box-shadow: 0 0 0 0.2rem rgba(6, 182, 212, 0.25);
             color: white;
         }
-        
+
         .search-form .form-control::placeholder {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
         }
-        
+
         .search-btn {
             background: linear-gradient(135deg, var(--learning-teal) 0%, var(--success-green) 100%);
             border: none;
@@ -122,13 +123,13 @@
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);
         }
-        
+
         .search-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
             background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
         }
-        
+
         .hero-banner {
             background: linear-gradient(135deg, var(--modern-purple) 0%, var(--education-blue) 50%, var(--learning-teal) 100%);
             padding: 80px 0;
@@ -136,7 +137,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero-banner::before {
             content: '';
             position: absolute;
@@ -146,20 +147,20 @@
             bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
         }
-        
+
         .hero-content {
             position: relative;
             z-index: 2;
             text-align: center;
         }
-        
+
         .hero-title {
             font-size: 3rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
-        
+
         .hero-subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
@@ -197,97 +198,98 @@
             color: white;
             box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
         }
-        
+
         .reports-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .reports-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
-        
+
         .card-header {
             background: linear-gradient(135deg, var(--modern-purple) 0%, var(--education-blue) 100%);
             border: none;
             border-radius: 20px 20px 0 0 !important;
             padding: 25px 30px;
         }
-        
-        .card-header h4, .card-header h5 {
+
+        .card-header h4,
+        .card-header h5 {
             color: white;
             margin: 0;
             font-weight: 600;
         }
-        
+
         .report-section-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             backdrop-filter: blur(5px);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             height: 100%;
         }
-        
+
         .report-section-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
-        
+
         .section-header {
             background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 100%);
             border-radius: 15px 15px 0 0 !important;
             padding: 20px 25px;
         }
-        
+
         .section-header h5 {
             color: white;
             margin: 0;
             font-weight: 600;
         }
-        
+
         .list-group {
             border-radius: 0 0 15px 15px;
         }
-        
+
         .list-group-item {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--text-light);
             transition: all 0.3s ease;
         }
-        
+
         .list-group-item:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             transform: translateX(5px);
         }
-        
+
         .list-group-item:first-child {
             border-top-left-radius: 0;
             border-top-right-radius: 0;
         }
-        
+
         .list-group-item:last-child {
             border-bottom-left-radius: 15px;
             border-bottom-right-radius: 15px;
         }
-        
+
         .badge {
             background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
             padding: 8px 15px;
             border-radius: 20px;
             font-weight: 500;
         }
-        
+
         .table-dark {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-blue) 100%);
         }
-        
+
         .table-dark th {
             border: none;
             font-weight: 600;
@@ -295,29 +297,29 @@
             font-size: 0.85rem;
             letter-spacing: 1px;
         }
-        
+
         .table tbody tr {
-            background: rgba(255,255,255,0.02);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: background 0.3s ease;
             color: var(--text-light);
         }
-        
+
         .table tbody tr:hover {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
         }
-        
+
         .table tbody td {
             color: var(--text-light);
-            border-color: rgba(255,255,255,0.1);
+            border-color: rgba(255, 255, 255, 0.1);
             padding: 15px 12px;
         }
-        
+
         .table tbody td strong {
             color: white;
             font-weight: 600;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, var(--education-blue) 0%, var(--modern-purple) 100%);
             border: none;
@@ -328,12 +330,12 @@
             transition: all 0.3s ease;
             box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-1px);
             box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
         }
-        
+
         .btn-success {
             background: linear-gradient(135deg, var(--success-green) 0%, var(--learning-teal) 100%);
             border: none;
@@ -344,24 +346,24 @@
             transition: all 0.3s ease;
             box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
         }
-        
+
         .btn-success:hover {
             transform: translateY(-1px);
             box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
         }
-        
+
         .empty-state {
             text-align: center;
             padding: 40px 20px;
             color: var(--text-muted);
         }
-        
+
         .empty-state i {
             font-size: 3rem;
             margin-bottom: 15px;
             opacity: 0.5;
         }
-        
+
         .alert-danger {
             background: linear-gradient(135deg, var(--danger-red) 0%, #dc2626 100%);
             border: none;
@@ -370,37 +372,37 @@
             margin-bottom: 25px;
             color: white;
         }
-        
+
         .stats-row {
             margin-bottom: 40px;
         }
-        
+
         .stat-item {
             background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 100%);
             padding: 30px;
             border-radius: 15px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease;
         }
-        
+
         .stat-item:hover {
             transform: translateY(-5px);
         }
-        
+
         .stat-number {
             font-size: 2.5rem;
             font-weight: 700;
             color: white;
             display: block;
         }
-        
+
         .stat-label {
             font-size: 1rem;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             margin-top: 10px;
         }
-        
+
         .section-description {
             color: var(--text-muted);
             font-size: 0.9rem;
@@ -408,13 +410,14 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Central Navbar -->
     <div th:replace="navbar :: navbar"></div>
     <div style="padding-top: 80px;"></div>
-    
-    
+
+
     <!-- Hero Banner -->
     <section class="hero-banner">
         <div class="container">
@@ -432,7 +435,7 @@
         <!-- Breadcrumb -->
         <nav class="breadcrumb-nav">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="breadcrumb-item"><a href="/admin/dashboard"><i class="fas fa-home me-1"></i>Home</a></li>
                 <li class="breadcrumb-item active">Reports</li>
             </ol>
         </nav>
@@ -478,7 +481,7 @@
                             <i class="fas fa-exclamation-circle me-2"></i>
                             <span th:text="${error}"></span>
                         </div>
-                        
+
                         <!-- Report Sections -->
                         <div class="row">
                             <!-- Class Reports Section -->
@@ -488,11 +491,12 @@
                                         <h5><i class="fas fa-users me-2"></i>Class Reports</h5>
                                     </div>
                                     <div class="card-body">
-                                        <p class="section-description">Generate comprehensive reports for entire classes</p>
+                                        <p class="section-description">Generate comprehensive reports for entire classes
+                                        </p>
                                         <div class="list-group" th:unless="${#lists.isEmpty(availableClasses)}">
-                                            <a th:each="className : ${availableClasses}" 
-                                               th:href="@{/reports/class/{className}(className=${className})}" 
-                                               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                            <a th:each="className : ${availableClasses}"
+                                                th:href="@{/reports/class/{className}(className=${className})}"
+                                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                                 <span>
                                                     <i class="fas fa-chalkboard me-2"></i>
                                                     <span th:text="${className}"></span>
@@ -510,7 +514,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Individual Report Cards Section -->
                             <div class="col-lg-6 mb-4">
                                 <div class="card report-section-card">
@@ -519,7 +523,8 @@
                                     </div>
                                     <div class="card-body p-0">
                                         <div class="p-3">
-                                            <p class="section-description">Generate individual student report cards and PDFs</p>
+                                            <p class="section-description">Generate individual student report cards and
+                                                PDFs</p>
                                         </div>
                                         <div class="table-responsive" th:unless="${#lists.isEmpty(students)}">
                                             <table class="table table-hover mb-0">
@@ -537,14 +542,17 @@
                                                             <strong th:text="${student.name}"></strong>
                                                         </td>
                                                         <td>
-                                                            <span class="badge bg-secondary" th:text="${student.rollNumber}"></span>
+                                                            <span class="badge bg-secondary"
+                                                                th:text="${student.rollNumber}"></span>
                                                         </td>
                                                         <td th:text="${student.className}"></td>
                                                         <td>
-                                                            <a th:href="@{/reports/{id}(id=${student.id})}" class="btn btn-sm btn-primary me-1">
+                                                            <a th:href="@{/reports/{id}(id=${student.id})}"
+                                                                class="btn btn-sm btn-primary me-1">
                                                                 <i class="fas fa-eye me-1"></i>View
                                                             </a>
-                                                            <a th:href="@{/reports/{id}/pdf(id=${student.id})}" class="btn btn-sm btn-success">
+                                                            <a th:href="@{/reports/{id}/pdf(id=${student.id})}"
+                                                                class="btn btn-sm btn-success">
                                                                 <i class="fas fa-file-pdf me-1"></i>PDF
                                                             </a>
                                                         </td>
@@ -552,7 +560,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        
+
                                         <div th:if="${#lists.isEmpty(students)}" class="empty-state">
                                             <i class="fas fa-user-graduate"></i>
                                             <h6>No Students Found</h6>
@@ -567,7 +575,8 @@
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

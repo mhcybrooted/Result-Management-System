@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" th:fragment="navbar" style="
         background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
@@ -15,7 +17,7 @@
         z-index: 1000;
     ">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="/" style="
+            <a class="navbar-brand fw-bold" href="/admin/dashboard" style="
                 font-size: 1.8rem;
                 font-weight: 900;
                 color: #ffffff !important;
@@ -26,7 +28,7 @@
             ">
                 <i class="fas fa-graduation-cap me-2"></i>School Exam System
             </a>
-            
+
             <div class="d-flex align-items-center">
                 <div th:if="${activeSession}" class="me-3" style="
                     background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
@@ -40,27 +42,31 @@
                     <i class="fas fa-calendar-check me-1"></i>
                     <span th:text="${activeSession.sessionName}">2024-25</span>
                 </div>
-                
+
                 <!-- Admin Login/Logout -->
                 <div sec:authorize="isAnonymous()" class="me-3">
                     <a href="/admin-login" class="btn btn-outline-danger btn-sm">
                         <i class="fas fa-shield-alt me-1"></i>Admin Login
                     </a>
                 </div>
-                
+
                 <div sec:authorize="hasRole('ADMIN')" class="dropdown me-3">
                     <button class="btn btn-danger dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">
                         <i class="fas fa-shield-alt me-1"></i>Admin Panel
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><h6 class="dropdown-header">Admin Functions</h6></li>
+                        <li>
+                            <h6 class="dropdown-header">Admin Functions</h6>
+                        </li>
                         <li><a class="dropdown-item" href="/sessions">
-                            <i class="fas fa-calendar-alt me-2"></i>Manage Sessions
-                        </a></li>
+                                <i class="fas fa-calendar-alt me-2"></i>Manage Sessions
+                            </a></li>
                         <li><a class="dropdown-item" href="/students/promote">
-                            <i class="fas fa-user-graduate me-2"></i>Promote Students
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
+                                <i class="fas fa-user-graduate me-2"></i>Promote Students
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form th:action="@{/admin-logout}" method="post" class="d-inline">
                                 <button type="submit" class="dropdown-item text-danger">
@@ -70,7 +76,7 @@
                         </li>
                     </ul>
                 </div>
-                
+
                 <!-- Enhanced Search Container -->
                 <div class="search-container position-relative">
                     <form class="d-flex search-form" method="post" action="/search-results" style="
@@ -90,14 +96,9 @@
                                 <i class="fas fa-search"></i>
                             </span>
                         </div>
-                        
-                        <input type="text" 
-                               name="rollNumber" 
-                               id="searchInput"
-                               class="form-control search-input" 
-                               placeholder="Search Roll No..." 
-                               autocomplete="off"
-                               style="
+
+                        <input type="text" name="rollNumber" id="searchInput" class="form-control search-input"
+                            placeholder="Search Roll No..." autocomplete="off" style="
                                    background: transparent;
                                    border: none;
                                    color: #ffffff;
@@ -107,7 +108,7 @@
                                    font-weight: 500;
                                    box-shadow: none;
                                ">
-                        
+
                         <button type="submit" class="btn search-btn" style="
                             background: linear-gradient(135deg, #8b5cf6, #06b6d4);
                             border: none;
@@ -124,7 +125,7 @@
                             <i class="fas fa-search"></i>
                         </button>
                     </form>
-                    
+
                     <!-- Search Suggestions Dropdown -->
                     <div id="searchSuggestions" class="search-suggestions" style="
                         position: absolute;
@@ -145,122 +146,122 @@
                         <!-- Dynamic suggestions will be populated here -->
                     </div>
                 </div>
-                
-<!--                &lt;!&ndash; Quick Actions Dropdown &ndash;&gt;-->
-<!--                <div class="dropdown ms-3">-->
-<!--                    <button class="btn btn-outline-light dropdown-toggle" type="button" -->
-<!--                            data-bs-toggle="dropdown" style="-->
-<!--                                border-radius: 25px;-->
-<!--                                padding: 8px 16px;-->
-<!--                                margin-right: 30px;-->
-<!--                                border: 2px solid rgba(255,255,255,0.3);-->
-<!--                                transition: all 0.3s ease;-->
-<!--                            ">-->
-<!--                        <i class="fas fa-bolt me-1"></i>Quick-->
-<!--                    </button>-->
-<!--                    <ul class="dropdown-menu dropdown-menu-end" style="-->
-<!--                        background: rgba(30, 41, 59, 0.95);-->
-<!--                        border: 1px solid rgba(139, 92, 246, 0.3);-->
-<!--                        border-radius: 15px;-->
-<!--                        backdrop-filter: blur(10px);-->
-<!--                        box-shadow: 0 8px 25px rgba(0,0,0,0.3);-->
-<!--                    ">-->
-<!--                        <li><a class="dropdown-item text-light" href="/add-marks">-->
-<!--                            <i class="fas fa-plus-circle me-2"></i>Add Marks</a></li>-->
-<!--                        <li><a class="dropdown-item text-light" href="/bulk/marks">-->
-<!--                            <i class="fas fa-layer-group me-2"></i>Bulk Entry</a></li>-->
-<!--                        <li><a class="dropdown-item text-light" href="/view-results">-->
-<!--                            <i class="fas fa-chart-bar me-2"></i>View Results</a></li>-->
-<!--                        <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.2);"></li>-->
-<!--                        <li><a class="dropdown-item text-light" href="/students">-->
-<!--                            <i class="fas fa-user-graduate me-2"></i>Students</a></li>-->
-<!--                        <li><a class="dropdown-item text-light" href="/teachers">-->
-<!--                            <i class="fas fa-chalkboard-teacher me-2"></i>Teachers</a></li>-->
-<!--                    </ul>-->
-<!--                </div>-->
+
+                <!--                &lt;!&ndash; Quick Actions Dropdown &ndash;&gt;-->
+                <!--                <div class="dropdown ms-3">-->
+                <!--                    <button class="btn btn-outline-light dropdown-toggle" type="button" -->
+                <!--                            data-bs-toggle="dropdown" style="-->
+                <!--                                border-radius: 25px;-->
+                <!--                                padding: 8px 16px;-->
+                <!--                                margin-right: 30px;-->
+                <!--                                border: 2px solid rgba(255,255,255,0.3);-->
+                <!--                                transition: all 0.3s ease;-->
+                <!--                            ">-->
+                <!--                        <i class="fas fa-bolt me-1"></i>Quick-->
+                <!--                    </button>-->
+                <!--                    <ul class="dropdown-menu dropdown-menu-end" style="-->
+                <!--                        background: rgba(30, 41, 59, 0.95);-->
+                <!--                        border: 1px solid rgba(139, 92, 246, 0.3);-->
+                <!--                        border-radius: 15px;-->
+                <!--                        backdrop-filter: blur(10px);-->
+                <!--                        box-shadow: 0 8px 25px rgba(0,0,0,0.3);-->
+                <!--                    ">-->
+                <!--                        <li><a class="dropdown-item text-light" href="/add-marks">-->
+                <!--                            <i class="fas fa-plus-circle me-2"></i>Add Marks</a></li>-->
+                <!--                        <li><a class="dropdown-item text-light" href="/bulk/marks">-->
+                <!--                            <i class="fas fa-layer-group me-2"></i>Bulk Entry</a></li>-->
+                <!--                        <li><a class="dropdown-item text-light" href="/view-results">-->
+                <!--                            <i class="fas fa-chart-bar me-2"></i>View Results</a></li>-->
+                <!--                        <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.2);"></li>-->
+                <!--                        <li><a class="dropdown-item text-light" href="/students">-->
+                <!--                            <i class="fas fa-user-graduate me-2"></i>Students</a></li>-->
+                <!--                        <li><a class="dropdown-item text-light" href="/teachers">-->
+                <!--                            <i class="fas fa-chalkboard-teacher me-2"></i>Teachers</a></li>-->
+                <!--                    </ul>-->
+                <!--                </div>-->
             </div>
         </div>
     </nav>
-    
+
     <style>
         .navbar-brand:hover {
             color: #06b6d4 !important;
             transform: scale(1.05);
         }
-        
+
         .search-form:hover {
-            background: rgba(255,255,255,0.2) !important;
+            background: rgba(255, 255, 255, 0.2) !important;
             border-color: rgba(139, 92, 246, 0.5);
         }
-        
+
         .search-form:focus-within {
-            background: rgba(255,255,255,0.25) !important;
+            background: rgba(255, 255, 255, 0.25) !important;
             border-color: #8b5cf6;
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
         }
-        
+
         .search-input::placeholder {
-            color: rgba(255,255,255,0.7) !important;
+            color: rgba(255, 255, 255, 0.7) !important;
             font-style: italic;
         }
-        
+
         .search-input:focus {
             box-shadow: none !important;
         }
-        
+
         .search-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
         }
-        
+
         .search-btn:active {
             transform: scale(0.95);
         }
-        
+
         .search-suggestion-item {
             padding: 12px 16px;
             color: #ffffff;
             cursor: pointer;
             transition: all 0.3s ease;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .search-suggestion-item:hover {
             background: rgba(139, 92, 246, 0.2);
         }
-        
+
         .search-suggestion-item:last-child {
             border-bottom: none;
         }
-        
+
         .dropdown-item:hover {
             background: rgba(139, 92, 246, 0.2) !important;
         }
-        
+
         @media (max-width: 768px) {
             .search-input {
                 width: 200px !important;
             }
-            
+
             .dropdown {
                 display: none;
             }
         }
-        
+
         @media (max-width: 576px) {
             .search-input {
                 width: 150px !important;
             }
         }
     </style>
-    
+
     <script>
         // Enhanced search functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('searchInput');
             const searchSuggestions = document.getElementById('searchSuggestions');
             let searchTimeout;
-            
+
             // Sample search suggestions (in real app, fetch from server)
             const sampleSuggestions = [
                 { type: 'student', text: 'Roll No: 101 - John Doe (Class 10)', value: '101' },
@@ -268,11 +269,11 @@
                 { type: 'class', text: 'Class 10 - All Students', value: 'class:10' },
                 { type: 'class', text: 'Class 9 - All Students', value: 'class:9' }
             ];
-            
-            searchInput.addEventListener('input', function() {
+
+            searchInput.addEventListener('input', function () {
                 clearTimeout(searchTimeout);
                 const query = this.value.trim();
-                
+
                 if (query.length >= 2) {
                     searchTimeout = setTimeout(() => {
                         showSuggestions(query);
@@ -281,24 +282,24 @@
                     hideSuggestions();
                 }
             });
-            
-            searchInput.addEventListener('focus', function() {
+
+            searchInput.addEventListener('focus', function () {
                 if (this.value.trim().length >= 2) {
                     showSuggestions(this.value.trim());
                 }
             });
-            
-            document.addEventListener('click', function(e) {
+
+            document.addEventListener('click', function (e) {
                 if (!e.target.closest('.search-container')) {
                     hideSuggestions();
                 }
             });
-            
+
             function showSuggestions(query) {
-                const filtered = sampleSuggestions.filter(item => 
+                const filtered = sampleSuggestions.filter(item =>
                     item.text.toLowerCase().includes(query.toLowerCase())
                 );
-                
+
                 if (filtered.length > 0) {
                     let html = '';
                     filtered.forEach(item => {
@@ -316,19 +317,19 @@
                     hideSuggestions();
                 }
             }
-            
+
             function hideSuggestions() {
                 searchSuggestions.style.display = 'none';
             }
-            
-            window.selectSuggestion = function(value) {
+
+            window.selectSuggestion = function (value) {
                 searchInput.value = value;
                 hideSuggestions();
                 searchInput.form.submit();
             };
-            
+
             // Keyboard navigation
-            searchInput.addEventListener('keydown', function(e) {
+            searchInput.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape') {
                     hideSuggestions();
                 }
@@ -336,4 +337,5 @@
         });
     </script>
 </body>
+
 </html>
