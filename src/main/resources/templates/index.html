@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -483,7 +484,8 @@
         }
 
         /* Ensure all buttons are clickable */
-        .btn, a.btn {
+        .btn,
+        a.btn {
             cursor: pointer;
             text-decoration: none;
             position: relative;
@@ -491,7 +493,8 @@
             pointer-events: auto;
         }
 
-        .btn:hover, a.btn:hover {
+        .btn:hover,
+        a.btn:hover {
             text-decoration: none;
         }
 
@@ -531,473 +534,526 @@
             margin-right: 12px;
             font-size: 1.1rem;
         }
-
-
     </style>
 </head>
+
 <body>
     <!-- Central Navbar -->
-<!--    <div th:replace="navbar :: navbar"></div>-->
+    <!--    <div th:replace="navbar :: navbar"></div>-->
 
 
-<!--<div style="padding-top: 80px;"></div>-->
+    <!--<div style="padding-top: 80px;"></div>-->
 
-<!-- Hero Section -->
-<div class="hero-section">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold mb-3">
+                        <i class="fas fa-school me-3"></i>School Exam Result System
+                    </h1>
+                    <p class="lead mb-4">Complete academic management solution with multi-session support, student
+                        tracking,
+                        and comprehensive reporting.</p>
+
+                    <!-- Session Badge -->
+                    <div th:if="${activeSession}" class="session-badge">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        <strong>Active Session:</strong> <span th:text="${activeSession.sessionName}"></span>
+                        <a href="/sessions" class="btn btn-sm btn-light ms-3">Switch</a>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="row mt-4">
+                        <div class="col-md-4 mb-2">
+                            <a href="/add-marks" class="btn btn-warning quick-action-btn">
+                                <i class="fas fa-plus-circle me-2"></i>Add Marks
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <a href="/view-results" class="btn btn-success quick-action-btn">
+                                <i class="fas fa-search me-2"></i>View Results
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <a href="/reports" class="btn btn-info quick-action-btn">
+                                <i class="fas fa-file-pdf me-2"></i>Generate Reports
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <i class="fas fa-chart-line" style="font-size: 8rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-3">
-                    <i class="fas fa-school me-3"></i>School Exam Result System
-                </h1>
-                <p class="lead mb-4">Complete academic management solution with multi-session support, student tracking,
-                    and comprehensive reporting.</p>
-
-                <!-- Session Badge -->
-                <div th:if="${activeSession}" class="session-badge">
-                    <i class="fas fa-calendar-alt me-2"></i>
-                    <strong>Active Session:</strong> <span th:text="${activeSession.sessionName}"></span>
-                    <a href="/sessions" class="btn btn-sm btn-light ms-3">Switch</a>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="row mt-4">
-                    <div class="col-md-4 mb-2">
-                        <a href="/add-marks" class="btn btn-warning quick-action-btn">
-                            <i class="fas fa-plus-circle me-2"></i>Add Marks
-                        </a>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <a href="/view-results" class="btn btn-success quick-action-btn">
-                            <i class="fas fa-search me-2"></i>View Results
-                        </a>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <a href="/reports" class="btn btn-info quick-action-btn">
-                            <i class="fas fa-file-pdf me-2"></i>Generate Reports
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 text-center">
-                <i class="fas fa-chart-line" style="font-size: 8rem; opacity: 0.3;"></i>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container">
-    <!-- Statistics Cards -->
-    <div class="row mb-5">
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-users icon-large text-primary"></i>
-                    <h3 class="card-title mt-3" th:text="${totalStudents ?: 0}">0</h3>
-                    <p class="card-text">Total Students</p>
-                    <small class="text-muted">Active Session</small>
-                    <div class="mt-3">
-                        <a href="/students" class="btn btn-primary btn-sm">View All</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-chalkboard-teacher icon-large text-success"></i>
-                    <h3 class="card-title mt-3" th:text="${totalTeachers ?: 0}">0</h3>
-                    <p class="card-text">Teachers</p>
-                    <small class="text-muted">All Departments</small>
-                    <div class="mt-3">
-                        <a href="/teachers" class="btn btn-success btn-sm">Manage</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-book icon-large text-info"></i>
-                    <h3 class="card-title mt-3" th:text="${totalSubjects ?: 0}">0</h3>
-                    <p class="card-text">Subjects</p>
-                    <small class="text-muted">All Classes</small>
-                    <div class="mt-3">
-                        <a href="/subjects" class="btn btn-info btn-sm">Configure</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-clipboard-list icon-large text-warning"></i>
-                    <h3 class="card-title mt-3" th:text="${totalExams ?: 0}">0</h3>
-                    <p class="card-text">Exams</p>
-                    <small class="text-muted">Current Session</small>
-                    <div class="mt-3">
-                        <a href="/exams" class="btn btn-warning btn-sm">Schedule</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Actions Row -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <h3 class="text-center mb-4" style="color: var(--text-light);">
-                <i class="fas fa-bolt me-2"></i>Quick Actions
-            </h3>
-        </div>
-        <div class="col-lg-2 col-md-4 mb-3">
-            <a href="/add-marks" class="btn btn-gradient-primary w-100 quick-action">
-                <i class="fas fa-plus-circle fa-2x mb-2"></i>
-                <div>Add Marks</div>
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-4 mb-3">
-            <a href="/bulk/marks" class="btn btn-gradient-success w-100 quick-action">
-                <i class="fas fa-layer-group fa-2x mb-2"></i>
-                <div>Bulk Entry</div>
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-4 mb-3">
-            <a href="/import/marks" class="btn btn-gradient-info w-100 quick-action">
-                <i class="fas fa-file-import fa-2x mb-2"></i>
-                <div>Import Excel</div>
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-4 mb-3">
-            <a href="/import/export" class="btn btn-gradient-warning w-100 quick-action">
-                <i class="fas fa-file-export fa-2x mb-2"></i>
-                <div>Export Data</div>
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-4 mb-3">
-            <a href="/view-results" class="btn btn-gradient-purple w-100 quick-action">
-                <i class="fas fa-search fa-2x mb-2"></i>
-                <div>View Results</div>
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-4 mb-3">
-            <a href="/reports" class="btn btn-gradient-danger w-100 quick-action">
-                <i class="fas fa-file-pdf fa-2x mb-2"></i>
-                <div>Reports</div>
-            </a>
-        </div>
-    </div>
-
-    <!-- Analytics Charts Section -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <h2 class="text-center mb-4" style="color: var(--text-light);">
-                <i class="fas fa-chart-line me-2"></i>System Analytics
-            </h2>
-        </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="chart-card">
-                <div class="chart-title">
-                    <i class="fas fa-users me-2"></i>Students by Class
-                </div>
-                <div class="chart-container">
-                    <canvas id="studentsChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="chart-card">
-                <div class="chart-title">
-                    <i class="fas fa-book me-2"></i>Subjects Distribution
-                </div>
-                <div class="chart-container">
-                    <canvas id="subjectsChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="chart-card">
-                <div class="chart-title">
-                    <i class="fas fa-clipboard-list me-2"></i>Exams Overview
-                </div>
-                <div class="chart-container">
-                    <canvas id="examsChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="chart-card">
-                <div class="chart-title">
-                    <i class="fas fa-chart-pie me-2"></i>System Overview
-                </div>
-                <div class="chart-container">
-                    <canvas id="overviewChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Feature Cards -->
-    <div class="row">
-        <div class="col-lg-4 mb-4">
-            <div class="card feature-card h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-calendar-alt text-primary icon-large"></i>
-                    <h5 class="card-title">Session Management</h5>
-                    <p class="card-text">Manage multiple academic years with seamless data separation and student
-                        promotion.</p>
-                    <div class="mt-3">
-                        <a href="/sessions" class="btn btn-primary me-2">Manage Sessions</a>
-                        <a href="/students/promote" class="btn btn-outline-primary">Promote Students</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 mb-4">
-            <div class="card feature-card h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-chart-bar text-success icon-large"></i>
-                    <h5 class="card-title">Results & Analytics</h5>
-                    <p class="card-text">Comprehensive result tracking with automatic grade calculation and performance
-                        analytics.</p>
-                    <div class="mt-3">
-                        <a href="/view-results" class="btn btn-success me-2">View Results</a>
-                        <a href="/add-marks" class="btn btn-outline-success">Add Marks</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 mb-4">
-            <div class="card feature-card h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-file-pdf text-danger icon-large"></i>
-                    <h5 class="card-title">Report Generation</h5>
-                    <p class="card-text">Professional PDF report cards with class-wise and individual student
-                        reports.</p>
-                    <div class="mt-3">
-                        <a href="/reports" class="btn btn-danger">Generate Reports</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- System Features -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="fas fa-star me-2"></i>System Features</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-unstyled">
-                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Multi-session
-                                    academic year management
-                                </li>
-                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Student promotion
-                                    between sessions
-                                </li>
-                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Class and subject
-                                    management
-                                </li>
-                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Multiple exam type
-                                    support
-                                </li>
-                            </ul>
+        <!-- Statistics Cards -->
+        <div class="row mb-5">
+            <div class="col-md-3 mb-4">
+                <div class="card stat-card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-users icon-large text-primary"></i>
+                        <h3 class="card-title mt-3" th:text="${totalStudents ?: 0}">0</h3>
+                        <p class="card-text">Total Students</p>
+                        <small class="text-muted">Active Session</small>
+                        <div class="mt-3">
+                            <a href="/students" class="btn btn-primary btn-sm">View All</a>
                         </div>
-                        <div class="col-md-6">
-                            <ul class="list-unstyled">
-                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Automatic grade
-                                    calculation
-                                </li>
-                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Professional PDF
-                                    report cards
-                                </li>
-                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Duplicate mark
-                                    prevention
-                                </li>
-                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Comprehensive
-                                    search functionality
-                                </li>
-                            </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card stat-card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-chalkboard-teacher icon-large text-success"></i>
+                        <h3 class="card-title mt-3" th:text="${totalTeachers ?: 0}">0</h3>
+                        <p class="card-text">Teachers</p>
+                        <small class="text-muted">All Departments</small>
+                        <div class="mt-3">
+                            <a href="/teachers" class="btn btn-success btn-sm">Manage</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card stat-card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-book icon-large text-info"></i>
+                        <h3 class="card-title mt-3" th:text="${totalSubjects ?: 0}">0</h3>
+                        <p class="card-text">Subjects</p>
+                        <small class="text-muted">All Classes</small>
+                        <div class="mt-3">
+                            <a href="/subjects" class="btn btn-info btn-sm">Configure</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card stat-card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-clipboard-list icon-large text-warning"></i>
+                        <h3 class="card-title mt-3" th:text="${totalExams ?: 0}">0</h3>
+                        <p class="card-text">Exams</p>
+                        <small class="text-muted">Current Session</small>
+                        <div class="mt-3">
+                            <a href="/exams" class="btn btn-warning btn-sm">Schedule</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Row -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h3 class="text-center mb-4" style="color: var(--text-light);">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h3>
+            </div>
+            <div class="col-lg-2 col-md-4 mb-3">
+                <a href="/add-marks" class="btn btn-gradient-primary w-100 quick-action">
+                    <i class="fas fa-plus-circle fa-2x mb-2"></i>
+                    <div>Add Marks</div>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-4 mb-3">
+                <a href="/bulk/marks" class="btn btn-gradient-success w-100 quick-action">
+                    <i class="fas fa-layer-group fa-2x mb-2"></i>
+                    <div>Bulk Entry</div>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-4 mb-3">
+                <a href="/import/marks" class="btn btn-gradient-info w-100 quick-action">
+                    <i class="fas fa-file-import fa-2x mb-2"></i>
+                    <div>Import Excel</div>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-4 mb-3">
+                <a href="/import/export" class="btn btn-gradient-warning w-100 quick-action">
+                    <i class="fas fa-file-export fa-2x mb-2"></i>
+                    <div>Export Data</div>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-4 mb-3">
+                <a href="/view-results" class="btn btn-gradient-purple w-100 quick-action">
+                    <i class="fas fa-search fa-2x mb-2"></i>
+                    <div>View Results</div>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-4 mb-3">
+                <a href="/reports" class="btn btn-gradient-danger w-100 quick-action">
+                    <i class="fas fa-file-pdf fa-2x mb-2"></i>
+                    <div>Reports</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Analytics Charts Section -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h2 class="text-center mb-4" style="color: var(--text-light);">
+                    <i class="fas fa-chart-line me-2"></i>System Analytics
+                </h2>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-graduation-cap me-2"></i>Average GPA
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="studentsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-book me-2"></i>Avg Marks by Subject
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="subjectsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-bar me-2"></i>Grade Distribution
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="examsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-pie me-2"></i>Pass/Fail Rate
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="overviewChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Cards -->
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-alt text-primary icon-large"></i>
+                        <h5 class="card-title">Session Management</h5>
+                        <p class="card-text">Manage multiple academic years with seamless data separation and student
+                            promotion.</p>
+                        <div class="mt-3">
+                            <a href="/sessions" class="btn btn-primary me-2">Manage Sessions</a>
+                            <a href="/students/promote" class="btn btn-outline-primary">Promote Students</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-bar text-success icon-large"></i>
+                        <h5 class="card-title">Results & Analytics</h5>
+                        <p class="card-text">Comprehensive result tracking with automatic grade calculation and
+                            performance
+                            analytics.</p>
+                        <div class="mt-3">
+                            <a href="/view-results" class="btn btn-success me-2">View Results</a>
+                            <a href="/add-marks" class="btn btn-outline-success">Add Marks</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-file-pdf text-danger icon-large"></i>
+                        <h5 class="card-title">Report Generation</h5>
+                        <p class="card-text">Professional PDF report cards with class-wise and individual student
+                            reports.</p>
+                        <div class="mt-3">
+                            <a href="/reports" class="btn btn-danger">Generate Reports</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Features -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-star me-2"></i>System Features</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Multi-session
+                                        academic year management
+                                    </li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Student
+                                        promotion
+                                        between sessions
+                                    </li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Class and
+                                        subject
+                                        management
+                                    </li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Multiple exam
+                                        type
+                                        support
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Automatic
+                                        grade
+                                        calculation
+                                    </li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Professional
+                                        PDF
+                                        report cards
+                                    </li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Duplicate mark
+                                        prevention
+                                    </li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Comprehensive
+                                        search functionality
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Footer -->
-<footer class="bg-dark text-light mt-5 py-4">
-    <div class="container text-center">
-        <p class="mb-0">
-            <i class="fas fa-graduation-cap me-2"></i>
-            School Exam Result Management System - Complete Academic Solution
-        </p>
-    </div>
-</footer>
+    <!-- Footer -->
+    <footer class="bg-dark text-light mt-5 py-4">
+        <div class="container text-center">
+            <p class="mb-0">
+                <i class="fas fa-graduation-cap me-2"></i>
+                School Exam Result Management System - Complete Academic Solution
+            </p>
+        </div>
+    </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    // Chart.js configuration with dark theme
-    Chart.defaults.color = '#f8fafc';
-    Chart.defaults.borderColor = 'rgba(59, 130, 246, 0.2)';
+    <script th:inline="javascript">
+        // Chart.js configuration with dark theme
+        Chart.defaults.color = '#f8fafc';
+        Chart.defaults.borderColor = 'rgba(59, 130, 246, 0.2)';
 
-    // Students by Class Chart
-    const studentsCtx = document.getElementById('studentsChart').getContext('2d');
-    new Chart(studentsCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Class 9', 'Class 10', 'Class 11', 'Class 12'],
-            datasets: [{
-                data: [2, 3, 0, 0], // Sample data based on current students
-                backgroundColor: [
-                    '#06b6d4', // Learning teal
-                    '#3b82f6', // Education blue
-                    '#8b5cf6', // Modern purple
-                    '#10b981'  // Success green
-                ],
-                borderWidth: 3,
-                borderColor: '#0d1421'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {color: '#f8fafc', padding: 20, font: {size: 12}}
-                }
-            }
+        // Get Data from Backend
+        const totalPass = [[${ totalPass }]] || 0;
+        const totalFail = [[${ totalFail }]] || 0;
+        const averageGpa = [[${ averageGpa }]] || 0;
+        const gradeUnparsed = [[${ gradeDistribution }]];
+
+        // Parse grade distribution map
+        const gradeLabels = ['A+', 'A', 'A-', 'B', 'C', 'D', 'F'];
+        const gradeData = [];
+
+        // Ensure data is aligned with labels
+        if (gradeUnparsed) {
+            gradeLabels.forEach(label => {
+                gradeData.push(gradeUnparsed[label] || 0);
+            });
         }
-    });
 
-    // Subjects Distribution Chart
-    const subjectsCtx = document.getElementById('subjectsChart').getContext('2d');
-    new Chart(subjectsCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Mathematics', 'English', 'Science'],
-            datasets: [{
-                label: 'Max Marks',
-                data: [100, 100, 100], // Sample data
-                backgroundColor: 'rgba(6, 182, 212, 0.8)',
-                borderColor: '#06b6d4',
-                borderWidth: 2,
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {color: 'rgba(59, 130, 246, 0.2)'},
-                    ticks: {color: '#f8fafc'}
+        /* 
+           REPLACED: "System Overview" -> "Pass/Fail Rate"
+           REPLACED: "Exams Overview" -> "Grade Distribution"
+        */
+
+        // 1. Pass/Fail Rate Chart (Replaces "System Overview")
+        const passFailCtx = document.getElementById('overviewChart').getContext('2d');
+        // Change title in HTML first, but for now we reuse the canvas
+        // Note: You should update the card title in HTML to "Pass/Fail Rate"
+
+        new Chart(passFailCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Passed', 'Failed'],
+                datasets: [{
+                    data: [totalPass, totalFail],
+                    backgroundColor: [
+                        '#10b981', // Success green
+                        '#ef4444'  // Danger red
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#f8fafc', padding: 20 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                let value = context.parsed;
+                                let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                let percentage = total > 0 ? Math.round((value / total) * 100) + '%' : '0%';
+                                return label + value + ' (' + percentage + ')';
+                            }
+                        }
+                    }
                 },
-                x: {
-                    grid: {color: 'rgba(59, 130, 246, 0.2)'},
-                    ticks: {color: '#f8fafc'}
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: {color: '#f8fafc'}
-                }
+                cutout: '70%'
             }
-        }
-    });
+        });
 
-    // Exams Overview Chart
-    const examsCtx = document.getElementById('examsChart').getContext('2d');
-    new Chart(examsCtx, {
-        type: 'line',
-        data: {
-            labels: ['Midterm Exam', 'Final Exam', 'Quiz 1'],
-            datasets: [{
-                label: 'Scheduled Exams',
-                data: [1, 1, 1], // Sample data
-                borderColor: '#8b5cf6',
-                backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4,
-                pointBackgroundColor: '#8b5cf6',
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 2,
-                pointRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {color: 'rgba(59, 130, 246, 0.2)'},
-                    ticks: {color: '#f8fafc'}
+        // 2. Grade Distribution Chart (Replaces "Exams Overview")
+        const gradeCtx = document.getElementById('examsChart').getContext('2d');
+        new Chart(gradeCtx, {
+            type: 'bar',
+            data: {
+                labels: gradeLabels,
+                datasets: [{
+                    label: 'Student Count',
+                    data: gradeData,
+                    backgroundColor: [
+                        '#10b981', '#3b82f6', '#06b6d4', '#8b5cf6', '#f59e0b', '#d97706', '#ef4444'
+                    ],
+                    borderRadius: 5,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(59, 130, 246, 0.1)' },
+                        ticks: { color: '#f8fafc', precision: 0 }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#f8fafc' }
+                    }
                 },
-                x: {
-                    grid: {color: 'rgba(59, 130, 246, 0.2)'},
-                    ticks: {color: '#f8fafc'}
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: {color: '#f8fafc'}
+                plugins: {
+                    legend: { display: false }
                 }
             }
-        }
-    });
+        });
 
-    // System Overview Chart
-    const overviewCtx = document.getElementById('overviewChart').getContext('2d');
-    new Chart(overviewCtx, {
-        type: 'polarArea',
-        data: {
-            labels: ['Students', 'Classes', 'Subjects', 'Exams', 'Sessions'],
-            datasets: [{
-                data: [5, 4, 5, 3, 2], // Sample data
-                backgroundColor: [
-                    'rgba(6, 182, 212, 0.8)',     // Learning teal
-                    'rgba(59, 130, 246, 0.8)',    // Education blue
-                    'rgba(139, 92, 246, 0.8)',    // Modern purple
-                    'rgba(16, 185, 129, 0.8)',    // Success green
-                    'rgba(245, 158, 11, 0.8)'     // Warning orange
-                ],
-                borderColor: '#0d1421',
-                borderWidth: 3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {color: '#f8fafc', padding: 15, font: {size: 11}}
-                }
+        // 3. Keep "Students by Class" (Use Mock or implement dynamic if needed)
+        // For now, let's keep it but ideally this should also be dynamic.
+        // Since we prioritized Pass/Fail & GPA, we leave this as mock or clear it.
+        // Let's make it a simple "Average GPA" Meter for now?
+        // Actually, let's keep the mock one or hide it if it's confusing.
+        // User asked for "Average GPA" chart. 
+
+        // Average GPA Gauge (Replaces "Students by Class")
+        const gpaCtx = document.getElementById('studentsChart').getContext('2d');
+
+        // Simple gauge visualization for GPA (0-5)
+        new Chart(gpaCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Average GPA', 'Remaining'],
+                datasets: [{
+                    data: [averageGpa, 5.0 - averageGpa],
+                    backgroundColor: [
+                        '#8b5cf6', // Purple
+                        'rgba(255, 255, 255, 0.1)' // Empty track
+                    ],
+                    borderWidth: 0,
+                    circumference: 180,
+                    rotation: 270
+                }]
             },
-            scales: {
-                r: {
-                    grid: {color: 'rgba(59, 130, 246, 0.2)'},
-                    ticks: {color: '#f8fafc', backdropColor: 'transparent'}
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false },
+                    title: {
+                        display: true,
+                        text: averageGpa.toFixed(2),
+                        color: '#fff',
+                        font: { size: 30, weight: 'bold' },
+                        position: 'bottom',
+                        padding: { top: -40, bottom: 20 }
+                    }
+                },
+                cutout: '80%'
+            }
+        });
+
+        // 4. Subjects Performance Chart (Real Data)
+        const subjectsCtx = document.getElementById('subjectsChart').getContext('2d');
+
+        // Parse subject performance map from backend
+        const subjectPerfMap = [[${ subjectPerformance }]];
+        const subjectLabels = subjectPerfMap ? Object.keys(subjectPerfMap) : ['No Data'];
+        const subjectData = subjectPerfMap ? Object.values(subjectPerfMap) : [0];
+
+        new Chart(subjectsCtx, {
+            type: 'bar',
+            data: {
+                labels: subjectLabels,
+                datasets: [{
+                    label: 'Avg Marks',
+                    data: subjectData,
+                    backgroundColor: 'rgba(6, 182, 212, 0.5)',
+                    borderColor: '#06b6d4',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: 'rgba(59, 130, 246, 0.1)' },
+                        ticks: { color: '#f8fafc' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#f8fafc' }
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: '#f8fafc' } }
                 }
             }
-        }
-    });
-</script>
+        });
+
+    </script>
 </body>
+
 </html>
