@@ -107,31 +107,35 @@ public class Result {
     }
 
     private String calculateGrade(double percentage) {
-        if (percentage >= 90)
+        if (percentage >= 80)
+            return "A+";
+        if (percentage >= 70)
             return "A";
-        if (percentage >= 75)
-            return "B";
         if (percentage >= 60)
-            return "C";
+            return "A-";
+        if (percentage >= 50)
+            return "B";
         if (percentage >= 40)
+            return "C";
+        if (percentage >= 33)
             return "D";
         return "F";
     }
 
     private double calculateGradePoint(double percentage) {
         if (percentage >= 80)
-            return 5.00;
+            return 5.00; // A+
         if (percentage >= 70)
-            return 4.00;
+            return 4.00; // A
         if (percentage >= 60)
-            return 3.50;
+            return 3.50; // A-
         if (percentage >= 50)
-            return 3.00;
+            return 3.00; // B
         if (percentage >= 40)
-            return 2.00;
+            return 2.00; // C
         if (percentage >= 33)
-            return 1.00;
-        return 0.00;
+            return 1.00; // D
+        return 0.00; // F
     }
 
     // Getters and Setters
