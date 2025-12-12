@@ -31,6 +31,9 @@ public class ExamController {
     @Autowired
     private TeacherAssignmentService teacherAssignmentService;
 
+    @org.springframework.beans.factory.annotation.Value("${dashboard.top.performers.limit:50}")
+    private int topPerformersLimit;
+
     // Public home page
     @GetMapping("/")
     public String homePage(Model model) {
@@ -87,6 +90,16 @@ public class ExamController {
         // Add Subject Performance Stats
         Map<String, Double> subjectPerformance = dashboardService.getSubjectPerformance();
         model.addAttribute("subjectPerformance", subjectPerformance);
+
+        // Add Top Performers (Dynamic Limit)
+        List<Result> topPerformers = dashboardService.getTopPerformers(topPerformersLimit);
+        model.addAttribute("topPerformers", topPerformers);
+        model.addAttribute("topPerformers", topPerformers);
+        model.addAttribute("topPerformersLimit", topPerformersLimit);
+
+        // Add At-Risk Students (Limit 10)
+        List<Result> atRiskStudents = dashboardService.getAtRiskStudents(10);
+        model.addAttribute("atRiskStudents", atRiskStudents);
 
         return "index";
     }

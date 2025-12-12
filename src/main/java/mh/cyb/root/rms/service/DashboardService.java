@@ -104,4 +104,48 @@ public class DashboardService {
 
         return formattedStats;
     }
+
+    // Get top performing students
+    public List<Result> getTopPerformers(int limit) {
+        List<Student> allStudents = studentRepository.findAll();
+
+        return allStudents.stream()
+                .map(student -> {
+                    List<Marks> marksList = marksRepository.findByStudentRollNumber(student.getRollNumber());
+                    return marksList.isEmpty() ? null
+                            : ResultBuilder.buildResult(
+                                    student.getName(),
+                                    student.getRollNumber(),
+                                    student.getClassName(),
+                                    marksList,
+                                    gradeCalculatorService);
+                })
+                // Filter: Must be PASS (Compulsory subjects fail = Result FAIL, so this covers
+                // it)
+                .filter(result -> result != null && "PASS".equalsIgnoreCase(result.getResult()))
+                .sorted((r1, r2) -> Double.compare(r2.getGpa(), r1.getGpa()))
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    // Get At-Risk Students (Fail)
+    public List<Result> getAtRiskStudents(int limit) {
+        List<Student> allStudents = studentRepository.findAll();
+
+        return allStudents.stream()
+                .map(student -> {
+                    List<Marks> marksList = marksRepository.findByStudentRollNumber(student.getRollNumber());
+                    return marksList.isEmpty() ? null
+                            : ResultBuilder.buildResult(
+                                    student.getName(),
+                                    student.getRollNumber(),
+                                    student.getClassName(),
+                                    marksList,
+                                    gradeCalculatorService);
+                })
+                .filter(result -> result != null && "FAIL".equalsIgnoreCase(result.getResult()))
+                .sorted((r1, r2) -> Double.compare(r1.getGpa(), r2.getGpa())) // Lowest GPA first
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
 }
