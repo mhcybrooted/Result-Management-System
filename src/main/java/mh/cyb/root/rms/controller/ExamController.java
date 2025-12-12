@@ -34,6 +34,9 @@ public class ExamController {
     @Autowired
     private TeacherAssignmentService teacherAssignmentService;
 
+    @Autowired
+    private mh.cyb.root.rms.repository.AdminUserRepository adminUserRepository;
+
     @org.springframework.beans.factory.annotation.Value("${dashboard.top.performers.limit:50}")
     private int topPerformersLimit;
 
@@ -394,12 +397,40 @@ public class ExamController {
                 .sorted()
                 .collect(Collectors.toList());
 
+        // RBAC: Filter filtering logic for Teachers
+        String username = securityServiceGetUsername();
+        Optional<AdminUser> adminUserOpt = adminUserRepository.findByUsername(username);
+
+        boolean isTeacher = false;
+        if (adminUserOpt.isPresent() && "TEACHER".equals(adminUserOpt.get().getRole())) {
+            isTeacher = true;
+            Long teacherId = adminUserOpt.get().getTeacherId();
+            if (activeSession.isPresent() && teacherId != null) {
+                // Get ONLY assigned subjects
+                List<Subject> assignedSubjects = teacherAssignmentService.getAssignedSubjects(teacherId,
+                        activeSession.get().getId());
+
+                // Intersect with existing subjects filter if present
+                if (classFilter != null && !classFilter.trim().isEmpty()) {
+                    subjects = subjects.stream()
+                            .filter(s -> assignedSubjects.stream().anyMatch(as -> as.getId().equals(s.getId())))
+                            .collect(Collectors.toList());
+                } else {
+                    subjects = assignedSubjects;
+                }
+            }
+        }
+
         model.addAttribute("students", students);
         model.addAttribute("subjects", subjects);
         model.addAttribute("exams", exams);
         model.addAttribute("teachers", teachers);
         model.addAttribute("availableClasses", availableClasses);
         model.addAttribute("selectedClass", classFilter);
+        model.addAttribute("isTeacher", isTeacher);
+        if (isTeacher && adminUserOpt.get().getTeacherId() != null) {
+            model.addAttribute("currentTeacherId", adminUserOpt.get().getTeacherId());
+        }
         return "add-marks";
     }
 
@@ -409,21 +440,60 @@ public class ExamController {
             @RequestParam Long subjectId,
             @RequestParam Long examId,
             @RequestParam Integer obtainedMarks,
-            @RequestParam Long teacherId,
+            @RequestParam(required = false) Long teacherId, // Optional for Teacher role
             RedirectAttributes redirectAttributes) {
 
-        // Validate input
-        if (studentId == null || subjectId == null || examId == null || obtainedMarks == null || obtainedMarks < 0
-                || teacherId == null) {
+        // Validate basic input
+        if (studentId == null || subjectId == null || examId == null || obtainedMarks == null || obtainedMarks < 0) {
             redirectAttributes.addFlashAttribute("error", "Please fill all fields with valid values");
             return "redirect:/add-marks";
         }
 
-        boolean success = examService.addMarks(studentId, subjectId, examId, obtainedMarks, teacherId);
+        // RBAC: Determine real Teacher ID
+        String username = securityServiceGetUsername();
+        Optional<AdminUser> adminUserOpt = adminUserRepository.findByUsername(username);
+
+        Long validTeacherId = teacherId;
+
+        if (adminUserOpt.isPresent()) {
+            AdminUser adminUser = adminUserOpt.get();
+            // If user is a TEACHER, force override teacherId and validate
+            if ("TEACHER".equals(adminUser.getRole())) {
+                validTeacherId = adminUser.getTeacherId();
+                if (validTeacherId == null) {
+                    redirectAttributes.addFlashAttribute("error",
+                            "Your account is not linked to a Teacher profile. Contact Super Admin.");
+                    return "redirect:/add-marks";
+                }
+
+                // Validate if this teacher is assigned to this subject
+                // Ideally this should also check Session ID, but obtaining it might require
+                // Extra DB call or Exam lookup.
+                // For now, we trust TeacherAssignmentService to check active assignments.
+                Optional<Session> activeSession = examService.getActiveSession();
+                if (activeSession.isPresent()) {
+                    List<mh.cyb.root.rms.entity.Subject> assignedSubjects = teacherAssignmentService
+                            .getAssignedSubjects(validTeacherId, activeSession.get().getId());
+                    boolean isAssigned = assignedSubjects.stream().anyMatch(s -> s.getId().equals(subjectId));
+                    if (!isAssigned) {
+                        redirectAttributes.addFlashAttribute("error",
+                                "Security Alert: You are not authorized to add marks for this subject.");
+                        return "redirect:/add-marks";
+                    }
+                }
+            } else {
+                // For SUPER_ADMIN, teacherId field is required
+                if (teacherId == null) {
+                    redirectAttributes.addFlashAttribute("error", "Please select a teacher");
+                    return "redirect:/add-marks";
+                }
+            }
+        }
+
+        boolean success = examService.addMarks(studentId, subjectId, examId, obtainedMarks, validTeacherId);
 
         if (success) {
             // Log Action
-            String username = securityServiceGetUsername();
             activityLogService.logAction("ADD_MARKS",
                     "Added marks: " + obtainedMarks + " for Student ID: " + studentId + ", Subject ID: " + subjectId,
                     username, null);

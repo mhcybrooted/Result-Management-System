@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add User - School Exam System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a1a2e;
+            --secondary-dark: #16213e;
+            --text-light: #ddd;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        .form-card {
+            background: #16213e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="navbar :: navbar"></div>
+    <div style="padding-top: 80px;"></div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="form-card">
+                    <h3 class="mb-4 text-center"><i class="fas fa-user-plus me-2"></i>Create New User</h3>
+
+                    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                    <form action="/admin/users/add" method="post" th:object="${adminUser}">
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" th:field="*{username}" required>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" th:field="*{password}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" name="confirmPassword" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <select class="form-select" th:field="*{role}" onchange="toggleTeacherSelect(this.value)">
+                                <option value="SUPER_ADMIN">Super Admin</option>
+                                <option value="TEACHER">Teacher</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3" id="teacherSelectGroup" style="display:none;">
+                            <label class="form-label">Link to Teacher Profile</label>
+                            <select class="form-select" th:field="*{teacherId}">
+                                <option value="">Select Teacher Profile...</option>
+                                <option th:each="t : ${teachers}" th:value="${t.id}"
+                                    th:text="${t.name + ' (' + t.email + ')'}"></option>
+                            </select>
+                            <small class="text-muted">Required if Role is set to Teacher.</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Create User</button>
+                            <a href="/admin/users" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTeacherSelect(role) {
+            const group = document.getElementById('teacherSelectGroup');
+            if (role === 'TEACHER') {
+                group.style.display = 'block';
+            } else {
+                group.style.display = 'none';
+            }
+        }
+        // Run on load in case validation failed and page reloaded
+        document.addEventListener('DOMContentLoaded', function () {
+            const roleSelect = document.querySelector('select[name="role"]');
+            if (roleSelect) toggleTeacherSelect(roleSelect.value);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

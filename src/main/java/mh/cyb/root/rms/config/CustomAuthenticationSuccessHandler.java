@@ -37,7 +37,7 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
                 .anyMatch(r -> r.getAuthority().equals("ROLE_SUPER_ADMIN"));
 
         if (isSuperAdmin) {
-            targetUrl = "/super-admin/dashboard";
+            targetUrl = "/admin/dashboard";
         }
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);

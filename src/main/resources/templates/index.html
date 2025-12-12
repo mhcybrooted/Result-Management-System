@@ -774,13 +774,13 @@
                     <div>Bulk Entry</div>
                 </a>
             </div>
-            <div class="col-lg-2 col-md-4 mb-3">
+            <div class="col-lg-2 col-md-4 mb-3" sec:authorize="hasRole('SUPER_ADMIN')">
                 <a href="/import/marks" class="btn btn-gradient-info w-100 quick-action">
                     <i class="fas fa-file-import fa-2x mb-2"></i>
                     <div>Import Excel</div>
                 </a>
             </div>
-            <div class="col-lg-2 col-md-4 mb-3">
+            <div class="col-lg-2 col-md-4 mb-3" sec:authorize="hasRole('SUPER_ADMIN')">
                 <a href="/import/export" class="btn btn-gradient-warning w-100 quick-action">
                     <i class="fas fa-file-export fa-2x mb-2"></i>
                     <div>Export Data</div>
@@ -792,10 +792,17 @@
                     <div>View Results</div>
                 </a>
             </div>
-            <div class="col-lg-2 col-md-4 mb-3">
+            <div class="col-lg-2 col-md-4 mb-3" sec:authorize="hasRole('SUPER_ADMIN')">
                 <a href="/reports" class="btn btn-gradient-danger w-100 quick-action">
                     <i class="fas fa-file-pdf fa-2x mb-2"></i>
                     <div>Reports</div>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-4 mb-3" sec:authorize="hasRole('SUPER_ADMIN')">
+                <a href="/admin/users" class="btn btn-dark w-100 quick-action"
+                    style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);">
+                    <i class="fas fa-users-cog fa-2x mb-2"></i>
+                    <div>Manage Users</div>
                 </a>
             </div>
         </div>

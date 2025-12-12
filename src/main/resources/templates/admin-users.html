@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - School Exam System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a1a2e;
+            --secondary-dark: #16213e;
+            --accent-blue: #0f3460;
+            --education-blue: #2c5aa0;
+            --learning-teal: #16a085;
+            --modern-purple: #6c5ce7;
+            --success-green: #00b894;
+            --warning-orange: #fdcb6e;
+            --danger-red: #e17055;
+            --text-light: #ddd;
+            --text-muted: #95a5a6;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        .navbar-dark {
+            background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent-blue) 100%) !important;
+        }
+
+        .card-header {
+            background: linear-gradient(90deg, var(--education-blue) 0%, var(--modern-purple) 100%) !important;
+            color: white;
+        }
+
+        .table-dark {
+            background: var(--secondary-dark);
+            color: var(--text-light);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Central Navbar -->
+    <div th:replace="navbar :: navbar"></div>
+    <div style="padding-top: 80px;"></div>
+
+    <div class="container">
+        <div class="card bg-dark text-white border-secondary mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="fas fa-users-cog me-2"></i>Admin Users</h4>
+                <a href="/admin/users/add" class="btn btn-success"><i class="fas fa-plus me-2"></i>Create New User</a>
+            </div>
+            <div class="card-body">
+                <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Linked Teacher ID</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user : ${users}">
+                                <td th:text="${user.username}" class="fw-bold"></td>
+                                <td>
+                                    <span th:if="${user.role == 'SUPER_ADMIN'}" class="badge bg-danger">Super
+                                        Admin</span>
+                                    <span th:if="${user.role == 'TEACHER'}" class="badge bg-info">Teacher</span>
+                                    <span th:if="${user.role == 'ADMIN'}" class="badge bg-warning">Admin</span>
+                                </td>
+                                <td>
+                                    <span th:if="${user.teacherId}" th:text="${user.teacherId}"
+                                        class="badge bg-light text-dark"></span>
+                                    <span th:unless="${user.teacherId}" class="text-muted">-</span>
+                                </td>
+                                <td>
+                                    <span th:if="${user.active}" class="badge bg-success">Active</span>
+                                    <span th:unless="${user.active}" class="badge bg-secondary">Inactive</span>
+                                </td>
+                                <td>
+                                    <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post"
+                                        style="display:inline;" onsubmit="return confirm('Delete this user?');">
+                                        <button type="submit" class="btn btn-sm btn-danger"><i
+                                                class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
