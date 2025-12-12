@@ -46,7 +46,7 @@ public class SecurityConfig {
 
                                                 // Shared Access
                                                 .requestMatchers("/add-marks", "/students/**", "/exams/**",
-                                                                "/subjects/**", "/bulk/**")
+                                                                "/subjects/**", "/bulk/**", "/reports/**")
                                                 .hasAnyRole("SUPER_ADMIN", "TEACHER")
                                                 .requestMatchers("/admin/dashboard", "/admin/activity-logs")
                                                 .hasAnyRole("SUPER_ADMIN", "TEACHER")

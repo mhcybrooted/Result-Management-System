@@ -44,6 +44,11 @@ public class ExamService {
         return sessionRepository.findAll();
     }
 
+    public org.springframework.data.domain.Page<Session> getAllSessions(
+            org.springframework.data.domain.Pageable pageable) {
+        return sessionRepository.findAll(pageable);
+    }
+
     public Optional<Session> getActiveSession() {
         return sessionRepository.findByActiveTrue();
     }
@@ -68,9 +73,19 @@ public class ExamService {
         return studentRepository.findByActiveSession();
     }
 
+    public org.springframework.data.domain.Page<Student> getAllStudents(
+            org.springframework.data.domain.Pageable pageable) {
+        return studentRepository.findByActiveSession(pageable);
+    }
+
     // Get all subjects
     public List<Subject> getAllSubjects() {
         return subjectRepository.findAll();
+    }
+
+    public org.springframework.data.domain.Page<Subject> getAllSubjects(
+            org.springframework.data.domain.Pageable pageable) {
+        return subjectRepository.findAll(pageable);
     }
 
     // Get exams for active session
@@ -79,8 +94,13 @@ public class ExamService {
     }
 
     // Get all exams for active session
+    // Get all exams for active session
     public List<Exam> getAllExams() {
         return examRepository.findByActiveSession();
+    }
+
+    public org.springframework.data.domain.Page<Exam> getAllExams(org.springframework.data.domain.Pageable pageable) {
+        return examRepository.findByActiveSession(pageable);
     }
 
     // Add/Update exam (with active session)
@@ -252,6 +272,11 @@ public class ExamService {
     // Class management
     public List<mh.cyb.root.rms.entity.Class> getAllClasses() {
         return classRepository.findAll();
+    }
+
+    public org.springframework.data.domain.Page<mh.cyb.root.rms.entity.Class> getAllClasses(
+            org.springframework.data.domain.Pageable pageable) {
+        return classRepository.findAll(pageable);
     }
 
     public List<mh.cyb.root.rms.entity.Class> getAllActiveClasses() {

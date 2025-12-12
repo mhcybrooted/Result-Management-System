@@ -8,4 +8,6 @@ import java.util.List;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     List<Teacher> findByActiveTrue();
+
+    org.springframework.data.domain.Page<Teacher> findByActiveTrue(org.springframework.data.domain.Pageable pageable);
 }

@@ -58,6 +58,11 @@ public class AdminUserService implements UserDetailsService {
         return adminUserRepository.findAll();
     }
 
+    public org.springframework.data.domain.Page<AdminUser> getAllAdminUsers(
+            org.springframework.data.domain.Pageable pageable) {
+        return adminUserRepository.findAll(pageable);
+    }
+
     public void deleteAdminUser(Long id) {
         adminUserRepository.deleteById(id);
     }

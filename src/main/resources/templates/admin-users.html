@@ -99,6 +99,37 @@
                             </tr>
                         </tbody>
                     </table>
+                    </table>
+
+                    <!-- Pagination Controls -->
+                    <div th:if="${totalPages > 1}"
+                        class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-secondary">
+                        <div class="text-light small">
+                            Showing page <span th:text="${currentPage + 1}">1</span> of <span
+                                th:text="${totalPages}">1</span>
+                            (<span th:text="${totalItems}">0</span> total users)
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                    <a class="page-link bg-secondary border-secondary text-light"
+                                        th:href="@{/admin/users(page=${currentPage - 1})}">
+                                        <i class="fas fa-chevron-left me-1"></i> Previous
+                                    </a>
+                                </li>
+                                <li class="page-item disabled">
+                                    <span class="page-link bg-secondary border-secondary text-light"
+                                        th:text="${currentPage + 1}">1</span>
+                                </li>
+                                <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                                    <a class="page-link bg-secondary border-secondary text-light"
+                                        th:href="@{/admin/users(page=${currentPage + 1})}">
+                                        Next <i class="fas fa-chevron-right ms-1"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>

@@ -8,10 +8,13 @@ import java.util.List;
 
 @Repository
 public interface ExamRepository extends JpaRepository<Exam, Long> {
-    
+
     @Query("SELECT e FROM Exam e WHERE e.active = true AND e.session.active = true")
     List<Exam> findByActiveTrue();
-    
+
     @Query("SELECT e FROM Exam e WHERE e.session.active = true")
     List<Exam> findByActiveSession();
+
+    @Query("SELECT e FROM Exam e WHERE e.session.active = true")
+    org.springframework.data.domain.Page<Exam> findByActiveSession(org.springframework.data.domain.Pageable pageable);
 }

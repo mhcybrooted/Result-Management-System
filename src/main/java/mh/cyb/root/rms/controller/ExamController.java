@@ -72,40 +72,75 @@ public class ExamController {
 
     // Admin dashboard (admin authentication required)
     @GetMapping("/admin/dashboard")
-    public String adminDashboard(Model model) {
+    public String adminDashboard(@RequestParam(defaultValue = "0") int performersPage,
+            @RequestParam(defaultValue = "0") int atRiskPage, Model model) {
         // Get active session
         Optional<Session> activeSession = examService.getActiveSession();
         if (activeSession.isPresent()) {
             model.addAttribute("activeSession", activeSession.get());
         }
 
-        // Add statistics
-        model.addAttribute("totalStudents", examService.getAllStudents().size());
-        model.addAttribute("totalTeachers", teacherService.getAllActiveTeachers().size());
-        model.addAttribute("totalSubjects", examService.getAllSubjects().size());
-        model.addAttribute("totalExams", examService.getAllActiveExams().size());
+        // RBAC: Check user role
+        String username = securityServiceGetUsername();
+        Optional<AdminUser> adminUserOpt = adminUserRepository.findByUsername(username);
+        boolean isTeacher = adminUserOpt.isPresent() && "TEACHER".equals(adminUserOpt.get().getRole());
+        model.addAttribute("isTeacher", isTeacher);
 
-        // Add Pass/Fail & GPA Statistics from DashboardService
-        Map<String, Object> stats = dashboardService.getDashboardStats();
-        model.addAttribute("totalPass", stats.get("totalPass"));
-        model.addAttribute("totalFail", stats.get("totalFail"));
-        model.addAttribute("averageGpa", stats.get("averageGpa"));
-        model.addAttribute("studentsWithResults", stats.get("studentsWithResults"));
-        model.addAttribute("gradeDistribution", stats.get("gradeDistribution"));
+        if (isTeacher) {
+            Long teacherId = adminUserOpt.get().getTeacherId();
 
-        // Add Subject Performance Stats
-        Map<String, Double> subjectPerformance = dashboardService.getSubjectPerformance();
-        model.addAttribute("subjectPerformance", subjectPerformance);
+            if (activeSession.isPresent() && teacherId != null) {
+                Map<String, Object> teacherStats = dashboardService.getTeacherStats(teacherId,
+                        activeSession.get().getId());
+                model.addAttribute("totalStudents", teacherStats.get("totalStudents")); // My Students
+                model.addAttribute("totalSubjects", teacherStats.get("totalSubjects")); // My Subjects
+                model.addAttribute("totalPass", teacherStats.get("totalPass")); // Subject-level Pass
+                model.addAttribute("totalFail", teacherStats.get("totalFail")); // Subject-level Fail
+                model.addAttribute("averageGpa", teacherStats.get("averageGpa")); // Average GPA
+                model.addAttribute("subjectPerformance", teacherStats.get("subjectPerformance"));
+                model.addAttribute("gradeDistribution", teacherStats.get("gradeDistribution")); // Grade Distribution
+                                                                                                // Chart
 
-        // Add Top Performers (Dynamic Limit)
-        List<Result> topPerformers = dashboardService.getTopPerformers(topPerformersLimit);
-        model.addAttribute("topPerformers", topPerformers);
+                // Teachers don't manage other teachers/exams
+                model.addAttribute("totalTeachers", 0);
+                model.addAttribute("totalExams", 0);
+            }
+        } else {
+            // Super Admin (Global Stats)
+            model.addAttribute("totalStudents", examService.getAllStudents().size());
+            model.addAttribute("totalTeachers", teacherService.getAllActiveTeachers().size());
+            model.addAttribute("totalSubjects", examService.getAllSubjects().size());
+            model.addAttribute("totalExams", examService.getAllActiveExams().size());
+
+            Map<String, Object> stats = dashboardService.getDashboardStats();
+            model.addAttribute("totalPass", stats.get("totalPass"));
+            model.addAttribute("totalFail", stats.get("totalFail"));
+            model.addAttribute("averageGpa", stats.get("averageGpa"));
+            model.addAttribute("subjectPerformance", dashboardService.getSubjectPerformance());
+            model.addAttribute("studentsWithResults", stats.get("studentsWithResults"));
+            model.addAttribute("gradeDistribution", stats.get("gradeDistribution"));
+        }
+
+        // Common Data
+        int performersSize = topPerformersLimit;
+        List<Result> topPerformers = dashboardService.getTopPerformers(performersPage, performersSize);
+        int totalPerformers = dashboardService.getTopPerformersCount();
+        int totalPages = (int) Math.ceil((double) totalPerformers / performersSize);
+
         model.addAttribute("topPerformers", topPerformers);
         model.addAttribute("topPerformersLimit", topPerformersLimit);
+        model.addAttribute("performersPage", performersPage);
+        model.addAttribute("performersTotalPages", totalPages);
 
-        // Add At-Risk Students (Limit 10)
-        List<Result> atRiskStudents = dashboardService.getAtRiskStudents(10);
+        // At-Risk Students Data
+        int atRiskSize = 5;
+        List<Result> atRiskStudents = dashboardService.getAtRiskStudents(atRiskPage, atRiskSize);
+        int totalAtRisk = dashboardService.getAtRiskStudentsCount();
+        int totalAtRiskPages = (int) Math.ceil((double) totalAtRisk / atRiskSize);
+
         model.addAttribute("atRiskStudents", atRiskStudents);
+        model.addAttribute("atRiskPage", atRiskPage);
+        model.addAttribute("atRiskTotalPages", totalAtRiskPages);
 
         return "index";
     }
@@ -227,9 +262,15 @@ public class ExamController {
 
     // Session management pages
     @GetMapping("/sessions")
-    public String listSessions(Model model) {
-        List<Session> sessions = examService.getAllSessions();
-        model.addAttribute("sessions", sessions);
+    public String listSessions(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        org.springframework.data.domain.Page<Session> sessionPage = examService.getAllSessions(
+                org.springframework.data.domain.PageRequest.of(page, size));
+        model.addAttribute("sessions", sessionPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", sessionPage.getTotalPages());
+        model.addAttribute("totalItems", sessionPage.getTotalElements());
         return "sessions";
     }
 
@@ -302,9 +343,15 @@ public class ExamController {
 
     // Exam management pages
     @GetMapping("/exams")
-    public String listExams(Model model) {
-        List<Exam> exams = examService.getAllExams();
-        model.addAttribute("exams", exams);
+    public String listExams(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        org.springframework.data.domain.Page<Exam> examPage = examService.getAllExams(
+                org.springframework.data.domain.PageRequest.of(page, size));
+        model.addAttribute("exams", examPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", examPage.getTotalPages());
+        model.addAttribute("totalItems", examPage.getTotalElements());
         return "exams";
     }
 
@@ -509,9 +556,47 @@ public class ExamController {
 
     // Student management pages
     @GetMapping("/students")
-    public String listStudents(Model model) {
-        List<Student> students = examService.getAllStudents();
-        model.addAttribute("students", students);
+    public String listStudents(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        String username = securityServiceGetUsername();
+        Optional<AdminUser> adminUserOpt = adminUserRepository.findByUsername(username);
+        boolean isTeacher = adminUserOpt.isPresent() && "TEACHER".equals(adminUserOpt.get().getRole());
+        model.addAttribute("isTeacher", isTeacher);
+
+        if (isTeacher) {
+            Long teacherId = adminUserOpt.get().getTeacherId();
+            Optional<Session> activeSession = examService.getActiveSession();
+
+            if (activeSession.isPresent() && teacherId != null) {
+                // Get all assigned students
+                List<Student> allStudents = teacherAssignmentService.getStudentsForTeacher(teacherId,
+                        activeSession.get().getId());
+
+                // Manual in-memory pagination for teachers
+                int start = Math.min(page * size, allStudents.size());
+                int end = Math.min(start + size, allStudents.size());
+                List<Student> pageContent = allStudents.subList(start, end);
+
+                model.addAttribute("students", pageContent);
+                model.addAttribute("currentPage", page);
+                model.addAttribute("totalPages", (int) Math.ceil((double) allStudents.size() / size));
+                model.addAttribute("totalItems", allStudents.size());
+            } else {
+                model.addAttribute("students", new ArrayList<>());
+                model.addAttribute("currentPage", 0);
+                model.addAttribute("totalPages", 0);
+                model.addAttribute("totalItems", 0);
+            }
+        } else {
+            // Super Admin (All Students) - Server-side Pagination
+            org.springframework.data.domain.Page<Student> studentPage = examService
+                    .getAllStudents(org.springframework.data.domain.PageRequest.of(page, size));
+            model.addAttribute("students", studentPage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", studentPage.getTotalPages());
+            model.addAttribute("totalItems", studentPage.getTotalElements());
+        }
         return "students";
     }
 
@@ -612,9 +697,15 @@ public class ExamController {
 
     // Class management pages
     @GetMapping("/classes")
-    public String listClasses(Model model) {
-        List<mh.cyb.root.rms.entity.Class> classes = examService.getAllClasses();
-        model.addAttribute("classes", classes);
+    public String listClasses(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        org.springframework.data.domain.Page<mh.cyb.root.rms.entity.Class> classPage = examService.getAllClasses(
+                org.springframework.data.domain.PageRequest.of(page, size));
+        model.addAttribute("classes", classPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", classPage.getTotalPages());
+        model.addAttribute("totalItems", classPage.getTotalElements());
         return "classes";
     }
 
@@ -668,17 +759,63 @@ public class ExamController {
 
     // Subject management pages
     @GetMapping("/subjects")
-    public String listSubjects(Model model) {
-        List<Subject> subjects = examService.getAllSubjects();
-        model.addAttribute("subjects", subjects);
+    public String listSubjects(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        String username = securityServiceGetUsername();
+        Optional<AdminUser> adminUserOpt = adminUserRepository.findByUsername(username);
+        boolean isTeacher = adminUserOpt.isPresent() && "TEACHER".equals(adminUserOpt.get().getRole());
+        model.addAttribute("isTeacher", isTeacher);
 
-        // Calculate dynamic stats
-        long classesCovered = subjects.stream()
+        List<Subject> allSubjectsForStats;
+        List<Subject> pageContent;
+        int currentPage = page;
+        int totalPages;
+        long totalItems;
+
+        if (isTeacher) {
+            Long teacherId = adminUserOpt.get().getTeacherId();
+            Optional<Session> activeSession = examService.getActiveSession();
+
+            if (activeSession.isPresent() && teacherId != null) {
+                allSubjectsForStats = teacherAssignmentService.getAssignedSubjects(teacherId,
+                        activeSession.get().getId());
+            } else {
+                allSubjectsForStats = new ArrayList<>();
+            }
+
+            // Manual Pagination
+            int start = Math.min(page * size, allSubjectsForStats.size());
+            int end = Math.min(start + size, allSubjectsForStats.size());
+            pageContent = allSubjectsForStats.subList(start, end);
+            totalPages = (int) Math.ceil((double) allSubjectsForStats.size() / size);
+            totalItems = allSubjectsForStats.size();
+        } else {
+            // Admin (All Subjects)
+            // fetch all for stats (optimization: could count in DB, but this is simple for
+            // now)
+            allSubjectsForStats = examService.getAllSubjects();
+
+            // Server-side Pagination
+            org.springframework.data.domain.Page<Subject> subjectPage = examService
+                    .getAllSubjects(org.springframework.data.domain.PageRequest.of(page, size));
+            pageContent = subjectPage.getContent();
+            totalPages = subjectPage.getTotalPages();
+            totalItems = subjectPage.getTotalElements();
+        }
+
+        model.addAttribute("subjects", pageContent);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
+
+        // Calculate dynamic stats from FULL list
+        long classesCovered = allSubjectsForStats.stream()
                 .map(Subject::getClassName)
                 .distinct()
                 .count();
 
-        int maxMarks = subjects.stream()
+        int maxMarks = allSubjectsForStats.stream()
                 .mapToInt(Subject::getMaxMarks)
                 .max()
                 .orElse(0);
@@ -764,6 +901,24 @@ public class ExamController {
     // Search results
     @PostMapping("/search-results")
     public String searchResults(@RequestParam String rollNumber, Model model) {
+        // RBAC Security Check
+        String username = securityServiceGetUsername();
+        Optional<AdminUser> adminUserOpt = adminUserRepository.findByUsername(username);
+
+        if (adminUserOpt.isPresent() && "TEACHER".equals(adminUserOpt.get().getRole())) {
+            Long teacherId = adminUserOpt.get().getTeacherId();
+            Optional<Session> activeSession = examService.getActiveSession();
+            if (activeSession.isPresent()) {
+                List<Student> allowedStudents = teacherAssignmentService.getStudentsForTeacher(teacherId,
+                        activeSession.get().getId());
+                boolean isAllowed = allowedStudents.stream().anyMatch(s -> s.getRollNumber().equals(rollNumber));
+                if (!isAllowed) {
+                    model.addAttribute("error",
+                            "Access Denied: You can only view results for students in your classes.");
+                    return "view-results";
+                }
+            }
+        }
 
         if (rollNumber == null || rollNumber.trim().isEmpty()) {
             model.addAttribute("error", "Please enter a roll number");

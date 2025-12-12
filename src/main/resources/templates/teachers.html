@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,7 @@
             position: relative;
             overflow-x: hidden;
         }
-        
+
         body::before {
             content: '';
             position: fixed;
@@ -23,17 +24,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
             z-index: -1;
         }
-        
+
         .container {
             padding-top: 100px;
             padding-bottom: 50px;
         }
-        
+
         .stats-card {
             background: rgba(15, 15, 35, 0.8);
             backdrop-filter: blur(20px);
@@ -41,12 +42,12 @@
             border-radius: 20px;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 
+            box-shadow:
                 0 8px 32px rgba(0, 0, 0, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
         }
-        
+
         .stats-card::before {
             content: '';
             position: absolute;
@@ -56,7 +57,7 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.5), transparent);
         }
-        
+
         .teacher-card {
             background: rgba(15, 15, 35, 0.8);
             backdrop-filter: blur(20px);
@@ -68,7 +69,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .teacher-card::after {
             content: '';
             position: absolute;
@@ -81,18 +82,18 @@
             transform: translate(-50%, -50%);
             border-radius: 50%;
         }
-        
+
         .teacher-card:hover::after {
             width: 300px;
             height: 300px;
         }
-        
+
         .teacher-card:hover {
             transform: translateY(-5px);
             border-color: rgba(102, 126, 234, 0.5);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
         }
-        
+
         .teacher-avatar {
             width: 60px;
             height: 60px;
@@ -106,12 +107,12 @@
             margin-right: 1rem;
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
         }
-        
+
         .stat-item {
             text-align: center;
             padding: 1rem;
         }
-        
+
         .stat-number {
             font-size: 2.5rem;
             font-weight: 900;
@@ -121,14 +122,14 @@
             background-clip: text;
             margin-bottom: 0.5rem;
         }
-        
+
         .stat-label {
             color: #8b949e;
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
+
         .chart-container {
             background: rgba(15, 15, 35, 0.8);
             backdrop-filter: blur(20px);
@@ -138,7 +139,7 @@
             margin-bottom: 2rem;
             position: relative;
         }
-        
+
         .chart-container::before {
             content: '';
             position: absolute;
@@ -148,7 +149,7 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.5), transparent);
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, #667eea, #764ba2);
             border: none;
@@ -157,12 +158,12 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
-        
+
         .btn-outline-primary {
             border: 1px solid rgba(102, 126, 234, 0.5);
             color: #667eea;
@@ -172,14 +173,14 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .btn-outline-primary:hover {
             background: rgba(102, 126, 234, 0.2);
             border-color: #667eea;
             color: #667eea;
             transform: translateY(-2px);
         }
-        
+
         .btn-outline-secondary {
             border: 1px solid rgba(139, 148, 158, 0.5);
             color: #8b949e;
@@ -188,13 +189,13 @@
             font-weight: 500;
             transition: all 0.3s ease;
         }
-        
+
         .btn-outline-secondary:hover {
             background: rgba(139, 148, 158, 0.2);
             border-color: #8b949e;
             color: #8b949e;
         }
-        
+
         .badge {
             background: rgba(102, 126, 234, 0.2);
             border: 1px solid rgba(102, 126, 234, 0.5);
@@ -202,35 +203,38 @@
             border-radius: 20px;
             padding: 0.25rem 0.75rem;
         }
-        
-        h1, h2, h3 {
+
+        h1,
+        h2,
+        h3 {
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .table-dark {
             background: rgba(15, 15, 35, 0.8);
             border: 1px solid rgba(120, 119, 198, 0.2);
             border-radius: 15px;
         }
-        
+
         .table-dark th {
             border-color: rgba(120, 119, 198, 0.2);
             color: #e0e6ed;
         }
-        
+
         .table-dark td {
             border-color: rgba(120, 119, 198, 0.1);
             color: #a0a9c0;
         }
     </style>
 </head>
+
 <body>
     <!-- Central Navbar -->
     <div th:replace="navbar :: navbar"></div>
-    
+
     <div class="container">
         <!-- Page Header -->
         <div class="row mb-4">
@@ -251,7 +255,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Statistics Cards -->
         <div class="row mb-4">
             <div class="col-md-3">
@@ -281,35 +285,36 @@
             <div class="col-md-3">
                 <div class="stats-card">
                     <div class="stat-item">
-                        <div class="stat-number" th:text="${assignmentRate != null ? (assignmentRate + '%') : '0%'}">95%</div>
+                        <div class="stat-number" th:text="${assignmentRate != null ? (assignmentRate + '%') : '0%'}">95%
+                        </div>
                         <div class="stat-label">Assignment Rate</div>
                     </div>
                 </div>
             </div>
         </div>
-        
-<!--        &lt;!&ndash; Charts Row &ndash;&gt;-->
-<!--        <div class="row mb-4">-->
-<!--            <div class="col-md-6">-->
-<!--                <div class="chart-container">-->
-<!--                    <h3 class="mb-3">Teacher Status Distribution</h3>-->
-<!--                    <canvas id="teacherStatusChart" width="200" height="50"></canvas>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-md-6">-->
-<!--                <div class="chart-container">-->
-<!--                    <h3 class="mb-3">Subject Assignment Overview</h3>-->
-<!--                    <canvas id="subjectAssignmentChart" width="400" height="200"></canvas>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-        
+
+        <!--        &lt;!&ndash; Charts Row &ndash;&gt;-->
+        <!--        <div class="row mb-4">-->
+        <!--            <div class="col-md-6">-->
+        <!--                <div class="chart-container">-->
+        <!--                    <h3 class="mb-3">Teacher Status Distribution</h3>-->
+        <!--                    <canvas id="teacherStatusChart" width="200" height="50"></canvas>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--            <div class="col-md-6">-->
+        <!--                <div class="chart-container">-->
+        <!--                    <h3 class="mb-3">Subject Assignment Overview</h3>-->
+        <!--                    <canvas id="subjectAssignmentChart" width="400" height="200"></canvas>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+
         <!-- Teachers List -->
         <div class="row">
             <div class="col-12">
                 <div class="stats-card">
                     <h3 class="mb-4">Teaching Staff</h3>
-                    
+
                     <div th:if="${#lists.isEmpty(teachers)}" class="text-center py-5">
                         <i class="fas fa-user-plus fa-3x text-muted mb-3"></i>
                         <h4 class="text-muted">No Teachers Found</h4>
@@ -318,7 +323,7 @@
                             <i class="fas fa-plus me-2"></i>Add Teacher
                         </a>
                     </div>
-                    
+
                     <div th:if="${!#lists.isEmpty(teachers)}">
                         <div class="row">
                             <div class="col-md-6" th:each="teacher : ${teachers}">
@@ -338,35 +343,70 @@
                                                 <span th:text="${teacher.phone}">+1234567890</span>
                                             </p>
                                             <div class="mt-2">
-                                                <a th:href="@{/assign-subjects(teacherId=${teacher.id})}" class="btn btn-sm btn-outline-primary me-2">
+                                                <a th:href="@{/assign-subjects(teacherId=${teacher.id})}"
+                                                    class="btn btn-sm btn-outline-primary me-2">
                                                     <i class="fas fa-book me-1"></i>Assign Subjects
                                                 </a>
-                                                <a th:href="@{/teachers/edit/{id}(id=${teacher.id})}" class="btn btn-sm btn-outline-secondary">
+                                                <a th:href="@{/teachers/edit/{id}(id=${teacher.id})}"
+                                                    class="btn btn-sm btn-outline-secondary">
                                                     <i class="fas fa-edit me-1"></i>Edit
                                                 </a>
                                             </div>
                                         </div>
                                         <div>
                                             <span th:if="${teacher.active}" class="badge bg-success">Active</span>
-                                            <span th:unless="${teacher.active}" class="badge bg-secondary">Inactive</span>
+                                            <span th:unless="${teacher.active}"
+                                                class="badge bg-secondary">Inactive</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Pagination Controls -->
+                    <div th:if="${totalPages > 1}"
+                        class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top"
+                        style="border-color: rgba(120, 119, 198, 0.2) !important;">
+                        <div class="text-muted small">
+                            Showing page <span th:text="${currentPage + 1}">1</span> of <span
+                                th:text="${totalPages}">1</span>
+                            (<span th:text="${totalItems}">0</span> total teachers)
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                    <a class="page-link bg-dark border-secondary text-light"
+                                        th:href="@{/teachers(page=${currentPage - 1})}">
+                                        <i class="fas fa-chevron-left me-1"></i> Previous
+                                    </a>
+                                </li>
+                                <li class="page-item disabled">
+                                    <span class="page-link bg-dark border-secondary text-light"
+                                        th:text="${currentPage + 1}">1</span>
+                                </li>
+                                <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                                    <a class="page-link bg-dark border-secondary text-light"
+                                        th:href="@{/teachers(page=${currentPage + 1})}">
+                                        Next <i class="fas fa-chevron-right ms-1"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Teacher Status Chart
         const statusCtx = document.getElementById('teacherStatusChart').getContext('2d');
         const activeTeachers = /*[[${#lists.size(teachers.?[active == true])}]]*/ 10;
         const inactiveTeachers = /*[[${teachers.size()}]]*/ 12 - activeTeachers;
-        
+
         new Chart(statusCtx, {
             type: 'doughnut',
             data: {
@@ -395,7 +435,7 @@
                 }
             }
         });
-        
+
         // Subject Assignment Chart
         const assignmentCtx = document.getElementById('subjectAssignmentChart').getContext('2d');
         new Chart(assignmentCtx, {
@@ -443,4 +483,5 @@
         });
     </script>
 </body>
+
 </html>

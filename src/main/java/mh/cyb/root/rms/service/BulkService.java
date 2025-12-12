@@ -15,50 +15,50 @@ import java.util.stream.Collectors;
 
 @Service
 public class BulkService {
-    
+
     @Autowired
     private StudentRepository studentRepository;
-    
+
     @Autowired
     private SubjectRepository subjectRepository;
-    
+
     @Autowired
     private ExamRepository examRepository;
-    
+
     @Autowired
     private TeacherRepository teacherRepository;
-    
+
     @Autowired
     private MarksRepository marksRepository;
-    
+
     @Transactional
     public BulkResult saveBulkMarks(BulkMarksRequest request) {
         BulkResult result = new BulkResult();
-        
+
         // Validate request
         if (!validateRequest(request, result)) {
             return result;
         }
-        
+
         // Get entities
         Optional<Teacher> teacher = teacherRepository.findById(request.getTeacherId());
         Optional<Subject> subject = subjectRepository.findById(request.getSubjectId());
         Optional<Exam> exam = examRepository.findById(request.getExamId());
-        
+
         if (!teacher.isPresent() || !subject.isPresent() || !exam.isPresent()) {
             result.addError("Invalid teacher, subject, or exam selected");
             return result;
         }
-        
+
         // Process each student mark
         int processed = 0;
         int success = 0;
         int errors = 0;
-        
+
         for (BulkMarksRequest.StudentMark studentMark : request.getStudentMarks()) {
             if (studentMark.getObtainedMarks() != null && studentMark.getObtainedMarks() >= 0) {
                 processed++;
-                
+
                 if (processSingleMark(studentMark, teacher.get(), subject.get(), exam.get(), result)) {
                     success++;
                 } else {
@@ -66,14 +66,14 @@ public class BulkService {
                 }
             }
         }
-        
+
         result.setTotalProcessed(processed);
         result.setSuccessCount(success);
         result.setErrorCount(errors);
-        
+
         return result;
     }
-    
+
     private boolean validateRequest(BulkMarksRequest request, BulkResult result) {
         if (request.getTeacherId() == null) {
             result.addError("Teacher is required");
@@ -93,28 +93,40 @@ public class BulkService {
         }
         return true;
     }
-    
-    private boolean processSingleMark(BulkMarksRequest.StudentMark studentMark, 
-                                     Teacher teacher, Subject subject, Exam exam, 
-                                     BulkResult result) {
+
+    private boolean processSingleMark(BulkMarksRequest.StudentMark studentMark,
+            Teacher teacher, Subject subject, Exam exam,
+            BulkResult result) {
         try {
             Optional<Student> student = studentRepository.findById(studentMark.getStudentId());
             if (!student.isPresent()) {
                 result.addError("Student not found for ID: " + studentMark.getStudentId());
                 return false;
             }
-            
-            // Validate marks don't exceed max marks
-            if (studentMark.getObtainedMarks() > subject.getMaxMarks()) {
-                result.addError("Marks for " + student.get().getName() + 
-                               " exceed maximum (" + subject.getMaxMarks() + ")");
+
+            // Validate Student Class matches Subject Class
+            // Subjects are class-specific. Ensure the student belongs to the same class as
+            // the subject.
+            // Using equalsIgnoreCase for safety, assuming Subject has non-null className
+            if (subject.getClassName() != null
+                    && !subject.getClassName().equalsIgnoreCase(student.get().getClassName())) {
+                result.addError(
+                        "Security Warning: Student " + student.get().getName() + " (" + student.get().getClassName() +
+                                ") does not belong to Subject Class (" + subject.getClassName() + ")");
                 return false;
             }
-            
+
+            // Validate marks don't exceed max marks
+            if (studentMark.getObtainedMarks() > subject.getMaxMarks()) {
+                result.addError("Marks for " + student.get().getName() +
+                        " exceed maximum (" + subject.getMaxMarks() + ")");
+                return false;
+            }
+
             // Check for existing marks
             Optional<Marks> existingMarks = marksRepository.findByStudentIdAndSubjectIdAndExamId(
-                studentMark.getStudentId(), subject.getId(), exam.getId());
-            
+                    studentMark.getStudentId(), subject.getId(), exam.getId());
+
             Marks marks;
             if (existingMarks.isPresent()) {
                 // Update existing marks
@@ -125,20 +137,20 @@ public class BulkService {
                 result.addWarning("Updated existing marks for " + student.get().getName());
             } else {
                 // Create new marks
-                marks = new Marks(student.get(), subject, exam, 
-                                studentMark.getObtainedMarks(), LocalDate.now());
+                marks = new Marks(student.get(), subject, exam,
+                        studentMark.getObtainedMarks(), LocalDate.now());
                 marks.setEnteredBy(teacher);
             }
-            
+
             marksRepository.save(marks);
             return true;
-            
+
         } catch (Exception e) {
             result.addError("Error processing marks: " + e.getMessage());
             return false;
         }
     }
-    
+
     public List<Student> getStudentsForBulkEntry(Long subjectId) {
         Optional<Subject> subject = subjectRepository.findById(subjectId);
         if (subject.isPresent()) {

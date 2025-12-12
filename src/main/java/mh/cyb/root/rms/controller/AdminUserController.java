@@ -23,8 +23,15 @@ public class AdminUserController {
     private TeacherService teacherService;
 
     @GetMapping
-    public String listUsers(Model model) {
-        model.addAttribute("users", adminUserService.getAllAdminUsers());
+    public String listUsers(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        org.springframework.data.domain.Page<AdminUser> userPage = adminUserService.getAllAdminUsers(
+                org.springframework.data.domain.PageRequest.of(page, size));
+        model.addAttribute("users", userPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", userPage.getTotalPages());
+        model.addAttribute("totalItems", userPage.getTotalElements());
         return "admin-users";
     }
 

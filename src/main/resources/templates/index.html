@@ -545,7 +545,7 @@
     <!--<div style="padding-top: 80px;"></div>-->
 
     <!-- Hero Section -->
-    <div class="hero-section">
+    <div class="hero-section" th:classappend="${isTeacher ? 'bg-gradient-teacher' : ''}">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8">
@@ -560,7 +560,7 @@
                     <div th:if="${activeSession}" class="session-badge">
                         <i class="fas fa-calendar-alt me-2"></i>
                         <strong>Active Session:</strong> <span th:text="${activeSession.sessionName}"></span>
-                        <a href="/sessions" class="btn btn-sm btn-light ms-3">Switch</a>
+                        <a href="/sessions" class="btn btn-sm btn-light ms-3" th:if="${!isTeacher}">Switch</a>
                     </div>
 
                     <!-- Quick Actions -->
@@ -597,7 +597,8 @@
                     <div class="card-body">
                         <i class="fas fa-users icon-large text-primary"></i>
                         <h3 class="card-title mt-3" th:text="${totalStudents ?: 0}">0</h3>
-                        <p class="card-text">Total Students</p>
+                        <p class="card-text" th:text="${isTeacher ? 'My Students' : 'Total Students'}">Total Students
+                        </p>
                         <small class="text-muted">Active Session</small>
                         <div class="mt-3">
                             <a href="/students" class="btn btn-primary btn-sm">View All</a>
@@ -605,7 +606,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-4">
+            <div class="col-md-3 mb-4" th:if="${!isTeacher}">
                 <div class="card stat-card h-100 text-center">
                     <div class="card-body">
                         <i class="fas fa-chalkboard-teacher icon-large text-success"></i>
@@ -623,15 +624,16 @@
                     <div class="card-body">
                         <i class="fas fa-book icon-large text-info"></i>
                         <h3 class="card-title mt-3" th:text="${totalSubjects ?: 0}">0</h3>
-                        <p class="card-text">Subjects</p>
-                        <small class="text-muted">All Classes</small>
+                        <p class="card-text" th:text="${isTeacher ? 'My Subjects' : 'Subjects'}">Subjects</p>
+                        <small class="text-muted" th:text="${isTeacher ? 'Assigned' : 'All Classes'}">All
+                            Classes</small>
                         <div class="mt-3">
                             <a href="/subjects" class="btn btn-info btn-sm">Configure</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-4">
+            <div class="col-md-3 mb-4" th:if="${!isTeacher}">
                 <div class="card stat-card h-100 text-center">
                     <div class="card-body">
                         <i class="fas fa-clipboard-list icon-large text-warning"></i>
