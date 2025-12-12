@@ -26,7 +26,10 @@ public class ExamController {
     private TeacherService teacherService; // Kept as it's used in adminDashboard
 
     @Autowired
-    private DashboardService dashboardService; // Injected DashboardService
+    private DashboardService dashboardService;
+
+    @Autowired
+    private ActivityLogService activityLogService; // Injected for logging
 
     @Autowired
     private TeacherAssignmentService teacherAssignmentService;
@@ -110,6 +113,13 @@ public class ExamController {
         return "developer";
     }
 
+    // Activity Logs (Admin only)
+    @GetMapping("/admin/activity-logs")
+    public String viewActivityLogs(Model model) {
+        model.addAttribute("logs", activityLogService.getAllLogs());
+        return "activity-logs";
+    }
+
     // Assign subjects page
     @GetMapping("/assign-subjects")
     public String assignSubjects(Model model, @RequestParam(required = false) Long teacherId) {
@@ -163,6 +173,11 @@ public class ExamController {
                     sessionId);
 
             if (assignmentCreated) {
+                // Log Action
+                String username = securityServiceGetUsername();
+                activityLogService.logAction("ASSIGN_SUBJECT",
+                        "Assigned Subject ID: " + subjectId + " to Teacher ID: " + teacherId, username, null);
+
                 redirectAttributes.addFlashAttribute("success", "Subject assigned successfully!");
             } else {
                 redirectAttributes.addFlashAttribute("error", "This teacher is already assigned to this subject!");
@@ -185,6 +200,11 @@ public class ExamController {
     public String removeAssignment(@RequestParam Long assignmentId, RedirectAttributes redirectAttributes) {
         try {
             teacherAssignmentService.removeAssignment(assignmentId);
+
+            // Log Action
+            String username = securityServiceGetUsername();
+            activityLogService.logAction("REMOVE_ASSIGNMENT", "Removed Assignment ID: " + assignmentId, username, null);
+
             redirectAttributes.addFlashAttribute("success", "Assignment removed successfully!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Failed to remove assignment: " + e.getMessage());
@@ -226,6 +246,11 @@ public class ExamController {
         }
 
         examService.saveSession(session);
+
+        // Log Action
+        String username = securityServiceGetUsername();
+        activityLogService.logAction("ADD_SESSION", "Created session: " + session.getSessionName(), username, null);
+
         redirectAttributes.addFlashAttribute("success", "Session added successfully!");
         return "redirect:/sessions";
     }
@@ -233,6 +258,10 @@ public class ExamController {
     @PostMapping("/sessions/{id}/activate")
     public String activateSession(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         if (examService.activateSession(id)) {
+            // Log Action
+            String username = securityServiceGetUsername();
+            activityLogService.logAction("ACTIVATE_SESSION", "Activated Session ID: " + id, username, null);
+
             redirectAttributes.addFlashAttribute("success", "Session activated successfully!");
         } else {
             redirectAttributes.addFlashAttribute("error", "Failed to activate session");
@@ -256,6 +285,11 @@ public class ExamController {
             RedirectAttributes redirectAttributes) {
 
         if (examService.promoteStudents(studentIds, targetSessionId)) {
+            // Log Action
+            String username = securityServiceGetUsername();
+            activityLogService.logAction("PROMOTE_STUDENTS",
+                    "Promoted " + studentIds.size() + " students to new session", username, null);
+
             redirectAttributes.addFlashAttribute("success", "Students promoted successfully!");
         } else {
             redirectAttributes.addFlashAttribute("error", "Failed to promote students");
@@ -285,6 +319,11 @@ public class ExamController {
         }
 
         examService.saveExam(exam);
+
+        // Log Action
+        String username = securityServiceGetUsername();
+        activityLogService.logAction("ADD_EXAM", "Scheduled exam: " + exam.getExamName(), username, null);
+
         redirectAttributes.addFlashAttribute("success", "Exam added successfully!");
         return "redirect:/exams";
     }
@@ -302,6 +341,10 @@ public class ExamController {
     @PostMapping("/exams/delete/{id}")
     public String deleteExam(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         if (examService.deleteExam(id)) {
+            // Log Action
+            String username = securityServiceGetUsername();
+            activityLogService.logAction("DELETE_EXAM", "Deleted Exam ID: " + id, username, null);
+
             redirectAttributes.addFlashAttribute("success", "Exam deleted successfully!");
         } else {
             redirectAttributes.addFlashAttribute("error", "Failed to delete exam");
@@ -379,6 +422,12 @@ public class ExamController {
         boolean success = examService.addMarks(studentId, subjectId, examId, obtainedMarks, teacherId);
 
         if (success) {
+            // Log Action
+            String username = securityServiceGetUsername();
+            activityLogService.logAction("ADD_MARKS",
+                    "Added marks: " + obtainedMarks + " for Student ID: " + studentId + ", Subject ID: " + subjectId,
+                    username, null);
+
             redirectAttributes.addFlashAttribute("success", "Marks added successfully!");
         } else {
             redirectAttributes.addFlashAttribute("error",
@@ -431,6 +480,12 @@ public class ExamController {
         }
 
         examService.saveStudent(student);
+
+        // Log Action
+        String username = securityServiceGetUsername();
+        activityLogService.logAction("ADD_STUDENT",
+                "Added student: " + student.getName() + " (Roll: " + student.getRollNumber() + ")", username, null);
+
         redirectAttributes.addFlashAttribute("success", "Student added successfully!");
         return "redirect:/students";
     }
@@ -474,6 +529,10 @@ public class ExamController {
     @PostMapping("/students/delete/{id}")
     public String deleteStudent(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         if (examService.deleteStudent(id)) {
+            // Log Action
+            String username = securityServiceGetUsername();
+            activityLogService.logAction("DELETE_STUDENT", "Deleted Student ID: " + id, username, null);
+
             redirectAttributes.addFlashAttribute("success", "Student deleted successfully!");
         } else {
             redirectAttributes.addFlashAttribute("error", "Failed to delete student");
@@ -504,6 +563,11 @@ public class ExamController {
         }
 
         examService.saveClass(classEntity);
+
+        // Log Action
+        String username = securityServiceGetUsername();
+        activityLogService.logAction("ADD_CLASS", "Added Class: " + classEntity.getClassName(), username, null);
+
         redirectAttributes.addFlashAttribute("success", "Class added successfully!");
         return "redirect:/classes";
     }
@@ -521,6 +585,10 @@ public class ExamController {
     @PostMapping("/classes/delete/{id}")
     public String deleteClass(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         if (examService.deleteClass(id)) {
+            // Log Action
+            String username = securityServiceGetUsername();
+            activityLogService.logAction("DELETE_CLASS", "Deleted Class ID: " + id, username, null);
+
             redirectAttributes.addFlashAttribute("success", "Class deleted successfully!");
         } else {
             redirectAttributes.addFlashAttribute("error", "Failed to delete class");
@@ -579,6 +647,13 @@ public class ExamController {
             subject.setClassEntity(classEntity.get());
             examService.saveSubject(subject);
 
+            // Log Action
+            String username = securityServiceGetUsername();
+            String action = subject.getId() != null ? "UPDATE_SUBJECT" : "ADD_SUBJECT";
+            activityLogService.logAction(action,
+                    "Saved subject: " + subject.getSubjectName(),
+                    username, null);
+
             String message = subject.getId() != null ? "Subject updated successfully!" : "Subject added successfully!";
             redirectAttributes.addFlashAttribute("success", message);
         } else {
@@ -605,6 +680,10 @@ public class ExamController {
     @PostMapping("/subjects/delete/{id}")
     public String deleteSubject(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         if (examService.deleteSubject(id)) {
+            // Log Action
+            String username = securityServiceGetUsername();
+            activityLogService.logAction("DELETE_SUBJECT", "Deleted Subject ID: " + id, username, null);
+
             redirectAttributes.addFlashAttribute("success", "Subject deleted successfully!");
         } else {
             redirectAttributes.addFlashAttribute("error", "Failed to delete subject");
@@ -630,5 +709,15 @@ public class ExamController {
         }
 
         return "view-results";
+    }
+
+    // Helper to get username safely
+    private String securityServiceGetUsername() {
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder
+                .getContext().getAuthentication();
+        if (auth != null) {
+            return auth.getName();
+        }
+        return "Unknown";
     }
 }
