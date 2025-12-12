@@ -208,7 +208,8 @@
             gap: 8px;
         }
 
-        .form-control {
+        .form-control,
+        .form-select {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(44, 90, 160, 0.3);
             color: var(--text-light);
@@ -218,27 +219,21 @@
             transition: all 0.3s ease;
         }
 
-        .form-control:focus {
+        .form-control:focus,
+        .form-select:focus {
             background: rgba(255, 255, 255, 0.15);
-            border-color: var(--education-blue);
-            box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+            border-color: var(--modern-purple);
+            box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.25);
             color: var(--text-light);
         }
 
         .form-control::placeholder {
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.6);
         }
 
-        /* Dropdown option styling */
-        .form-control option {
+        .form-select option {
             background: var(--secondary-dark);
             color: var(--text-light);
-            padding: 10px;
-        }
-
-        .form-control option:hover {
-            background: var(--education-blue);
-            color: white;
         }
 
         .btn-primary {
@@ -390,20 +385,29 @@
                                         <i class="fas fa-book"></i>Subject Name
                                     </label>
                                     <input type="text" class="form-control" id="subjectName" name="subjectName"
-                                        th:value="${subject.subjectName}" placeholder="Enter subject name" required>
+                                        th:value="${subject.subjectName}"
+                                        placeholder="Enter subject name (e.g., Mathematics, Physics)" required>
+                                    <div class="form-text text-muted mt-2">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Enter the name of the subject
+                                    </div>
                                 </div>
 
                                 <div class="col-md-6 mb-4">
                                     <label for="classId" class="form-label">
                                         <i class="fas fa-chalkboard"></i>Class Name
                                     </label>
-                                    <select class="form-control" id="classId" name="classId" required>
+                                    <select class="form-select" id="classId" name="classId" required>
                                         <option value="">Select Class</option>
                                         <option th:each="classEntity : ${availableClasses}" th:value="${classEntity.id}"
                                             th:text="${classEntity.className}"
                                             th:selected="${subject.classEntity != null and subject.classEntity.id == classEntity.id}">
                                         </option>
                                     </select>
+                                    <div class="form-text text-muted mt-2">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Choose the appropriate class level for the subject
+                                    </div>
                                 </div>
                             </div>
 
@@ -412,55 +416,46 @@
                                     <i class="fas fa-trophy"></i>Maximum Marks
                                 </label>
                                 <input type="number" class="form-control" id="maxMarks" name="maxMarks"
-                                    th:value="${subject.maxMarks}" placeholder="Enter maximum marks" min="1" max="1000"
-                                    required>
-                            </div>
-
-                    </div>
-
-                    <div class="mb-4">
-                        <div class="form-check form-switch custom-switch">
-                            <input class="form-check-input" type="checkbox" id="optional" name="optional"
-                                th:checked="${subject.optional}">
-                            <label class="form-check-label" for="optional">
-                                <i class="fas fa-star-half-alt me-2"></i>Is Optional Subject?
-                            </label>
-                            <div class="form-text text-light-50">
-                                Optional subjects have special grading rules (Boosts GPA if > 2.0, Ignored if < 2.0 or
-                                    Fail). </div>
+                                    th:value="${subject.maxMarks}" placeholder="Enter maximum marks (e.g., 100)" min="1"
+                                    max="1000" required>
+                                <div class="form-text text-muted mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Specify the maximum achievable marks for this subject
+                                </div>
                             </div>
 
                             <div class="mb-4">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="optional" name="optional"
-                                        th:checked="${subject.optional}">
-                                    <label class="form-check-label" for="optional">
+                                        th:checked="${subject.optional}"
+                                        style="width: 3em; height: 1.5em; cursor: pointer;">
+                                    <label class="form-check-label" for="optional"
+                                        style="padding-left: 0.5em; cursor: pointer;">
                                         <i class="fas fa-star-half-alt me-2"></i>Optional Subject
                                     </label>
                                 </div>
-                                <div class="form-text text-white-50 ms-4">
-                                    If checked, marks above passing will be added as bonus GPA.
+                                <div class="form-text text-muted ms-4 mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Optional subjects boost GPA if > 2.0, ignored if < 2.0 or Fail </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="mb-4">
-                            <label for="description" class="form-label">
-                                <i class="fas fa-align-left"></i>Description (Optional)
-                            </label>
-                            <textarea class="form-control" id="description" name="description"
-                                th:text="${subject.description}" rows="4"
-                                placeholder="Enter subject description"></textarea>
-                        </div>
+                                <div class="mb-4">
+                                    <label for="description" class="form-label">
+                                        <i class="fas fa-align-left"></i>Description (Optional)
+                                    </label>
+                                    <textarea class="form-control" id="description" name="description"
+                                        th:text="${subject.description}" rows="4"
+                                        placeholder="Enter subject description"></textarea>
+                                </div>
 
-                        <div class="d-flex gap-3 justify-content-end">
-                            <a href="/subjects" class="btn btn-secondary">
-                                <i class="fas fa-times me-2"></i>Cancel
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i>Add Subject
-                            </button>
-                        </div>
+                                <div class="d-grid gap-3">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-save me-2"></i>Add Subject
+                                    </button>
+                                    <a href="/subjects" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>Back to Subjects
+                                    </a>
+                                </div>
                         </form>
                     </div>
                 </div>
