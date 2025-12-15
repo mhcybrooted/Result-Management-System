@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Report - School Result System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #e0e6ed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .report-card {
+            background: rgba(15, 15, 35, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(120, 119, 198, 0.2);
+            border-radius: 25px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .student-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(120, 119, 198, 0.2);
+            padding-bottom: 1rem;
+        }
+
+        .student-name {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            color: #a0a9c0;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Status Colors */
+        .text-present {
+            color: #10b981;
+        }
+
+        .text-absent {
+            color: #ef4444;
+        }
+
+        .text-late {
+            color: #f59e0b;
+        }
+
+        .text-excused {
+            color: #06b6d4;
+        }
+
+        .text-holiday {
+            color: #3b82f6;
+        }
+
+        .text-total {
+            color: #e0e6ed;
+        }
+
+        .attendance-table {
+            color: #e0e6ed;
+            margin-top: 1rem;
+        }
+
+        .attendance-table th {
+            border-bottom: 2px solid rgba(120, 119, 198, 0.3);
+            color: #a0a9c0;
+            font-weight: 600;
+        }
+
+        .attendance-table td {
+            border-bottom: 1px solid rgba(120, 119, 198, 0.1);
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .badge-present {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-absent {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge-late {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-excused {
+            background: rgba(6, 182, 212, 0.2);
+            color: #06b6d4;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .badge-holiday {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-back {
+            background: rgba(15, 15, 35, 0.8);
+            border: 1px solid rgba(120, 119, 198, 0.3);
+            border-radius: 15px;
+            color: #e0e6ed;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .btn-back:hover {
+            background: rgba(253, 160, 133, 0.2);
+            border-color: rgba(253, 160, 133, 0.6);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Back Button -->
+        <a href="/attendance/public" class="btn-back">
+            <i class="fas fa-arrow-left"></i>
+            Back to Search
+        </a>
+
+        <div class="report-card">
+            <!-- Header -->
+            <div class="student-header">
+                <h1 class="student-name" th:text="${summary.studentName}">Student Name</h1>
+                <div class="d-flex justify-content-center gap-4 text-muted">
+                    <span><i class="fas fa-id-badge me-2"></i>Roll: <strong
+                            th:text="${summary.rollNumber}"></strong></span>
+                    <span><i class="fas fa-users me-2"></i>Class: <strong
+                            th:text="${summary.className}"></strong></span>
+                    <span><i class="fas fa-calendar-alt me-2"></i>Session: <strong
+                            th:text="${activeSession.sessionName}"></strong></span>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="row g-4 mb-5">
+                <!-- Percentage (Big Card) -->
+                <div class="col-md-12 mb-2">
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, rgba(246, 211, 101, 0.1) 0%, rgba(253, 160, 133, 0.1) 100%); border-color: rgba(253, 160, 133, 0.3);">
+                        <div class="stat-value" style="color: #fda085;" th:text="${summary.percentage} + '%'">85.5%
+                        </div>
+                        <div class="stat-label">Attendance Percentage</div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-2">
+                    <div class="stat-card">
+                        <div class="stat-value text-total" th:text="${summary.totalDays}">0</div>
+                        <div class="stat-label">Total Days</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="stat-card">
+                        <div class="stat-value text-present" th:text="${summary.presentCount}">0</div>
+                        <div class="stat-label">Present</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="stat-card">
+                        <div class="stat-value text-absent" th:text="${summary.absentCount}">0</div>
+                        <div class="stat-label">Absent</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="stat-card">
+                        <div class="stat-value text-late" th:text="${summary.lateCount}">0</div>
+                        <div class="stat-label">Late</div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-2">
+                    <div class="stat-card">
+                        <div class="stat-value text-excused" th:text="${summary.excusedCount}">0</div>
+                        <div class="stat-label">Excused</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="stat-card">
+                        <div class="stat-value text-holiday" th:text="${summary.holidayCount}">0</div>
+                        <div class="stat-label">Holiday</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Table -->
+            <h4 class="mb-3 border-start border-4 border-warning ps-3">Attendance History</h4>
+            <div class="table-responsive">
+                <table class="table attendance-table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Day</th>
+                            <th class="text-center">Status</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="record : ${summary.history}">
+                            <td th:text="${record.date}">2024-01-01</td>
+                            <td th:text="${record.date.dayOfWeek}">MONDAY</td>
+                            <td class="text-center">
+                                <span th:if="${record.status.name() == 'PRESENT'}" class="status-badge badge-present"><i
+                                        class="fas fa-check me-2"></i>Present</span>
+                                <span th:if="${record.status.name() == 'ABSENT'}" class="status-badge badge-absent"><i
+                                        class="fas fa-times me-2"></i>Absent</span>
+                                <span th:if="${record.status.name() == 'LATE'}" class="status-badge badge-late"><i
+                                        class="fas fa-clock me-2"></i>Late</span>
+                                <span th:if="${record.status.name() == 'EXCUSED'}" class="status-badge badge-excused"><i
+                                        class="fas fa-notes-medical me-2"></i>Excused</span>
+                                <span th:if="${record.status.name() == 'HOLIDAY'}" class="status-badge badge-holiday"><i
+                                        class="fas fa-umbrella-beach me-2"></i>Holiday</span>
+                            </td>
+                            <td class="text-muted small" th:text="${record.remarks}"></td>
+                        </tr>
+                        <tr th:if="${summary.history.isEmpty()}">
+                            <td colspan="4" class="text-center py-4 text-muted">
+                                <i class="fas fa-calendar-times mb-2 d-block fa-2x"></i>
+                                No attendance records found.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

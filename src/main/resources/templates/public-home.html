@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,7 @@
             position: relative;
             overflow-x: hidden;
         }
-        
+
         body::before {
             content: '';
             position: fixed;
@@ -23,18 +24,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.1) 0%, transparent 50%);
             z-index: -1;
         }
-        
+
         .hero-section {
             padding: 100px 0;
             text-align: center;
         }
-        
+
         .hero-title {
             font-size: 3.5rem;
             font-weight: 900;
@@ -45,14 +46,14 @@
             background-clip: text;
             text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
         }
-        
+
         .hero-subtitle {
             font-size: 1.3rem;
             margin-bottom: 3rem;
             color: #a0a9c0;
             font-weight: 300;
         }
-        
+
         .feature-card {
             background: rgba(15, 15, 35, 0.8);
             backdrop-filter: blur(20px);
@@ -64,7 +65,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .feature-card::before {
             content: '';
             position: absolute;
@@ -74,7 +75,7 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.5), transparent);
         }
-        
+
         .feature-card::after {
             content: '';
             position: absolute;
@@ -87,18 +88,18 @@
             transform: translate(-50%, -50%);
             border-radius: 50%;
         }
-        
+
         .feature-card:hover::after {
             width: 300px;
             height: 300px;
         }
-        
+
         .feature-card:hover {
             transform: translateY(-10px);
             border-color: rgba(102, 126, 234, 0.5);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
-        
+
         .feature-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
@@ -107,7 +108,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .btn-primary-custom {
             background: linear-gradient(135deg, #667eea, #764ba2);
             border: none;
@@ -122,13 +123,13 @@
             margin: 0.5rem;
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
         }
-        
+
         .btn-primary-custom:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
             color: white;
         }
-        
+
         .btn-secondary-custom {
             background: rgba(15, 15, 35, 0.8);
             border: 1px solid rgba(120, 119, 198, 0.3);
@@ -142,14 +143,14 @@
             transition: all 0.3s ease;
             margin: 0.5rem;
         }
-        
+
         .btn-secondary-custom:hover {
             background: rgba(102, 126, 234, 0.2);
             border-color: rgba(102, 126, 234, 0.6);
             color: white;
             transform: translateY(-2px);
         }
-        
+
         .session-badge {
             background: rgba(102, 126, 234, 0.2);
             border: 1px solid rgba(102, 126, 234, 0.5);
@@ -159,18 +160,19 @@
             margin-bottom: 2rem;
             color: #e0e6ed;
         }
-        
+
         h4 {
             color: #e0e6ed;
             margin-bottom: 1rem;
         }
-        
+
         p {
             color: #8b949e;
             line-height: 1.6;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Hero Section -->
@@ -180,22 +182,26 @@
                     <div class="mb-4">
                         <i class="fas fa-graduation-cap fa-4x text-success mb-3"></i>
                     </div>
-                    
+
                     <h1 class="hero-title">School Exam Result System</h1>
                     <p class="hero-subtitle">
                         Comprehensive academic performance management and result tracking system
                     </p>
-                    
+
                     <div th:if="${activeSession}" class="session-badge">
                         <i class="fas fa-calendar me-2"></i>
                         <strong>Current Session: </strong>
                         <span th:text="${activeSession.sessionName}">2024-25</span>
                     </div>
-                    
+
                     <div class="mb-5">
-                        <a href="/view-results" class="btn-primary-custom">
-                            <i class="fas fa-search me-2"></i>
-                            Search Student Results
+                        <a href="/view-results"
+                            class="btn btn-primary btn-lg px-5 py-3 me-3 rounded-pill fw-bold shadow-lg text-uppercase">
+                            <i class="fas fa-search me-2"></i> View Result
+                        </a>
+                        <a href="/attendance/public"
+                            class="btn btn-warning btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg text-uppercase text-white">
+                            <i class="fas fa-calendar-check me-2"></i> Track Attendance
                         </a>
                         <a href="/admin-login" class="btn-secondary-custom">
                             <i class="fas fa-shield-alt me-2"></i>
@@ -209,7 +215,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Features Section -->
         <div class="row">
             <div class="col-md-4">
@@ -218,31 +224,34 @@
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h4>Result Management</h4>
-                    <p>Comprehensive exam result tracking with detailed performance analytics and grade calculations.</p>
+                    <p>Comprehensive exam result tracking with detailed performance analytics and grade calculations.
+                    </p>
                 </div>
             </div>
-            
+
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-users"></i>
                     </div>
                     <h4>Student Records</h4>
-                    <p>Complete student information management with session-wise data organization and promotion tracking.</p>
+                    <p>Complete student information management with session-wise data organization and promotion
+                        tracking.</p>
                 </div>
             </div>
-            
+
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-file-alt"></i>
                     </div>
                     <h4>Report Generation</h4>
-                    <p>Professional report cards and academic transcripts with detailed subject-wise performance breakdown.</p>
+                    <p>Professional report cards and academic transcripts with detailed subject-wise performance
+                        breakdown.</p>
                 </div>
             </div>
         </div>
-        
+
         <!-- Footer -->
         <div class="text-center mt-5 pb-4">
             <p class="mb-0 opacity-75">
@@ -252,7 +261,8 @@
             <small class="opacity-50">© 2024 School Exam Result System. All rights reserved.</small>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

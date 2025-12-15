@@ -32,7 +32,8 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(authz -> authz
                                                 .requestMatchers("/", "/admin-login", "/student-login",
                                                                 "/teacher-login", "/login-portal",
-                                                                "/developer", "/css/**", "/js/**", "/images/**")
+                                                                "/developer", "/css/**", "/js/**", "/images/**",
+                                                                "/attendance/public/**")
                                                 .permitAll()
                                                 .requestMatchers("/h2-console/**").permitAll()
                                                 .requestMatchers("/view-results", "/search-results").permitAll()
@@ -46,7 +47,8 @@ public class SecurityConfig {
 
                                                 // Shared Access
                                                 .requestMatchers("/add-marks", "/students/**", "/exams/**",
-                                                                "/subjects/**", "/bulk/**", "/reports/**")
+                                                                "/subjects/**", "/bulk/**", "/reports/**",
+                                                                "/attendance/**")
                                                 .hasAnyRole("SUPER_ADMIN", "TEACHER")
                                                 .requestMatchers("/admin/dashboard", "/admin/activity-logs")
                                                 .hasAnyRole("SUPER_ADMIN", "TEACHER")

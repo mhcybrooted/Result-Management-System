@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Attendance - Result Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a1a2e;
+            --secondary-dark: #16213e;
+            --accent-blue: #0f3460;
+            --education-blue: #2c5aa0;
+            --learning-teal: #16a085;
+            --modern-purple: #6c5ce7;
+            --success-green: #00b894;
+            --warning-orange: #fdcb6e;
+            --danger-red: #e17055;
+            --text-light: #ddd;
+            --text-muted: #95a5a6;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 50%, var(--modern-purple) 100%);
+            padding: 40px 0;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin: 0;
+        }
+
+        .hero-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--secondary-dark);
+            border: 1px solid rgba(44, 90, 160, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            background: linear-gradient(90deg, var(--education-blue) 0%, var(--modern-purple) 100%) !important;
+            border-bottom: 1px solid rgba(108, 92, 231, 0.3);
+            padding: 20px;
+        }
+
+        .card-header h4,
+        .card-header h5 {
+            color: white;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        /* Form Elements */
+        .form-control,
+        .form-select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(44, 90, 160, 0.3);
+            color: var(--text-light);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--modern-purple);
+            color: var(--text-light);
+            box-shadow: none;
+        }
+
+        .form-label {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(45deg, var(--education-blue) 0%, var(--modern-purple) 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, var(--learning-teal) 0%, var(--success-green) 100%);
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+        }
+
+        .btn-outline-primary {
+            color: var(--text-light);
+            border-color: var(--education-blue);
+        }
+
+        .btn-outline-primary:hover,
+        .btn-check:checked+.btn-outline-primary {
+            background: var(--education-blue);
+            color: white;
+            border-color: var(--education-blue);
+        }
+
+        /* Unique Checkboxes for Attendance */
+        .btn-check:checked+.btn-outline-success {
+            background-color: var(--success-green);
+            border-color: var(--success-green);
+            color: white;
+        }
+
+        .btn-outline-success {
+            color: var(--success-green);
+            border-color: var(--success-green);
+        }
+
+        .btn-outline-success:hover {
+            background-color: var(--success-green);
+            color: white;
+        }
+
+        .btn-check:checked+.btn-outline-danger {
+            background-color: var(--danger-red);
+            border-color: var(--danger-red);
+            color: white;
+        }
+
+        .btn-outline-danger {
+            color: var(--danger-red);
+            border-color: var(--danger-red);
+        }
+
+        .btn-outline-danger:hover {
+            background-color: var(--danger-red);
+            color: white;
+        }
+
+        .btn-check:checked+.btn-outline-warning {
+            background-color: var(--warning-orange);
+            border-color: var(--warning-orange);
+            color: #000;
+        }
+
+        .btn-outline-warning {
+            color: var(--warning-orange);
+            border-color: var(--warning-orange);
+        }
+
+        .btn-outline-warning:hover {
+            background-color: var(--warning-orange);
+            color: #000;
+        }
+
+        .btn-check:checked+.btn-outline-info {
+            background-color: var(--learning-teal);
+            border-color: var(--learning-teal);
+            color: white;
+        }
+
+        .btn-outline-info {
+            color: var(--learning-teal);
+            border-color: var(--learning-teal);
+        }
+
+        .btn-outline-info:hover {
+            background-color: var(--learning-teal);
+            color: white;
+        }
+
+
+        /* Table Styles */
+        .table {
+            color: var(--text-light);
+            vertical-align: middle;
+        }
+
+        .table thead th {
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .table td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .alert-info {
+            background: rgba(44, 90, 160, 0.2);
+            border: 1px solid var(--education-blue);
+            color: var(--text-light);
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Central Navbar -->
+    <div th:replace="navbar :: navbar"></div>
+    <div style="padding-top: 80px;"></div>
+
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <div class="container">
+            <h1 class="hero-title"><i class="fas fa-calendar-check me-3"></i>Attendance Management</h1>
+            <p class="hero-subtitle">Record and track daily student attendance</p>
+        </div>
+    </div>
+
+
+    <div class="container">
+
+        <!-- Filter Card -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4><i class="fas fa-filter me-2"></i>Select Class & Date</h4>
+                <div th:if="${isRecorded}" class="badge bg-success rounded-pill px-3 py-2">
+                    <i class="fas fa-check-circle me-1"></i> Recorded
+                </div>
+                <div th:unless="${isRecorded}" class="badge bg-secondary rounded-pill px-3 py-2">
+                    <i class="fas fa-circle me-1"></i> New Entry
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="get" th:action="@{/attendance/take}" class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label for="className" class="form-label">Class</label>
+                        <select class="form-select" id="className" name="className" required>
+                            <option value="">Select Class...</option>
+                            <option th:each="cls : ${availableClasses}" th:value="${cls}" th:text="${cls}"
+                                th:selected="${cls == className}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date" name="date" th:value="${date}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-sync-alt me-2"></i>Load
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Navigation & Actions -->
+        <div th:if="${sheet}" class="d-flex justify-content-between align-items-center mb-4">
+            <a th:if="${prevDate}" th:href="@{/attendance/take(className=${className}, date=${prevDate})}"
+                class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-2"></i>Previous Day
+            </a>
+
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-success" onclick="markAllPresent()">
+                    <i class="fas fa-check-double me-2"></i>Mark All Present
+                </button>
+                <button type="button" class="btn btn-danger" onclick="markAllAbsent()">
+                    <i class="fas fa-user-times me-2"></i>Mark All Absent
+                </button>
+                <button type="button" class="btn btn-outline-info" onclick="markAllHoliday()">
+                    <i class="fas fa-umbrella-beach me-2"></i>Mark All Holiday
+                </button>
+            </div>
+
+            <a th:if="${nextDate}" th:href="@{/attendance/take(className=${className}, date=${nextDate})}"
+                class="btn btn-outline-primary">
+                Next Day <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+
+        <!-- Attendance Sheet -->
+        <div th:if="${sheet}" class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-list-alt me-2"></i>Student List</h4>
+            </div>
+            <div class="card-body p-0">
+                <form method="post" th:action="@{/attendance/save(className=${className}, date=${date})}"
+                    th:object="${formWrapper}">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4">Roll</th>
+                                    <th>Student Name</th>
+                                    <th class="text-center">Status</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item, stat : *{sheet}">
+                                    <td class="ps-4" th:text="${item.rollNumber}">101</td>
+                                    <td>
+                                        <input type="hidden" th:field="*{sheet[__${stat.index}__].studentId}">
+                                        <input type="hidden" th:field="*{sheet[__${stat.index}__].studentName}">
+                                        <input type="hidden" th:field="*{sheet[__${stat.index}__].rollNumber}">
+
+                                        <span th:text="${item.studentName}" class="fw-bold">John Doe</span>
+                                    </td>
+                                    <td class="text-center" style="min-width: 350px;">
+                                        <div class="btn-group w-100" role="group">
+                                            <!-- Present -->
+                                            <input type="radio" class="btn-check"
+                                                th:name="|sheet[${stat.index}].status|" th:id="|p_${stat.index}|"
+                                                value="PRESENT"
+                                                th:checked="${item.status == T(mh.cyb.root.rms.entity.AttendanceStatus).PRESENT}">
+                                            <label class="btn btn-outline-success" th:for="|p_${stat.index}|">P</label>
+
+                                            <!-- Absent -->
+                                            <input type="radio" class="btn-check"
+                                                th:name="|sheet[${stat.index}].status|" th:id="|a_${stat.index}|"
+                                                value="ABSENT"
+                                                th:checked="${item.status == T(mh.cyb.root.rms.entity.AttendanceStatus).ABSENT}">
+                                            <label class="btn btn-outline-danger" th:for="|a_${stat.index}|">A</label>
+
+                                            <!-- Late -->
+                                            <input type="radio" class="btn-check"
+                                                th:name="|sheet[${stat.index}].status|" th:id="|l_${stat.index}|"
+                                                value="LATE"
+                                                th:checked="${item.status == T(mh.cyb.root.rms.entity.AttendanceStatus).LATE}">
+                                            <label class="btn btn-outline-warning" th:for="|l_${stat.index}|">L</label>
+
+                                            <!-- Excused -->
+                                            <input type="radio" class="btn-check"
+                                                th:name="|sheet[${stat.index}].status|" th:id="|e_${stat.index}|"
+                                                value="EXCUSED"
+                                                th:checked="${item.status == T(mh.cyb.root.rms.entity.AttendanceStatus).EXCUSED}">
+                                            <label class="btn btn-outline-info" th:for="|e_${stat.index}|">E</label>
+
+                                            <!-- Holiday -->
+                                            <input type="radio" class="btn-check"
+                                                th:name="|sheet[${stat.index}].status|" th:id="|h_${stat.index}|"
+                                                value="HOLIDAY"
+                                                th:checked="${item.status == T(mh.cyb.root.rms.entity.AttendanceStatus).HOLIDAY}">
+                                            <label class="btn btn-outline-primary" th:for="|h_${stat.index}|">H</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm"
+                                            th:field="*{sheet[__${stat.index}__].remarks}" placeholder="Optional">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="p-3 border-top d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-save me-2"></i>Save Attendance
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div th:if="${sheet == null}" class="alert alert-info text-center mt-4">
+            <i class="fas fa-info-circle me-2"></i>Please select a Class and Date to load the student list.
+        </div>
+
+    </div>
+
+    <!-- Spacing -->
+    <div style="height: 60px;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function markAllPresent() {
+            const presentRadios = document.querySelectorAll('input[value="PRESENT"]');
+            presentRadios.forEach(radio => radio.checked = true);
+        }
+
+        function markAllAbsent() {
+            const absentRadios = document.querySelectorAll('input[value="ABSENT"]');
+            absentRadios.forEach(radio => radio.checked = true);
+        }
+
+        function markAllHoliday() {
+            const holidayRadios = document.querySelectorAll('input[value="HOLIDAY"]');
+            holidayRadios.forEach(radio => radio.checked = true);
+        }
+    </script>
+</body>
+
+</html>
