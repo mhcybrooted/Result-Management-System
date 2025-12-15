@@ -311,11 +311,15 @@ public class ExamService {
     }
 
     public List<String> getAvailableClasses() {
-        return getAllStudents().stream()
-                .map(Student::getClassName)
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
+        return studentRepository.findDistinctClassNamesByActiveSession();
+    }
+
+    public org.springframework.data.domain.Page<Student> getStudentsForPromotion(String className,
+            org.springframework.data.domain.Pageable pageable) {
+        if (className != null && !className.isEmpty()) {
+            return studentRepository.findByActiveSessionAndClassName(className, pageable);
+        }
+        return studentRepository.findByActiveSession(pageable);
     }
 
     // Class management

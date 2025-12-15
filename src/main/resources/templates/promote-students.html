@@ -410,27 +410,60 @@
             </ol>
         </nav>
 
-        <!-- Statistics Row -->
-        <div class="row stats-row">
-            <div class="col-md-4">
-                <div class="stat-item">
-                    <span class="stat-number" th:text="${#lists.size(students)}">0</span>
-                    <span class="stat-label">Students Available</span>
+        <!-- Filter and Stats Row -->
+        <div class="row align-items-center mb-4">
+            <!-- Filter Form -->
+            <div class="col-md-6 mb-3 mb-md-0">
+                <form method="get" th:action="@{/students/promote}"
+                    class="d-flex align-items-center bg-dark p-3 rounded-3 border border-secondary">
+                    <label for="classFilter" class="form-label text-nowrap mb-0 me-3 text-white">
+                        <i class="fas fa-filter text-info me-2"></i>Filter by Class:
+                    </label>
+                    <select class="form-select me-2" id="classFilter" name="className" onchange="this.form.submit()"
+                        style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;">
+                        <option value="">All Classes</option>
+                        <option th:each="cls : ${availableClasses}" th:value="${cls}" th:text="${cls}"
+                            th:selected="${cls == currentClass}"></option>
+                    </select>
+                </form>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="col-md-6">
+                <div class="d-flex justify-content-end gap-3">
+                    <div class="text-end">
+                        <small class="text-muted d-block">Total Students</small>
+                        <span class="h5 fw-bold text-white" th:text="${totalItems}">0</span>
+                    </div>
+                    <div class="text-end ps-3 border-start border-secondary">
+                        <small class="text-muted d-block">Current Page</small>
+                        <span class="h5 fw-bold text-info"
+                            th:text="${currentPage + 1} + ' / ' + ${totalPages}">1/1</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="stat-item">
-                    <span class="stat-number"
-                        th:text="${activeSession != null ? activeSession.sessionName : 'None'}">Current Session</span>
-                    <span class="stat-label">Active Session</span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stat-item">
-                    <span class="stat-number" th:text="${#lists.size(sessions.?[active == false])}">0</span>
-                    <span class="stat-label">Target Sessions</span>
-                </div>
-            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="d-flex justify-content-between align-items-center mb-3" th:if="${totalPages > 1}">
+            <a th:if="${currentPage > 0}"
+                th:href="@{/students/promote(page=${currentPage - 1}, className=${currentClass})}"
+                class="btn btn-outline-light btn-sm">
+                <i class="fas fa-chevron-left me-1"></i> Previous
+            </a>
+            <span th:if="${currentPage == 0}" class="btn btn-outline-secondary btn-sm disabled"><i
+                    class="fas fa-chevron-left me-1"></i> Previous</span>
+
+            <span class="text-muted small">Page <span th:text="${currentPage + 1}"></span> of <span
+                    th:text="${totalPages}"></span></span>
+
+            <a th:if="${currentPage < totalPages - 1}"
+                th:href="@{/students/promote(page=${currentPage + 1}, className=${currentClass})}"
+                class="btn btn-outline-light btn-sm">
+                Next <i class="fas fa-chevron-right ms-1"></i>
+            </a>
+            <span th:if="${currentPage >= totalPages - 1}" class="btn btn-outline-secondary btn-sm disabled">Next <i
+                    class="fas fa-chevron-right ms-1"></i></span>
         </div>
 
         <!-- Promotion Form -->

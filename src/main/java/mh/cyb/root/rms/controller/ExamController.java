@@ -333,12 +333,34 @@ public class ExamController {
     }
 
     // Student promotion
+    // Student promotion
     @GetMapping("/students/promote")
-    public String promoteStudentsPage(Model model) {
-        List<Student> students = examService.getAllStudents();
+    public String promoteStudentsPage(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size,
+            @RequestParam(required = false) String className,
+            Model model) {
+
+        // Get Available Classes for Dropdown
+        model.addAttribute("availableClasses", examService.getAvailableClasses());
+        model.addAttribute("currentClass", className);
+
+        // Get Filtered/Paginated Students
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        org.springframework.data.domain.Page<Student> studentPage = examService.getStudentsForPromotion(className,
+                pageable);
+
+        model.addAttribute("students", studentPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", studentPage.getTotalPages());
+        model.addAttribute("totalItems", studentPage.getTotalElements());
+
         List<Session> sessions = examService.getAllSessions();
-        model.addAttribute("students", students);
         model.addAttribute("sessions", sessions);
+
+        if (examService.getActiveSession().isPresent()) {
+            model.addAttribute("activeSession", examService.getActiveSession().get());
+        }
+
         return "promote-students";
     }
 
