@@ -240,6 +240,85 @@
             color: var(--text-light);
             border-radius: 12px;
         }
+
+        /* Row Highlighting and Stats Bar */
+        tr.row-present {
+            background-color: rgba(0, 184, 148, 0.1) !important;
+            transition: background-color 0.3s;
+        }
+
+        tr.row-absent {
+            background-color: rgba(225, 112, 85, 0.2) !important;
+            transition: background-color 0.3s;
+        }
+
+        tr.row-late {
+            background-color: rgba(253, 203, 110, 0.2) !important;
+            transition: background-color 0.3s;
+        }
+
+        tr.row-excused {
+            background-color: rgba(108, 92, 231, 0.1) !important;
+            transition: background-color 0.3s;
+        }
+
+        tr.row-holiday {
+            background-color: rgba(0, 184, 148, 0.05) !important;
+            transition: background-color 0.3s;
+        }
+
+        .stats-bar {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            background: rgba(22, 33, 62, 0.98);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 0;
+            z-index: 9999;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-size: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-badge {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .stat-total {
+            color: var(--text-light);
+        }
+
+        .stat-present {
+            color: var(--success-green);
+        }
+
+        .stat-absent {
+            color: var(--danger-red);
+        }
+
+        .stat-late {
+            color: var(--warning-orange);
+        }
+
+        .stat-excused {
+            color: var(--modern-purple);
+        }
     </style>
 </head>
 
@@ -412,21 +491,103 @@
     <!-- Spacing -->
     <div style="height: 60px;"></div>
 
+    <!-- Stats Bar -->
+    <div th:if="${sheet}" class="stats-bar" id="statsBar">
+        <div class="stat-item"><i class="fas fa-users"></i> Total: <span id="countTotal"
+                class="stat-badge stat-total">0</span></div>
+        <div class="stat-item"><i class="fas fa-check-circle"></i> Present: <span id="countPresent"
+                class="stat-badge stat-present">0</span></div>
+        <div class="stat-item"><i class="fas fa-times-circle"></i> Absent: <span id="countAbsent"
+                class="stat-badge stat-absent">0</span></div>
+        <div class="stat-item"><i class="fas fa-clock"></i> Late: <span id="countLate"
+                class="stat-badge stat-late">0</span></div>
+        <div class="stat-item"><i class="fas fa-info-circle"></i> Excused: <span id="countExcused"
+                class="stat-badge stat-excused">0</span></div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            updateAllStats();
+            initializeRowStyles();
+
+            // Add listeners to all radio buttons
+            const radios = document.querySelectorAll('input[type="radio"]');
+            radios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    updateRowStyle(this);
+                    updateStats();
+                });
+            });
+        });
+
+        function updateAllStats() {
+            const sheet = document.querySelector('table');
+            if (sheet) {
+                updateStats();
+            }
+        }
+
+        function initializeRowStyles() {
+            const checkedRadios = document.querySelectorAll('input[type="radio"]:checked');
+            checkedRadios.forEach(radio => updateRowStyle(radio));
+        }
+
+        function updateRowStyle(radio) {
+            const row = radio.closest('tr');
+            if (!row) return;
+
+            // Remove existing status classes
+            row.classList.remove('row-present', 'row-absent', 'row-late', 'row-excused', 'row-holiday');
+
+            // Add new class based on value
+            const status = radio.value;
+            if (status === 'PRESENT') row.classList.add('row-present');
+            else if (status === 'ABSENT') row.classList.add('row-absent');
+            else if (status === 'LATE') row.classList.add('row-late');
+            else if (status === 'EXCUSED') row.classList.add('row-excused');
+            else if (status === 'HOLIDAY') row.classList.add('row-holiday');
+        }
+
+        function updateStats() {
+            const total = document.querySelectorAll('tbody tr').length;
+            const present = document.querySelectorAll('input[value="PRESENT"]:checked').length;
+            const absent = document.querySelectorAll('input[value="ABSENT"]:checked').length;
+            const late = document.querySelectorAll('input[value="LATE"]:checked').length;
+            const excused = document.querySelectorAll('input[value="EXCUSED"]:checked').length;
+
+            document.getElementById('countTotal').textContent = total;
+            document.getElementById('countPresent').textContent = present;
+            document.getElementById('countAbsent').textContent = absent;
+            document.getElementById('countLate').textContent = late;
+            document.getElementById('countExcused').textContent = excused;
+        }
+
         function markAllPresent() {
             const presentRadios = document.querySelectorAll('input[value="PRESENT"]');
-            presentRadios.forEach(radio => radio.checked = true);
+            presentRadios.forEach(radio => {
+                radio.checked = true;
+                updateRowStyle(radio);
+            });
+            updateStats();
         }
 
         function markAllAbsent() {
             const absentRadios = document.querySelectorAll('input[value="ABSENT"]');
-            absentRadios.forEach(radio => radio.checked = true);
+            absentRadios.forEach(radio => {
+                radio.checked = true;
+                updateRowStyle(radio);
+            });
+            updateStats();
         }
 
         function markAllHoliday() {
             const holidayRadios = document.querySelectorAll('input[value="HOLIDAY"]');
-            holidayRadios.forEach(radio => radio.checked = true);
+            holidayRadios.forEach(radio => {
+                radio.checked = true;
+                updateRowStyle(radio);
+            });
+            updateStats();
         }
     </script>
 </body>
