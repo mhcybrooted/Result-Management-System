@@ -468,10 +468,18 @@
                                             </a>
                                             <form th:if="${exam.active}"
                                                 th:action="@{/exams/delete/{id}(id=${exam.id})}" method="post"
-                                                style="display: inline;" sec:authorize="hasRole('SUPER_ADMIN')">>
+                                                style="display: inline;" sec:authorize="hasRole('SUPER_ADMIN')">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger"
                                                     onclick="return confirm('Are you sure you want to delete this exam?')">
                                                     <i class="fas fa-trash me-1"></i>Delete
+                                                </button>
+                                            </form>
+                                            <form th:if="${!exam.active}"
+                                                th:action="@{/exams/activate/{id}(id=${exam.id})}" method="post"
+                                                style="display: inline;" sec:authorize="hasRole('SUPER_ADMIN')">
+                                                <button type="submit" class="btn btn-sm btn-outline-success"
+                                                    onclick="return confirm('Are you sure you want to activate this exam?')">
+                                                    <i class="fas fa-check-circle me-1"></i>Activate
                                                 </button>
                                             </form>
                                         </td>

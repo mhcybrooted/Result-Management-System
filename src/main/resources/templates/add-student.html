@@ -222,7 +222,7 @@
 <body>
 
     <!-- Central Navbar -->
-    <div th:replace="navbar :: navbar"></div>
+    <div th:replace="~{navbar :: navbar}"></div>
     <div style="padding-top: 80px;"></div>
 
     <!-- Hero Banner -->
@@ -273,7 +273,7 @@
                             <span th:text="${error}"></span>
                         </div>
 
-                        <form method="post" action="/students/add" th:object="${student}">
+                        <form method="post" th:action="@{/students/add}" th:object="${student}">
                             <input type="hidden" th:field="*{id}">
 
                             <div class="mb-4">

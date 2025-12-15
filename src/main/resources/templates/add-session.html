@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,18 +21,18 @@
             --text-light: #ddd;
             --text-muted: #95a5a6;
         }
-        
+
         body {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
             color: var(--text-light);
             min-height: 100vh;
         }
-        
+
         .navbar-dark {
             background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent-blue) 100%) !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
-        
+
         .hero-banner {
             background: linear-gradient(135deg, var(--accent-blue) 0%, var(--education-blue) 50%, var(--modern-purple) 100%);
             padding: 60px 0;
@@ -39,7 +40,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero-banner::before {
             content: '';
             position: absolute;
@@ -51,27 +52,27 @@
             opacity: 0.3;
             z-index: -1;
         }
-        
+
         .hero-content {
             position: relative;
             z-index: 2;
             text-align: center;
             color: white;
         }
-        
+
         .hero-title {
             font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
-        
+
         .hero-subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
             margin-bottom: 0;
         }
-        
+
         .form-card {
             background: var(--secondary-dark);
             border: 1px solid rgba(44, 90, 160, 0.2);
@@ -80,28 +81,28 @@
             overflow: hidden;
             transition: all 0.3s ease;
         }
-        
+
         .form-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(108, 92, 231, 0.3);
         }
-        
+
         .card-header {
             background: linear-gradient(90deg, var(--education-blue) 0%, var(--modern-purple) 100%) !important;
             border-bottom: 1px solid rgba(108, 92, 231, 0.3);
             padding: 25px;
         }
-        
+
         .card-header h4 {
             color: white;
             margin: 0;
             font-weight: 700;
         }
-        
+
         .card-body {
             padding: 40px;
         }
-        
+
         .form-label {
             color: var(--text-light);
             font-weight: 600;
@@ -110,7 +111,7 @@
             align-items: center;
             gap: 8px;
         }
-        
+
         .form-control {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(44, 90, 160, 0.3);
@@ -120,18 +121,18 @@
             font-size: 1rem;
             transition: all 0.3s ease;
         }
-        
+
         .form-control:focus {
             background: rgba(255, 255, 255, 0.15);
             border-color: var(--modern-purple);
             box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.25);
             color: var(--text-light);
         }
-        
+
         .form-control::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
-        
+
         .btn-primary {
             background: linear-gradient(45deg, var(--education-blue) 0%, var(--modern-purple) 100%);
             border: none;
@@ -143,12 +144,12 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
         }
-        
+
         .btn-secondary {
             background: var(--text-muted);
             border: none;
@@ -158,12 +159,12 @@
             color: white;
             transition: all 0.3s ease;
         }
-        
+
         .btn-secondary:hover {
             background: #7f8c8d;
             transform: translateY(-2px);
         }
-        
+
         .alert-danger {
             background: linear-gradient(45deg, rgba(225, 112, 85, 0.2) 0%, rgba(211, 48, 49, 0.2) 100%);
             border: 1px solid var(--danger-red);
@@ -171,7 +172,7 @@
             border-radius: 12px;
             padding: 15px;
         }
-        
+
         .breadcrumb-nav {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -179,22 +180,23 @@
             padding: 15px 25px;
             margin-bottom: 30px;
         }
-        
+
         .breadcrumb-item a {
             color: var(--text-light);
             text-decoration: none;
             transition: color 0.3s ease;
         }
-        
+
         .breadcrumb-item a:hover {
             color: var(--modern-purple);
         }
-        
+
         .breadcrumb-item.active {
             color: var(--text-muted);
         }
     </style>
 </head>
+
 <body>
 
     <!-- Central Navbar -->
@@ -214,17 +216,18 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container">
         <!-- Breadcrumb -->
         <nav class="breadcrumb-nav">
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a href="/"><i class="fas fa-home me-1"></i>Home</a></li>
-                <li class="breadcrumb-item"><a href="/sessions"><i class="fas fa-calendar-alt me-1"></i>Sessions</a></li>
+                <li class="breadcrumb-item"><a href="/sessions"><i class="fas fa-calendar-alt me-1"></i>Sessions</a>
+                </li>
                 <li class="breadcrumb-item active">Add Session</li>
             </ol>
         </nav>
-        
+
         <div class="row justify-content-center">
             <div class="col-lg-8 col-xl-6">
                 <div class="form-card">
@@ -237,54 +240,42 @@
                             <i class="fas fa-exclamation-triangle me-2"></i>
                             <span th:text="${error}"></span>
                         </div>
-                        
-                        <form method="post" action="/sessions/add" th:object="${academicSession}">
+
+                        <form method="post" th:action="@{/sessions/add}" th:object="${academicSession}">
                             <div class="mb-4">
                                 <label for="sessionName" class="form-label">
                                     <i class="fas fa-tag"></i>Session Name
                                 </label>
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="sessionName" 
-                                       th:field="*{sessionName}" 
-                                       placeholder="e.g., 2024-25, 2025-26"
-                                       required>
+                                <input type="text" class="form-control" id="sessionName" th:field="*{sessionName}"
+                                    placeholder="e.g., 2024-25, 2025-26" required>
                                 <div class="form-text text-muted mt-2">
                                     <i class="fas fa-info-circle me-1"></i>
                                     Enter the academic session name (e.g., 2024-25)
                                 </div>
                             </div>
-                            
+
                             <div class="mb-4">
                                 <label for="startDate" class="form-label">
                                     <i class="fas fa-calendar-day"></i>Start Date
                                 </label>
-                                <input type="date" 
-                                       class="form-control" 
-                                       id="startDate" 
-                                       th:field="*{startDate}" 
-                                       required>
+                                <input type="date" class="form-control" id="startDate" th:field="*{startDate}" required>
                                 <div class="form-text text-muted mt-2">
                                     <i class="fas fa-info-circle me-1"></i>
                                     When does this academic session begin?
                                 </div>
                             </div>
-                            
+
                             <div class="mb-4">
                                 <label for="endDate" class="form-label">
                                     <i class="fas fa-calendar-times"></i>End Date
                                 </label>
-                                <input type="date" 
-                                       class="form-control" 
-                                       id="endDate" 
-                                       th:field="*{endDate}" 
-                                       required>
+                                <input type="date" class="form-control" id="endDate" th:field="*{endDate}" required>
                                 <div class="form-text text-muted mt-2">
                                     <i class="fas fa-info-circle me-1"></i>
                                     When does this academic session end?
                                 </div>
                             </div>
-                            
+
                             <div class="d-grid gap-3">
                                 <button type="submit" class="btn btn-primary btn-lg">
                                     <i class="fas fa-save me-2"></i>Create Academic Session
@@ -299,10 +290,11 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Bottom Spacing -->
     <div style="height: 80px;"></div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

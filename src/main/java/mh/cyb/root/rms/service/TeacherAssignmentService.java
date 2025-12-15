@@ -66,9 +66,7 @@ public class TeacherAssignmentService {
 
     public List<TeacherAssignment> getAllActiveAssignments(Long sessionId) {
         // Get all assignments and filter by session and active status
-        return teacherAssignmentRepository.findAll().stream()
-                .filter(assignment -> assignment.getSession().getId().equals(sessionId) && assignment.getActive())
-                .collect(Collectors.toList());
+        return teacherAssignmentRepository.findBySessionIdAndActiveTrue(sessionId);
     }
 
     @Transactional
@@ -95,17 +93,11 @@ public class TeacherAssignmentService {
                 .distinct()
                 .collect(Collectors.toList());
 
-        // 3. Get students for these classes
-        // Note: We need to check if Subject uses Class entity or String className
-        // Based on previous ViewFile, Subject has 'classEntity', but Student has
-        // 'className' (String)
-        // We need to verify Subject.java to be sure.
-        // Assuming Subject has ClassEntity, we get className from it.
+        if (assignedClasses.isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
 
-        return studentRepository.findAll().stream()
-                .filter(student -> assignedClasses.contains(student.getClassName()) &&
-                        student.getSession() != null &&
-                        student.getSession().getId().equals(sessionId))
-                .collect(Collectors.toList());
+        // 3. Get students for these classes (Optimized)
+        return studentRepository.findBySessionIdAndClassNameInAndActiveTrue(sessionId, assignedClasses);
     }
 }

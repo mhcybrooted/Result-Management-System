@@ -97,10 +97,67 @@ public class GradeCalculatorService {
         return optionalMinThreshold;
     }
 
-    /**
-     * Get maximum GPA cap
-     */
     public double getGpaMaxCap() {
         return gpaMaxCap;
     }
+
+    // --- Threshold Getters ---
+    public int getMinAPlus() {
+        return minAPlus;
+    }
+
+    public int getMinA() {
+        return minA;
+    }
+
+    public int getMinB() {
+        return minB;
+    }
+
+    public int getMinC() {
+        return minC;
+    }
+
+    public int getMinD() {
+        return minD;
+    }
+
+    public double getPointAPlus() {
+        return pointAPlus;
+    }
+
+    public double getPointA() {
+        return pointA;
+    }
+
+    public double getPointB() {
+        return pointB;
+    }
+
+    public double getPointC() {
+        return pointC;
+    }
+
+    public double getPointD() {
+        return pointD;
+    }
+
+    // --- Helper Methods ---
+
+    public boolean isPass(double percentage) {
+        return percentage >= minD;
+    }
+
+    public boolean isPass(String grade) {
+        return !"F".equals(grade);
+    }
+
+    public String getPassStatus() {
+        return "PASS";
+    }
+
+    public String getFailStatus() {
+        return "FAIL";
+    }
+
 }

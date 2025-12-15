@@ -563,7 +563,8 @@
                 <a href="/reports" class="btn btn-secondary me-2">
                     <i class="fas fa-arrow-left me-2"></i>Back to Reports
                 </a>
-                <a th:href="@{/reports/{id}/pdf(id=${reportCard.student.id})}" class="btn btn-success me-2">
+                <a th:href="@{/reports/{id}/pdf(id=${reportCard.student.id}, v=${#dates.createNow().getTime()})}"
+                    class="btn btn-success me-2">
                     <i class="fas fa-file-pdf me-2"></i>Download PDF
                 </a>
                 <!-- <button onclick="window.print()" class="btn btn-primary">

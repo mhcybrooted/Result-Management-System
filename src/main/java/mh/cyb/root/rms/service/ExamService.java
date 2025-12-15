@@ -130,6 +130,17 @@ public class ExamService {
         return false;
     }
 
+    // Reactivate exam
+    public boolean activateExam(Long id) {
+        Optional<Exam> exam = examRepository.findById(id);
+        if (exam.isPresent()) {
+            exam.get().setActive(true);
+            examRepository.save(exam.get());
+            return true;
+        }
+        return false;
+    }
+
     // Add marks for a student (updated for session support)
     public boolean addMarks(Long studentId, Long subjectId, Long examId, Integer obtainedMarks, Long teacherId) {
         Optional<Student> student = studentRepository.findById(studentId);
@@ -140,6 +151,11 @@ public class ExamService {
         if (student.isPresent() && subject.isPresent() && exam.isPresent() && teacher.isPresent()) {
             // Validate marks don't exceed max marks
             if (obtainedMarks > subject.get().getMaxMarks()) {
+                return false;
+            }
+
+            // Validate Exam is active
+            if (!exam.get().getActive()) {
                 return false;
             }
 
@@ -174,13 +190,21 @@ public class ExamService {
 
     // Get result by roll number (active session)
     public Optional<Result> getResultByRollNumber(String rollNumber) {
+        // First find the student (assuming unique roll number in active session or
+        // taking the first one found)
+        // Ideally, this should find by Roll Number AND Active Session to be more
+        // specific,
+        // but studentRepository.findByRollNumber returns Optional<Student>, implying
+        // unique roll no constraint or limit 1.
         Optional<Student> student = studentRepository.findByRollNumber(rollNumber);
 
         if (student.isPresent()) {
-            List<Marks> marksList = marksRepository.findByStudentRollNumber(rollNumber);
+            Student s = student.get();
+            // FIX: Query marks by Student ID and Session ID to avoid collisions with other
+            // students having same roll no
+            List<Marks> marksList = marksRepository.findByStudentIdAndSessionId(s.getId(), s.getSession().getId());
 
             if (!marksList.isEmpty()) {
-                Student s = student.get();
                 // Use new ResultBuilder to pass GradeCalculatorService
                 Result result = ResultBuilder.buildResult(s.getName(), s.getRollNumber(),
                         s.getClassName(), marksList, gradeCalculatorService);
@@ -191,6 +215,7 @@ public class ExamService {
     }
 
     // Student promotion
+    @Transactional
     public boolean promoteStudents(List<Long> studentIds, Long targetSessionId) {
         Optional<Session> targetSession = sessionRepository.findById(targetSessionId);
         if (!targetSession.isPresent()) {
@@ -212,7 +237,26 @@ public class ExamService {
     }
 
     private String getNextClass(String currentClass) {
-        // Simple promotion logic
+        // Robust promotion logic: Try to increment number, fallback to same class if
+        // failed
+        if (currentClass == null)
+            return "Unknown Class";
+
+        // Handle "Class X" patter
+        if (currentClass.startsWith("Class ")) {
+            try {
+                int classNum = Integer.parseInt(currentClass.substring(6).trim());
+                if (classNum < 12) {
+                    return "Class " + (classNum + 1);
+                } else {
+                    return "Graduated";
+                }
+            } catch (NumberFormatException e) {
+                // Ignore, fall through
+            }
+        }
+
+        // Simple switch case as fallback for safety
         switch (currentClass) {
             case "Class 1":
                 return "Class 2";
@@ -237,7 +281,7 @@ public class ExamService {
             case "Class 11":
                 return "Class 12";
             default:
-                return currentClass;
+                return currentClass; // Stay in same class if unknown
         }
     }
 
@@ -249,13 +293,18 @@ public class ExamService {
                 student.setSession(activeSession.get());
             }
         }
+        if (student.getActive() == null) {
+            student.setActive(true);
+        }
         return studentRepository.save(student);
     }
 
     public boolean deleteStudent(Long id) {
         Optional<Student> student = studentRepository.findById(id);
         if (student.isPresent()) {
-            studentRepository.delete(student.get());
+            // Soft delete
+            student.get().setActive(false);
+            studentRepository.save(student.get());
             return true;
         }
         return false;

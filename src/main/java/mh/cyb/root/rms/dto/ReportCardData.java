@@ -24,25 +24,10 @@ public class ReportCardData {
         this.session = session;
         this.subjects = subjects;
         this.reportDate = LocalDate.now();
-        calculateOverall();
+        // Calculation moved to Service to ensure consistency
     }
 
-    private void calculateOverall() {
-        if (subjects == null || subjects.isEmpty()) {
-            overallPercentage = 0;
-            // overallGrade default? Let service handle it.
-            result = "FAIL";
-            return;
-        }
-
-        double totalObtained = subjects.stream().mapToDouble(SubjectReport::getTotalObtained).sum();
-        double totalMaximum = subjects.stream().mapToDouble(SubjectReport::getTotalMaximum).sum();
-
-        overallPercentage = totalMaximum > 0 ? (totalObtained / totalMaximum) * 100 : 0;
-        // overallGrade calculated externally
-        result = overallPercentage >= 40 ? "PASS" : "FAIL"; // This threshold is also arguably configurable, but
-                                                            // sticking to grade scale for now.
-    }
+    // Removed calculateOverall() - Service must set these exclusively
 
     // Removed internal calculateGrade
 
@@ -69,11 +54,15 @@ public class ReportCardData {
 
     public void setSubjects(List<SubjectReport> subjects) {
         this.subjects = subjects;
-        calculateOverall();
+        // Calculation moved to Service
     }
 
     public double getOverallPercentage() {
         return Math.round(overallPercentage * 100.0) / 100.0;
+    }
+
+    public void setOverallPercentage(double overallPercentage) {
+        this.overallPercentage = overallPercentage;
     }
 
     public String getOverallGrade() {

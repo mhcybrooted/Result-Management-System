@@ -187,22 +187,41 @@ public class ExamController {
     @PostMapping("/assign-subjects")
     public String processAssignSubjects(@RequestParam Long teacherId,
             @RequestParam Long subjectId,
-            @RequestParam Long sessionId,
+            @RequestParam(required = false) Long sessionId,
             @RequestParam(required = false) Long classId,
             RedirectAttributes redirectAttributes) {
+
+        if (sessionId == null) {
+            redirectAttributes.addFlashAttribute("error", "No active session found! Cannot assign subjects.");
+            return "redirect:/assign-subjects";
+        }
         try {
-            // Validate that the subject belongs to the selected class if classId is
-            // provided
+            // Validate Subject and Class consistency
+            Optional<Subject> subjectOpt = examService.getSubjectById(subjectId);
+            if (!subjectOpt.isPresent()) {
+                redirectAttributes.addFlashAttribute("error", "Invalid subject selected");
+                return "redirect:/assign-subjects";
+            }
+
+            Subject subject = subjectOpt.get();
+
+            // If classId is provided, ensure it matches subject's class
             if (classId != null) {
-                Optional<Subject> subjectOpt = examService.getSubjectById(subjectId);
-                if (subjectOpt.isPresent()) {
-                    Subject subject = subjectOpt.get();
-                    if (subject.getClassEntity() != null &&
-                            !subject.getClassEntity().getId().equals(classId)) {
-                        redirectAttributes.addFlashAttribute("error",
-                                "Selected subject does not belong to the selected class!");
-                        return "redirect:/assign-subjects";
-                    }
+                if (subject.getClassEntity() != null && !subject.getClassEntity().getId().equals(classId)) {
+                    redirectAttributes.addFlashAttribute("error",
+                            "Selected subject does not belong to the selected class!");
+                    return "redirect:/assign-subjects";
+                }
+            } else {
+                // If classId NOT provided, but subject has one, strictly enforce strict
+                // assignment if needed?
+                // For now, if subject has a class, we implicitly accept it.
+                // But we could warn if the subject is "Class 10 Math" and we didn't specify
+                // class.
+                // Actually, let's just ensure we don't assign inactive class subjects.
+                if (subject.getClassEntity() != null && !subject.getClassEntity().getActive()) {
+                    redirectAttributes.addFlashAttribute("error", "Cannot assign subject from an inactive class!");
+                    return "redirect:/assign-subjects";
                 }
             }
 
@@ -398,6 +417,20 @@ public class ExamController {
             redirectAttributes.addFlashAttribute("success", "Exam deleted successfully!");
         } else {
             redirectAttributes.addFlashAttribute("error", "Failed to delete exam");
+        }
+        return "redirect:/exams";
+    }
+
+    @PostMapping("/exams/activate/{id}")
+    public String activateExam(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        if (examService.activateExam(id)) {
+            // Log Action
+            String username = securityServiceGetUsername();
+            activityLogService.logAction("ACTIVATE_EXAM", "Activated Exam ID: " + id, username, null);
+
+            redirectAttributes.addFlashAttribute("success", "Exam activated successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Failed to activate exam");
         }
         return "redirect:/exams";
     }

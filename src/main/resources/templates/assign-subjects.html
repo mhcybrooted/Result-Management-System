@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +15,7 @@
             position: relative;
             overflow-x: hidden;
         }
-        
+
         body::before {
             content: '';
             position: fixed;
@@ -22,17 +23,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
             z-index: -1;
         }
-        
+
         .container {
             padding-top: 100px;
             padding-bottom: 50px;
         }
-        
+
         .assignment-card {
             background: rgba(15, 15, 35, 0.8);
             backdrop-filter: blur(20px);
@@ -40,12 +41,12 @@
             border-radius: 20px;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 
+            box-shadow:
                 0 8px 32px rgba(0, 0, 0, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
         }
-        
+
         .assignment-card::before {
             content: '';
             position: absolute;
@@ -55,27 +56,29 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.5), transparent);
         }
-        
-        .form-control, .form-select {
+
+        .form-control,
+        .form-select {
             background: rgba(15, 15, 35, 0.6);
             border: 2px solid rgba(120, 119, 198, 0.2);
             border-radius: 12px;
             color: #e0e6ed !important;
             transition: all 0.3s ease;
         }
-        
-        .form-control:focus, .form-select:focus {
+
+        .form-control:focus,
+        .form-select:focus {
             background: rgba(15, 15, 35, 0.8);
             border-color: rgba(102, 126, 234, 0.8);
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
             color: #e0e6ed !important;
         }
-        
+
         .form-select option {
             background-color: #0f0f23;
             color: #e0e6ed;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, #667eea, #764ba2);
             border: none;
@@ -84,12 +87,12 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
-        
+
         .btn-secondary {
             background: rgba(139, 148, 158, 0.2);
             border: 1px solid rgba(139, 148, 158, 0.5);
@@ -99,43 +102,45 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .btn-secondary:hover {
             background: rgba(139, 148, 158, 0.3);
             color: #a0a9c0;
         }
-        
-        h1, h2, h3 {
+
+        h1,
+        h2,
+        h3 {
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .form-label {
             color: #e0e6ed;
             font-weight: 600;
             margin-bottom: 0.75rem;
         }
-        
+
         .alert-success {
             background: rgba(16, 185, 129, 0.2);
             border: 1px solid rgba(16, 185, 129, 0.5);
             border-radius: 12px;
             color: #e0e6ed;
         }
-        
+
         .alert-danger {
             background: rgba(239, 68, 68, 0.2);
             border: 1px solid rgba(239, 68, 68, 0.5);
             border-radius: 12px;
             color: #e0e6ed;
         }
-        
+
         .btn-close {
             filter: invert(1);
         }
-        
+
         .btn-outline-danger {
             border: 1px solid rgba(239, 68, 68, 0.5);
             color: #ef4444;
@@ -143,30 +148,30 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-        
+
         .btn-outline-danger:hover {
             background: rgba(239, 68, 68, 0.2);
             border-color: #ef4444;
             color: #ef4444;
         }
-        
+
         .badge {
             padding: 0.35rem 0.65rem;
             border-radius: 12px;
         }
-        
+
         .table-dark th {
             border-color: rgba(120, 119, 198, 0.2);
             color: #e0e6ed;
             font-weight: 600;
         }
-        
+
         .table-dark td {
             border-color: rgba(120, 119, 198, 0.1);
             color: #a0a9c0;
             vertical-align: middle;
         }
-        
+
         .session-display {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2)) !important;
             border: 2px solid rgba(102, 126, 234, 0.6) !important;
@@ -177,10 +182,11 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Central Navbar -->
-    <div th:replace="navbar :: navbar"></div>
-    
+    <div th:replace="~{navbar :: navbar}"></div>
+
     <div class="container">
         <!-- Page Header -->
         <div class="row mb-4">
@@ -196,7 +202,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Assignment Form -->
         <div class="row justify-content-center">
             <div class="col-lg-8">
@@ -206,17 +212,17 @@
                     <span th:text="${success}">Success message</span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
-                
+
                 <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="fas fa-exclamation-triangle me-2"></i>
                     <span th:text="${error}">Error message</span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
-                
+
                 <div class="assignment-card">
                     <h3 class="mb-4">Subject Assignment Form</h3>
-                    
-                    <form action="/assign-subjects" method="post">
+
+                    <form th:action="@{/assign-subjects}" method="post">
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="teacher" class="form-label">
@@ -224,29 +230,28 @@
                                 </label>
                                 <select class="form-select" id="teacher" name="teacherId" required>
                                     <option value="">Choose a teacher...</option>
-                                    <option th:each="teacher : ${teachers}" 
-                                            th:value="${teacher.id}" 
-                                            th:text="${teacher.name}"
-                                            th:selected="${selectedTeacherId != null && selectedTeacherId == teacher.id}">
+                                    <option th:each="teacher : ${teachers}" th:value="${teacher.id}"
+                                        th:text="${teacher.name}"
+                                        th:selected="${selectedTeacherId != null && selectedTeacherId == teacher.id}">
                                         Teacher Name
                                     </option>
                                 </select>
                             </div>
-                            
+
                             <div class="col-md-4 mb-3">
                                 <label for="classSelect" class="form-label">
                                     <i class="fas fa-school me-2"></i>Select Class
                                 </label>
-                                <select class="form-select" id="classSelect" onchange="filterSubjectsByClass()" required>
+                                <select class="form-select" id="classSelect" onchange="filterSubjectsByClass()"
+                                    required>
                                     <option value="">Choose a class...</option>
-                                    <option th:each="class : ${classes}" 
-                                            th:value="${class.id}" 
-                                            th:text="${class.className}">
+                                    <option th:each="class : ${classes}" th:value="${class.id}"
+                                        th:text="${class.className}">
                                         Class Name
                                     </option>
                                 </select>
                             </div>
-                            
+
                             <div class="col-md-4 mb-3">
                                 <label for="subject" class="form-label">
                                     <i class="fas fa-book me-2"></i>Select Subject
@@ -256,29 +261,29 @@
                                 </select>
                                 <!-- Hidden template for subjects -->
                                 <div id="subjectTemplate" style="display: none;">
-                                    <option th:each="subject : ${subjects}" 
-                                            th:value="${subject.id}" 
-                                            th:text="${subject.subjectName}"
-                                            th:attr="data-class-id=${subject.classEntity != null ? subject.classEntity.id : ''}">
+                                    <option th:each="subject : ${subjects}" th:value="${subject.id}"
+                                        th:text="${subject.subjectName}"
+                                        th:attr="data-class-id=${subject.classEntity != null ? subject.classEntity.id : ''}">
                                         Subject Name
                                     </option>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-12 mb-4">
                                 <label for="session" class="form-label">
                                     <i class="fas fa-calendar me-2"></i>Academic Session
                                 </label>
-                                <input type="text" class="form-control session-display" id="session" 
-                                       th:value="${activeSession != null ? activeSession.sessionName : 'No Active Session'}" 
-                                       readonly>
-                                <input type="hidden" name="sessionId" th:value="${activeSession != null ? activeSession.id : ''}">
+                                <input type="text" class="form-control session-display" id="session"
+                                    th:value="${activeSession != null ? activeSession.sessionName : 'No Active Session'}"
+                                    readonly>
+                                <input type="hidden" name="sessionId"
+                                    th:value="${activeSession != null ? activeSession.id : ''}">
                                 <input type="hidden" name="classId" id="hiddenClassId" value="">
                             </div>
                         </div>
-                        
+
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary me-3">
                                 <i class="fas fa-save me-2"></i>Assign Subject
@@ -291,7 +296,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Current Assignments -->
         <div class="row">
             <div class="col-12">
@@ -300,15 +305,15 @@
                         <h3>Current Subject Assignments</h3>
                         <div class="d-flex align-items-center">
                             <label for="teacherFilter" class="form-label me-2 mb-0">Filter by Teacher:</label>
-                            <select class="form-select" id="teacherFilter" style="width: auto;" onchange="filterAssignments()">
+                            <select class="form-select" id="teacherFilter" style="width: auto;"
+                                onchange="filterAssignments()">
                                 <option value="">All Teachers</option>
-                                <option th:each="teacher : ${teachers}" 
-                                        th:value="${teacher.name}" 
-                                        th:text="${teacher.name}">Teacher Name</option>
+                                <option th:each="teacher : ${teachers}" th:value="${teacher.name}"
+                                    th:text="${teacher.name}">Teacher Name</option>
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="table-responsive">
                         <table class="table table-dark table-striped">
                             <thead>
@@ -328,20 +333,25 @@
                                         <div class="text-muted">No subject assignments found for current session</div>
                                     </td>
                                 </tr>
-                                <tr th:each="assignment : ${assignments}" class="assignment-row" th:attr="data-teacher=${assignment.teacher.name}">
+                                <tr th:each="assignment : ${assignments}" class="assignment-row"
+                                    th:attr="data-teacher=${assignment.teacher.name}">
                                     <td th:text="${assignment.teacher.name}">Teacher Name</td>
-                                    <td th:text="${assignment.subject.classEntity != null ? assignment.subject.classEntity.className : 'N/A'}">Class Name</td>
+                                    <td
+                                        th:text="${assignment.subject.classEntity != null ? assignment.subject.classEntity.className : 'N/A'}">
+                                        Class Name</td>
                                     <td th:text="${assignment.subject.subjectName}">Subject Name</td>
                                     <td th:text="${assignment.session.sessionName}">Session Name</td>
                                     <td>
                                         <span th:if="${assignment.active}" class="badge bg-success">Active</span>
-                                        <span th:unless="${assignment.active}" class="badge bg-secondary">Inactive</span>
+                                        <span th:unless="${assignment.active}"
+                                            class="badge bg-secondary">Inactive</span>
                                     </td>
                                     <td>
-                                        <form th:action="@{/assign-subjects/remove}" method="post" style="display: inline;">
+                                        <form th:action="@{/assign-subjects/remove}" method="post"
+                                            style="display: inline;">
                                             <input type="hidden" name="assignmentId" th:value="${assignment.id}">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" 
-                                                    onclick="return confirm('Are you sure you want to remove this assignment?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('Are you sure you want to remove this assignment?')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
@@ -350,7 +360,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div id="noAssignments" class="text-center py-4" style="display: none;">
                         <i class="fas fa-search fa-2x text-muted mb-3"></i>
                         <h5 class="text-muted">No assignments found for selected teacher</h5>
@@ -359,7 +369,7 @@
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Filter assignments by teacher
@@ -368,7 +378,7 @@
             const rows = document.querySelectorAll('.assignment-row');
             const noAssignmentsDiv = document.getElementById('noAssignments');
             let visibleCount = 0;
-            
+
             rows.forEach(row => {
                 const teacherName = row.getAttribute('data-teacher');
                 if (selectedTeacher === '' || teacherName === selectedTeacher) {
@@ -378,7 +388,7 @@
                     row.style.display = 'none';
                 }
             });
-            
+
             // Show/hide no assignments message
             if (visibleCount === 0 && selectedTeacher !== '') {
                 noAssignmentsDiv.style.display = 'block';
@@ -388,7 +398,7 @@
                 document.querySelector('#assignmentsTable').style.display = '';
             }
         }
-        
+
         // Remove assignment function
         function removeAssignment(button) {
             if (confirm('Are you sure you want to remove this assignment?')) {
@@ -402,9 +412,9 @@
                 }, 300);
             }
         }
-        
+
         // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Auto-dismiss alerts after 5 seconds
             setTimeout(() => {
                 const alerts = document.querySelectorAll('.alert');
@@ -414,25 +424,25 @@
                 });
             }, 5000);
         });
-        
+
         // Filter subjects by selected class
         function filterSubjectsByClass() {
             const classSelect = document.getElementById('classSelect');
             const subjectSelect = document.getElementById('subject');
             const hiddenClassId = document.getElementById('hiddenClassId');
             const selectedClassId = classSelect.value;
-            
+
             // Update hidden class ID field
             hiddenClassId.value = selectedClassId;
-            
+
             // Clear current options except the first one
             subjectSelect.innerHTML = '<option value="">Choose a subject...</option>';
-            
+
             if (selectedClassId) {
                 // Get all subject options from template
                 const subjectTemplate = document.getElementById('subjectTemplate');
                 const allSubjectOptions = subjectTemplate.querySelectorAll('option');
-                
+
                 allSubjectOptions.forEach(option => {
                     const classId = option.getAttribute('data-class-id');
                     if (classId === selectedClassId) {
@@ -442,7 +452,7 @@
                         subjectSelect.appendChild(newOption);
                     }
                 });
-                
+
                 // If no subjects found, show message
                 if (subjectSelect.options.length === 1) {
                     subjectSelect.innerHTML = '<option value="">No subjects available for this class</option>';
@@ -453,4 +463,5 @@
         }
     </script>
 </body>
+
 </html>

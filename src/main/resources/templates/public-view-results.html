@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +17,7 @@
             position: relative;
             overflow-x: hidden;
         }
-        
+
         body::before {
             content: '';
             position: fixed;
@@ -24,12 +25,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
             z-index: -1;
         }
-        
+
         .search-card {
             background: rgba(15, 15, 35, 0.8);
             backdrop-filter: blur(20px);
@@ -38,12 +39,12 @@
             padding: 3rem;
             margin: 0 auto;
             max-width: 600px;
-            box-shadow: 
+            box-shadow:
                 0 8px 32px rgba(0, 0, 0, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
         }
-        
+
         .search-card::before {
             content: '';
             position: absolute;
@@ -53,12 +54,12 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.5), transparent);
         }
-        
+
         .search-header {
             text-align: center;
             margin-bottom: 2rem;
         }
-        
+
         .search-icon {
             width: 80px;
             height: 80px;
@@ -72,7 +73,7 @@
             color: white;
             box-shadow: 0 0 30px rgba(102, 126, 234, 0.4);
         }
-        
+
         h2 {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
@@ -80,7 +81,7 @@
             background-clip: text;
             margin-bottom: 0.5rem;
         }
-        
+
         .form-control {
             background: rgba(15, 15, 35, 0.6);
             border: 2px solid rgba(120, 119, 198, 0.2);
@@ -90,18 +91,18 @@
             padding: 1rem;
             transition: all 0.3s ease;
         }
-        
+
         .form-control:focus {
             background: rgba(15, 15, 35, 0.8);
             border-color: rgba(102, 126, 234, 0.8);
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
             color: #e0e6ed !important;
         }
-        
+
         .form-control::placeholder {
             color: rgba(224, 230, 237, 0.5);
         }
-        
+
         .btn-search {
             background: linear-gradient(135deg, #667eea, #764ba2);
             border: none;
@@ -114,12 +115,12 @@
             transition: all 0.3s ease;
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
         }
-        
+
         .btn-search:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
-        
+
         .btn-back {
             background: rgba(15, 15, 35, 0.8);
             border: 1px solid rgba(120, 119, 198, 0.3);
@@ -133,13 +134,13 @@
             transition: all 0.3s ease;
             margin-bottom: 2rem;
         }
-        
+
         .btn-back:hover {
             background: rgba(102, 126, 234, 0.2);
             border-color: rgba(102, 126, 234, 0.6);
             color: white;
         }
-        
+
         .session-info {
             background: rgba(102, 126, 234, 0.2);
             border: 1px solid rgba(102, 126, 234, 0.5);
@@ -149,19 +150,20 @@
             text-align: center;
             color: #e0e6ed;
         }
-        
+
         .info-text {
             text-align: center;
             margin-top: 2rem;
             color: #8b949e;
             font-size: 0.95rem;
         }
-        
+
         p {
             color: #a0a9c0;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="row justify-content-center">
@@ -171,7 +173,7 @@
                     <i class="fas fa-arrow-left"></i>
                     Back to Home
                 </a>
-                
+
                 <div class="search-card">
                     <!-- Search Header -->
                     <div class="search-header">
@@ -181,28 +183,28 @@
                         <h2>Search Student Results</h2>
                         <p class="mb-0">Enter student roll number to view exam results</p>
                     </div>
-                    
+
                     <!-- Session Info -->
                     <div th:if="${activeSession}" class="session-info">
                         <i class="fas fa-calendar me-2"></i>
                         <strong>Current Academic Session: </strong>
                         <span th:text="${activeSession.sessionName}">2024-25</span>
                     </div>
-                    
+
                     <!-- Search Form -->
-                    <form action="/search-results" method="post">
+                    <form th:action="@{/search-results}" method="post">
                         <div class="mb-4">
-                            <input type="text" class="form-control" id="rollNumber" name="rollNumber" 
-                                   placeholder="Enter student roll number (e.g., 101, 102, 103)" 
-                                   required autocomplete="off">
+                            <input type="text" class="form-control" id="rollNumber" name="rollNumber"
+                                placeholder="Enter student roll number (e.g., 101, 102, 103)" required
+                                autocomplete="off">
                         </div>
-                        
+
                         <button type="submit" class="btn-search">
                             <i class="fas fa-search me-2"></i>
                             Search Results
                         </button>
                     </form>
-                    
+
                     <!-- Info Text -->
                     <div class="info-text">
                         <i class="fas fa-info-circle me-1"></i>
@@ -212,7 +214,8 @@
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

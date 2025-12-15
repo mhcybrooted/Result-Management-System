@@ -80,7 +80,16 @@
             background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
             transition: all 0.6s ease;
             transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
             border-radius: 50%;
+            pointer-events: none;
+            /* Prevent blocking clicks */
+            z-index: 0;
+        }
+
+        .teacher-card .d-flex {
+            position: relative;
+            z-index: 1;
         }
 
         .teacher-card:hover::after {
@@ -233,7 +242,7 @@
 
 <body>
     <!-- Central Navbar -->
-    <div th:replace="navbar :: navbar"></div>
+    <div th:replace="~{navbar :: navbar}"></div>
 
     <div class="container">
         <!-- Page Header -->

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,41 +16,42 @@
             --success-green: #10b981;
             --text-light: #f8fafc;
         }
-        
+
         body {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
             color: var(--text-light);
             min-height: 100vh;
         }
-        
+
         .navbar-dark {
             background: linear-gradient(90deg, var(--primary-dark) 0%, var(--accent-blue) 100%) !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
-        
+
         .preview-card {
             background: var(--secondary-dark);
             border: 1px solid rgba(139, 92, 246, 0.2);
             border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
         }
-        
+
         .stats-row {
             background: rgba(139, 92, 246, 0.1);
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
         }
-        
+
         .error-row {
             background-color: rgba(239, 68, 68, 0.1) !important;
         }
-        
+
         .valid-row {
             background-color: rgba(16, 185, 129, 0.1) !important;
         }
     </style>
 </head>
+
 <body>
 
     <!-- Central Navbar -->
@@ -104,7 +106,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="row : ${importRows}" 
+                        <tr th:each="row : ${importRows}"
                             th:class="${row.status == 'Error'} ? 'error-row' : 'valid-row'">
                             <td>
                                 <span th:if="${row.status == 'Valid'}" class="badge bg-success">
@@ -136,7 +138,7 @@
                     <span class="text-muted me-3">
                         Ready to import <strong th:text="${validRows}">0</strong> valid records
                     </span>
-                    <form method="post" action="/import/marks/confirm" class="d-inline">
+                    <form method="post" th:action="@{/import/marks/confirm}" class="d-inline">
                         <input type="hidden" name="importData" th:value="${importDataJson}">
                         <input type="hidden" name="teacherId" th:value="${teacherId}">
                         <button type="submit" class="btn btn-success" th:disabled="${validRows == 0}">
@@ -150,4 +152,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

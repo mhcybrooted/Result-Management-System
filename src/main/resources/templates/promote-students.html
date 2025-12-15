@@ -455,7 +455,7 @@
                             <span th:text="${error}"></span>
                         </div>
 
-                        <form method="post" action="/students/promote">
+                        <form method="post" th:action="@{/students/promote}">
                             <div class="mb-4">
                                 <label for="targetSessionId" class="form-label">
                                     <i class="fas fa-arrow-right form-icon"></i>Promote to Session

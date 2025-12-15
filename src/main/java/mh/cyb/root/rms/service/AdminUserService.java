@@ -66,4 +66,12 @@ public class AdminUserService implements UserDetailsService {
     public void deleteAdminUser(Long id) {
         adminUserRepository.deleteById(id);
     }
+
+    public java.util.Optional<AdminUser> getAdminUserById(Long id) {
+        return adminUserRepository.findById(id);
+    }
+
+    public java.util.Optional<AdminUser> getAdminUserByUsername(String username) {
+        return adminUserRepository.findByUsername(username);
+    }
 }

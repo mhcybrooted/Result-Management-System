@@ -33,6 +33,9 @@ public class ReportService {
     @Autowired
     private TemplateEngine templateEngine;
 
+    @Autowired
+    private GradeCalculatorService gradeCalculatorService;
+
     public Optional<ReportCardData> generateReportCard(Long studentId, Long sessionId) {
         Optional<Student> studentOpt = studentRepository.findById(studentId);
         Optional<Session> sessionOpt = sessionRepository.findById(sessionId);
@@ -44,18 +47,8 @@ public class ReportService {
         Student student = studentOpt.get();
         Session session = sessionOpt.get();
 
-        // Get all marks for this student in this session
-        List<Marks> allMarks = marksRepository.findAll().stream()
-                .filter(m -> {
-                    boolean match = m.getStudent().getId().equals(studentId) &&
-                            m.getStudent().getSession().getId().equals(sessionId);
-                    if (!match && m.getStudent().getId().equals(studentId)) {
-                        System.out.println("DEBUG: No match. Mark Session: " + m.getStudent().getSession().getId()
-                                + " vs Req: " + sessionId);
-                    }
-                    return match;
-                })
-                .collect(Collectors.toList());
+        // Get all marks for this student in this session (Optimized Query)
+        List<Marks> allMarks = marksRepository.findByStudentIdAndSessionId(studentId, sessionId);
 
         if (allMarks.isEmpty()) {
             return Optional.empty();
@@ -82,8 +75,8 @@ public class ReportService {
 
             SubjectReport subjectReport = new SubjectReport(subjectName, examMarks, totalMaximum);
             double perc = subjectReport.getPercentage();
-            subjectReport.setGrade(calculateGrade(perc));
-            subjectReport.setGradePoint(calculateGradePoint(perc));
+            subjectReport.setGrade(gradeCalculatorService.calculateGrade(perc));
+            subjectReport.setGradePoint(gradeCalculatorService.calculateGradePoint(perc));
 
             // Set optional flag
             if (!subjectMarks.isEmpty()) {
@@ -95,21 +88,32 @@ public class ReportService {
 
         ReportCardData reportCard = new ReportCardData(student, session, subjectReports);
 
-        // Calculate Overall Grade
-        reportCard.setOverallGrade(calculateGrade(reportCard.getOverallPercentage()));
+        // --- Centralized Calculation using GradeCalculatorService ---
 
-        // --- GPA Calculation with Optional Subject Logic ---
+        // 1. Calculate Totals
+        double totalObtained = subjectReports.stream().mapToDouble(SubjectReport::getTotalObtained).sum();
+        double totalMaximum = subjectReports.stream().mapToDouble(SubjectReport::getTotalMaximum).sum();
+        double overallPercentage = totalMaximum > 0 ? (totalObtained / totalMaximum) * 100 : 0;
+
+        reportCard.setOverallPercentage(Math.round(overallPercentage * 100.0) / 100.0); // Round for display
+
+        // 2. Calculate Overall Grade
+        String overallGrade = gradeCalculatorService.calculateGrade(overallPercentage);
+        reportCard.setOverallGrade(overallGrade);
+
+        // 3. GPA Calculation with Optional Logic
         double totalGP = 0.0;
         int compulsoryCount = 0;
         boolean isFail = false;
+        double optionalThreshold = gradeCalculatorService.getOptionalMinThreshold();
 
         for (SubjectReport sr : subjectReports) {
             String grade = sr.getGrade();
 
             if (sr.isOptional()) {
-                // Optional Logic: If GP >= 2.0, add (GP - 2.0)
-                if (sr.getGradePoint() >= 2.0) {
-                    totalGP += (sr.getGradePoint() - 2.0);
+                // Optional Logic: If GP >= Threshold, add (GP - Threshold)
+                if (sr.getGradePoint() >= optionalThreshold) {
+                    totalGP += (sr.getGradePoint() - optionalThreshold);
                 }
             } else {
                 // Compulsory Logic: Add full GP
@@ -117,12 +121,13 @@ public class ReportService {
                 compulsoryCount++;
 
                 // CHECK FAIL CONDITION
-                if ("F".equals(grade)) {
+                if (!gradeCalculatorService.isPass(grade)) {
                     isFail = true;
                 }
             }
         }
 
+        // 4. GPA Finalization
         double gpa;
         if (compulsoryCount > 0) {
             gpa = totalGP / compulsoryCount;
@@ -130,20 +135,24 @@ public class ReportService {
             gpa = 0.0;
         }
 
-        // Cap at 5.00
-        if (gpa > 5.00) {
-            gpa = 5.00;
+        // Cap at Max
+        if (gpa > gradeCalculatorService.getGpaMaxCap()) {
+            gpa = gradeCalculatorService.getGpaMaxCap();
         }
 
         // Apply Fail Logic
         if (isFail) {
             gpa = 0.00;
         }
-
         reportCard.setGpa(Math.round(gpa * 100.0) / 100.0);
 
-        if (isFail) {
-            reportCard.setResult("FAIL");
+        // 5. Set Result Logic (PASS/FAIL)
+        // If fail flag is set, it's FAIL.
+        // OR if overall percentage is below passing (Grade D min)
+        if (isFail || !gradeCalculatorService.isPass(overallPercentage)) {
+            reportCard.setResult(gradeCalculatorService.getFailStatus());
+        } else {
+            reportCard.setResult(gradeCalculatorService.getPassStatus());
         }
         // ----------------------------------------------------
 
@@ -159,6 +168,57 @@ public class ReportService {
     @org.springframework.beans.factory.annotation.Value("${report.title}")
     private String reportTitle;
 
+    public byte[] generatePDF(ReportCardData reportData) {
+        try {
+            Context context = new Context();
+            context.setVariable("reportCard", reportData);
+            context.setVariable("schoolName", schoolName);
+            context.setVariable("schoolAddress", schoolAddress);
+            context.setVariable("reportTitle", reportTitle);
+
+            // Create grade scale legend (Currently using hardcoded properties for Legend to
+            // stay simple or should fetch from Service?
+            // The logic was moved to Service, but the PDF legend values were hardcoded
+            // props here.
+            // For now, I will keep the legend generation as is, since
+            // GradeCalculatorService doesn't expose the limits easily without getters.
+            // Wait, I can't access private fields here anymore. I'll rely on
+            // GradeCalculatorService if it has getters, otherwise I might break the legend.
+            // GradeCalculatorService DOES NOT have getters for minAPlus etc.
+            // I should update GradeCalculatorService to expose them or just keep the
+            // properties here for the legend.
+            // Since "fix all item" implies keeping it working, I will keep the properties
+            // here for the Legend but use the Service for calculation.)
+            // Actually, I can leave the properties here for the PDF legend ONLY.
+
+            // Wait, I am replacing the WHOLE local calculation logic.
+            // `minAPlus` etc are used in `generatePDF` for the Legend.
+            // I will keep the @Values, but remove `calculateGrade` and
+            // `calculateGradePoint`.
+
+            Map<String, String> gradeLegend = new LinkedHashMap<>();
+            // Re-using the @Value fields which I am keeping below
+            gradeLegend.put("A+", minAPlus + "%+ (GP " + pointAPlus + ")");
+            gradeLegend.put("A", minA + "-" + (minAPlus - 1) + "% (GP " + pointA + ")");
+            gradeLegend.put("A-", minAMinus + "-" + (minA - 1) + "% (GP " + pointAMinus + ")");
+            gradeLegend.put("B", minB + "-" + (minAMinus - 1) + "% (GP " + pointB + ")");
+            gradeLegend.put("C", minC + "-" + (minB - 1) + "% (GP " + pointC + ")");
+            gradeLegend.put("D", minD + "-" + (minC - 1) + "% (GP " + pointD + ")");
+            gradeLegend.put("F", "0%-" + (minD - 1) + "% (GP 0.00)");
+            context.setVariable("gradeLegend", gradeLegend);
+
+            String html = templateEngine.process("report-card-pdf", context);
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ConverterProperties properties = new ConverterProperties();
+            HtmlConverter.convertToPdf(html, outputStream, properties);
+            return outputStream.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating PDF", e);
+        }
+    }
+
+    // PDF Legend Properties (Kept for Legend display)
     @org.springframework.beans.factory.annotation.Value("${grade.aplus.min}")
     private int minAPlus;
     @org.springframework.beans.factory.annotation.Value("${grade.a.min}")
@@ -185,70 +245,9 @@ public class ReportService {
     @org.springframework.beans.factory.annotation.Value("${grade.d.point}")
     private double pointD;
 
-    public byte[] generatePDF(ReportCardData reportData) {
-        try {
-            Context context = new Context();
-            context.setVariable("reportCard", reportData);
-            context.setVariable("schoolName", schoolName);
-            context.setVariable("schoolAddress", schoolAddress);
-            context.setVariable("reportTitle", reportTitle);
-
-            // Create grade scale legend
-            Map<String, String> gradeLegend = new LinkedHashMap<>();
-            gradeLegend.put("A+", minAPlus + "%+ (GP " + pointAPlus + ")");
-            gradeLegend.put("A", minA + "-" + (minAPlus - 1) + "% (GP " + pointA + ")");
-            gradeLegend.put("A-", minAMinus + "-" + (minA - 1) + "% (GP " + pointAMinus + ")");
-            gradeLegend.put("B", minB + "-" + (minAMinus - 1) + "% (GP " + pointB + ")");
-            gradeLegend.put("C", minC + "-" + (minB - 1) + "% (GP " + pointC + ")");
-            gradeLegend.put("D", minD + "-" + (minC - 1) + "% (GP " + pointD + ")");
-            gradeLegend.put("F", "0%-" + (minD - 1) + "% (GP 0.00)");
-            context.setVariable("gradeLegend", gradeLegend);
-
-            String html = templateEngine.process("report-card-pdf", context);
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ConverterProperties properties = new ConverterProperties();
-            HtmlConverter.convertToPdf(html, outputStream, properties);
-            return outputStream.toByteArray();
-        } catch (Exception e) {
-            throw new RuntimeException("Error generating PDF", e);
-        }
-    }
-
-    private String calculateGrade(double percentage) {
-        if (percentage >= minAPlus)
-            return "A+";
-        if (percentage >= minA)
-            return "A";
-        if (percentage >= minAMinus)
-            return "A-";
-        if (percentage >= minB)
-            return "B";
-        if (percentage >= minC)
-            return "C";
-        if (percentage >= minD)
-            return "D";
-        return "F";
-    }
-
-    private double calculateGradePoint(double percentage) {
-        if (percentage >= minAPlus)
-            return pointAPlus;
-        if (percentage >= minA)
-            return pointA;
-        if (percentage >= minAMinus)
-            return pointAMinus;
-        if (percentage >= minB)
-            return pointB;
-        if (percentage >= minC)
-            return pointC;
-        if (percentage >= minD)
-            return pointD;
-        return 0.00;
-    }
-
     public List<ReportCardData> generateClassReports(String className, Long sessionId) {
-        List<Student> classStudents = studentRepository.findAll().stream()
+        List<Student> classStudents = studentRepository.findByActiveSession().stream() // Optimizable too, but one step
+                                                                                       // at a time
                 .filter(s -> s.getClassName().equals(className) &&
                         s.getSession().getId().equals(sessionId))
                 .collect(Collectors.toList());

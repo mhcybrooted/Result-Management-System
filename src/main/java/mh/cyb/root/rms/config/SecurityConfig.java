@@ -64,7 +64,7 @@ public class SecurityConfig {
                                                 .invalidateHttpSession(true)
                                                 .deleteCookies("JSESSIONID")
                                                 .permitAll())
-                                .csrf(csrf -> csrf.disable())
+                                // CSRF Enabled by default (removed disable())
                                 .headers(headers -> headers.frameOptions().disable());
 
                 return http.build();

@@ -10,5 +10,8 @@ import java.util.List;
 @Repository
 public interface TeacherAssignmentRepository extends JpaRepository<TeacherAssignment, Long> {
     List<TeacherAssignment> findByTeacherAndSessionAndActiveTrue(Teacher teacher, Session session);
+
     List<TeacherAssignment> findByTeacherIdAndSessionIdAndActiveTrue(Long teacherId, Long sessionId);
+
+    List<TeacherAssignment> findBySessionIdAndActiveTrue(Long sessionId);
 }
