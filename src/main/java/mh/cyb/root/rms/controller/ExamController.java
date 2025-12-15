@@ -412,7 +412,7 @@ public class ExamController {
         if (examService.deleteExam(id)) {
             // Log Action
             String username = securityServiceGetUsername();
-            activityLogService.logAction("DELETE_EXAM", "Deleted Exam ID: " + id, username, null);
+            activityLogService.logAction("DEACTIVATE_EXAM", "Deactivated Exam ID: " + id, username, null);
 
             redirectAttributes.addFlashAttribute("success", "Exam deleted successfully!");
         } else {

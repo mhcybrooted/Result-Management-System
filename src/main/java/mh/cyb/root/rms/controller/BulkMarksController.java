@@ -143,6 +143,11 @@ public class BulkMarksController {
             }
             redirectAttributes.addFlashAttribute("success", message);
 
+            // LOGGING
+            String actionDetails = "Added marks for Subject ID: " + request.getSubjectId() + ", Exam ID: "
+                    + request.getExamId() + ", Count: " + result.getSuccessCount();
+            activityLogService.logAction("ADD_MARKS_BULK", actionDetails, username, "N/A");
+
             if (result.hasWarnings()) {
                 redirectAttributes.addFlashAttribute("warnings", result.getWarnings());
             }
