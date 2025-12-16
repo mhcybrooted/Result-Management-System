@@ -617,11 +617,22 @@ public class ExamController {
     @GetMapping("/students")
     public String listStudents(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String className,
+            @RequestParam(required = false) String search,
             Model model) {
         String username = securityServiceGetUsername();
         Optional<AdminUser> adminUserOpt = adminUserRepository.findByUsername(username);
         boolean isTeacher = adminUserOpt.isPresent() && "TEACHER".equals(adminUserOpt.get().getRole());
         model.addAttribute("isTeacher", isTeacher);
+
+        // Populate Class Filter Dropdown
+        model.addAttribute("availableClasses", examService.getAvailableClasses());
+        model.addAttribute("currentClass", className);
+        model.addAttribute("currentSearch", search);
+
+        // Effectively final variables for lambdas
+        final String filterClass = className;
+        final String filterSearch = search;
 
         if (isTeacher) {
             Long teacherId = adminUserOpt.get().getTeacherId();
@@ -631,6 +642,20 @@ public class ExamController {
                 // Get all assigned students
                 List<Student> allStudents = teacherAssignmentService.getStudentsForTeacher(teacherId,
                         activeSession.get().getId());
+
+                // Apply in-memory filtering for Teachers
+                if (filterClass != null && !filterClass.isEmpty()) {
+                    allStudents = allStudents.stream()
+                            .filter(s -> s.getClassName().equals(filterClass))
+                            .collect(Collectors.toList());
+                }
+                if (filterSearch != null && !filterSearch.isEmpty()) {
+                    String searchLower = filterSearch.toLowerCase();
+                    allStudents = allStudents.stream()
+                            .filter(s -> s.getName().toLowerCase().contains(searchLower)
+                                    || s.getRollNumber().toLowerCase().contains(searchLower))
+                            .collect(Collectors.toList());
+                }
 
                 // Manual in-memory pagination for teachers
                 int start = Math.min(page * size, allStudents.size());
@@ -648,9 +673,19 @@ public class ExamController {
                 model.addAttribute("totalItems", 0);
             }
         } else {
-            // Super Admin (All Students) - Server-side Pagination
-            org.springframework.data.domain.Page<Student> studentPage = examService
-                    .getAllStudents(org.springframework.data.domain.PageRequest.of(page, size));
+            // Super Admin (All Students) - Server-side Pagination & Filtering
+            // Clean empty params
+            String queryClass = className;
+            String querySearch = search;
+
+            if (queryClass != null && queryClass.trim().isEmpty())
+                queryClass = null;
+            if (querySearch != null && querySearch.trim().isEmpty())
+                querySearch = null;
+
+            org.springframework.data.domain.Page<Student> studentPage = examService.searchStudents(
+                    queryClass, querySearch, org.springframework.data.domain.PageRequest.of(page, size));
+
             model.addAttribute("students", studentPage.getContent());
             model.addAttribute("currentPage", page);
             model.addAttribute("totalPages", studentPage.getTotalPages());

@@ -35,4 +35,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
         org.springframework.data.domain.Page<Student> findByActiveSessionAndClassName(
                         @Param("className") String className,
                         org.springframework.data.domain.Pageable pageable);
+
+        @Query("SELECT s FROM Student s WHERE s.session.active = true AND s.active = true AND " +
+                        "(:className IS NULL OR s.className = :className) AND " +
+                        "(:search IS NULL OR LOWER(s.name) LIKE LOWER(CONCAT('%', :search, '%')) OR s.rollNumber LIKE CONCAT('%', :search, '%'))")
+        org.springframework.data.domain.Page<Student> searchStudents(@Param("className") String className,
+                        @Param("search") String search, org.springframework.data.domain.Pageable pageable);
 }

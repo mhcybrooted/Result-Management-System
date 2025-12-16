@@ -314,6 +314,11 @@ public class ExamService {
         return studentRepository.findDistinctClassNamesByActiveSession();
     }
 
+    public org.springframework.data.domain.Page<Student> searchStudents(String className, String search,
+            org.springframework.data.domain.Pageable pageable) {
+        return studentRepository.searchStudents(className, search, pageable);
+    }
+
     public org.springframework.data.domain.Page<Student> getStudentsForPromotion(String className, boolean onlyPassed,
             org.springframework.data.domain.Pageable pageable) {
 
