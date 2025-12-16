@@ -314,12 +314,53 @@ public class ExamService {
         return studentRepository.findDistinctClassNamesByActiveSession();
     }
 
-    public org.springframework.data.domain.Page<Student> getStudentsForPromotion(String className,
+    public org.springframework.data.domain.Page<Student> getStudentsForPromotion(String className, boolean onlyPassed,
             org.springframework.data.domain.Pageable pageable) {
-        if (className != null && !className.isEmpty()) {
-            return studentRepository.findByActiveSessionAndClassName(className, pageable);
+
+        if (onlyPassed) {
+            // Fetch ALL students (in specific class or all active)
+            List<Student> candidates;
+            if (className != null && !className.isEmpty()) {
+                candidates = studentRepository.findBySessionIdAndClassNameInAndActiveTrue(
+                        getActiveSession().get().getId(), List.of(className));
+            } else {
+                candidates = getAllStudents(); // Already scoped to Active Session
+            }
+
+            // In-Memory Filter for PASS
+            List<Student> passedStudents = candidates.stream()
+                    .filter(student -> {
+                        // Efficient marks fetch
+                        List<Marks> marks = marksRepository.findByStudentIdAndSessionId(student.getId(),
+                                student.getSession().getId());
+                        if (marks.isEmpty())
+                            return false;
+
+                        Result result = ResultBuilder.buildResult(student.getName(), student.getRollNumber(),
+                                student.getClassName(), marks, gradeCalculatorService);
+                        return "PASS".equalsIgnoreCase(result.getResult());
+                    })
+                    .collect(Collectors.toList());
+
+            // Manual Pagination
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), passedStudents.size());
+            List<Student> pageContent;
+            if (start > passedStudents.size()) {
+                pageContent = List.of();
+            } else {
+                pageContent = passedStudents.subList(start, end);
+            }
+
+            return new org.springframework.data.domain.PageImpl<>(pageContent, pageable, passedStudents.size());
+
+        } else {
+            // Standard DB Pagination
+            if (className != null && !className.isEmpty()) {
+                return studentRepository.findByActiveSessionAndClassName(className, pageable);
+            }
+            return studentRepository.findByActiveSession(pageable);
         }
-        return studentRepository.findByActiveSession(pageable);
     }
 
     // Class management

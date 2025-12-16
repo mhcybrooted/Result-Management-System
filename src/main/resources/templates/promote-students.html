@@ -415,16 +415,22 @@
             <!-- Filter Form -->
             <div class="col-md-6 mb-3 mb-md-0">
                 <form method="get" th:action="@{/students/promote}"
-                    class="d-flex align-items-center bg-dark p-3 rounded-3 border border-secondary">
+                    class="d-flex align-items-center bg-dark p-3 rounded-3 border border-secondary flex-wrap">
                     <label for="classFilter" class="form-label text-nowrap mb-0 me-3 text-white">
-                        <i class="fas fa-filter text-info me-2"></i>Filter by Class:
+                        <i class="fas fa-filter text-info me-2"></i>Filter:
                     </label>
-                    <select class="form-select me-2" id="classFilter" name="className" onchange="this.form.submit()"
-                        style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;">
+                    <select class="form-select me-3" id="classFilter" name="className" onchange="this.form.submit()"
+                        style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white; width: auto; min-width: 150px;">
                         <option value="">All Classes</option>
                         <option th:each="cls : ${availableClasses}" th:value="${cls}" th:text="${cls}"
                             th:selected="${cls == currentClass}"></option>
                     </select>
+
+                    <div class="form-check form-switch ms-2">
+                        <input class="form-check-input" type="checkbox" id="onlyPassed" name="onlyPassed"
+                            th:checked="${onlyPassed}" onchange="this.form.submit()">
+                        <label class="form-check-label text-white" for="onlyPassed">Passed Only</label>
+                    </div>
                 </form>
             </div>
 
@@ -447,7 +453,7 @@
         <!-- Pagination Controls -->
         <div class="d-flex justify-content-between align-items-center mb-3" th:if="${totalPages > 1}">
             <a th:if="${currentPage > 0}"
-                th:href="@{/students/promote(page=${currentPage - 1}, className=${currentClass})}"
+                th:href="@{/students/promote(page=${currentPage - 1}, className=${currentClass}, onlyPassed=${onlyPassed})}"
                 class="btn btn-outline-light btn-sm">
                 <i class="fas fa-chevron-left me-1"></i> Previous
             </a>
@@ -458,7 +464,7 @@
                     th:text="${totalPages}"></span></span>
 
             <a th:if="${currentPage < totalPages - 1}"
-                th:href="@{/students/promote(page=${currentPage + 1}, className=${currentClass})}"
+                th:href="@{/students/promote(page=${currentPage + 1}, className=${currentClass}, onlyPassed=${onlyPassed})}"
                 class="btn btn-outline-light btn-sm">
                 Next <i class="fas fa-chevron-right ms-1"></i>
             </a>

@@ -334,19 +334,23 @@ public class ExamController {
 
     // Student promotion
     // Student promotion
+    // Student promotion
     @GetMapping("/students/promote")
     public String promoteStudentsPage(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size,
             @RequestParam(required = false) String className,
+            @RequestParam(defaultValue = "false") boolean onlyPassed,
             Model model) {
 
         // Get Available Classes for Dropdown
         model.addAttribute("availableClasses", examService.getAvailableClasses());
         model.addAttribute("currentClass", className);
+        model.addAttribute("onlyPassed", onlyPassed);
 
         // Get Filtered/Paginated Students
         org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
         org.springframework.data.domain.Page<Student> studentPage = examService.getStudentsForPromotion(className,
+                onlyPassed,
                 pageable);
 
         model.addAttribute("students", studentPage.getContent());
