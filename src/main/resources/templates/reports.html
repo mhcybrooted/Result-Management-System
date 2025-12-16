@@ -561,6 +561,30 @@
                                             </table>
                                         </div>
 
+                                        <!-- Pagination Controls -->
+                                        <div th:if="${totalPages > 0}"
+                                            class="d-flex justify-content-between align-items-center p-3 border-top border-secondary">
+                                            <div class="text-white small">
+                                                Page <span th:text="${currentPage + 1}">1</span> of <span
+                                                    th:text="${totalPages}">1</span>
+                                            </div>
+                                            <ul class="pagination pagination-sm mb-0">
+                                                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                                    <a class="page-link bg-dark border-secondary text-light"
+                                                        th:href="@{/reports(page=${currentPage - 1})}">
+                                                        <i class="fas fa-chevron-left me-1"></i> Previous
+                                                    </a>
+                                                </li>
+                                                <li class="page-item"
+                                                    th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                                                    <a class="page-link bg-dark border-secondary text-light"
+                                                        th:href="@{/reports(page=${currentPage + 1})}">
+                                                        Next <i class="fas fa-chevron-right ms-1"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
                                         <div th:if="${#lists.isEmpty(students)}" class="empty-state">
                                             <i class="fas fa-user-graduate"></i>
                                             <h6>No Students Found</h6>

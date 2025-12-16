@@ -38,30 +38,35 @@ public class ReportController {
 
     // Reports home page
     @GetMapping
-    public String reportsHome(Model model) {
-        List<Student> students = examService.getAllStudents();
+    public String reportsHome(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        // Get paginated students
+        org.springframework.data.domain.Page<Student> studentPage = examService.getAllStudents(
+                org.springframework.data.domain.PageRequest.of(page, size));
 
-        // Get available classes from students
-        List<String> availableClasses = students.stream()
-                .map(Student::getClassName)
-                .distinct()
-                .collect(java.util.stream.Collectors.toList());
+        // Get available classes using dedicated method (efficient)
+        List<String> availableClasses = examService.getAvailableClasses();
 
-        // Add managed classes that don't already exist
+        // Add managed classes that don't already exist (just in case)
         List<mh.cyb.root.rms.entity.Class> managedClasses = examService.getAllActiveClasses();
         managedClasses.stream()
                 .map(mh.cyb.root.rms.entity.Class::getClassName)
                 .filter(className -> !availableClasses.contains(className))
                 .forEach(availableClasses::add);
 
-        // Sort the final list and ensure no duplicates
+        // Sort the final list
         List<String> finalClasses = availableClasses.stream()
                 .distinct()
                 .sorted()
                 .collect(java.util.stream.Collectors.toList());
 
-        model.addAttribute("students", students);
+        model.addAttribute("students", studentPage.getContent());
         model.addAttribute("availableClasses", finalClasses);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", studentPage.getTotalPages());
+        model.addAttribute("totalItems", studentPage.getTotalElements());
+
         return "reports";
     }
 
