@@ -51,7 +51,7 @@ public class DashboardService {
                         marksList,
                         gradeCalculatorService);
 
-                if ("PASS".equalsIgnoreCase(result.getResult())) {
+                if (gradeCalculatorService.getPassStatus().equalsIgnoreCase(result.getResult())) {
                     totalPass++;
                 } else {
                     totalFail++;
@@ -120,7 +120,8 @@ public class DashboardService {
                                     marksList,
                                     gradeCalculatorService);
                 })
-                .filter(result -> result != null && "PASS".equalsIgnoreCase(result.getResult()))
+                .filter(result -> result != null
+                        && gradeCalculatorService.getPassStatus().equalsIgnoreCase(result.getResult()))
                 .sorted((r1, r2) -> Double.compare(r2.getGpa(), r1.getGpa()))
                 .skip((long) page * size)
                 .limit(size)
@@ -140,7 +141,8 @@ public class DashboardService {
                                     marksList,
                                     gradeCalculatorService);
                 })
-                .filter(result -> result != null && "PASS".equalsIgnoreCase(result.getResult()))
+                .filter(result -> result != null
+                        && gradeCalculatorService.getPassStatus().equalsIgnoreCase(result.getResult()))
                 .count();
     }
 
@@ -159,7 +161,8 @@ public class DashboardService {
                                     marksList,
                                     gradeCalculatorService);
                 })
-                .filter(result -> result != null && "FAIL".equalsIgnoreCase(result.getResult()))
+                .filter(result -> result != null
+                        && gradeCalculatorService.getFailStatus().equalsIgnoreCase(result.getResult()))
                 .sorted((r1, r2) -> Double.compare(r1.getGpa(), r2.getGpa())) // Ascending GPA (lowest first)
                 .skip((long) page * size)
                 .limit(size)
@@ -179,7 +182,8 @@ public class DashboardService {
                                     marksList,
                                     gradeCalculatorService);
                 })
-                .filter(result -> result != null && "FAIL".equalsIgnoreCase(result.getResult()))
+                .filter(result -> result != null
+                        && gradeCalculatorService.getFailStatus().equalsIgnoreCase(result.getResult()))
                 .count();
     }
 
@@ -231,7 +235,7 @@ public class DashboardService {
             totalGpSum += gp;
 
             // Pass/Fail Logic (Subject Level)
-            if ("F".equals(grade)) {
+            if (!gradeCalculatorService.isPass(grade)) {
                 totalFail++;
             } else {
                 totalPass++;

@@ -70,7 +70,7 @@ public class ResultBuilder {
                 totalMax += subjectMax;
 
                 // CHECK FAIL CONDITION
-                if ("F".equals(subjectGrade)) {
+                if (!gradeCalc.isPass(subjectGrade)) {
                     isFail = true;
                 }
             }
@@ -97,9 +97,9 @@ public class ResultBuilder {
         String resultStatus;
         if (isFail) {
             gpa = 0.00;
-            resultStatus = "FAIL";
+            resultStatus = gradeCalc.getFailStatus();
         } else {
-            resultStatus = "PASS";
+            resultStatus = gradeCalc.getPassStatus();
         }
 
         // Round GPA to 2 decimal places
