@@ -680,8 +680,11 @@ public class ExamController {
 
             if (queryClass != null && queryClass.trim().isEmpty())
                 queryClass = null;
-            if (querySearch != null && querySearch.trim().isEmpty())
+            if (querySearch != null && querySearch.trim().isEmpty()) {
                 querySearch = null;
+            } else if (querySearch != null) {
+                querySearch = "%" + querySearch.trim().toLowerCase() + "%";
+            }
 
             org.springframework.data.domain.Page<Student> studentPage = examService.searchStudents(
                     queryClass, querySearch, org.springframework.data.domain.PageRequest.of(page, size));
