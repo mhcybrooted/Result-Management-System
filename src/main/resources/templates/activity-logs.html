@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Logs - Result Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #2c3e50 !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card {
+            background-color: #34495e;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .table {
+            color: #ecf0f1;
+        }
+
+        .table-hover tbody tr:hover {
+            color: #ecf0f1;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .badge-success {
+            background-color: #27ae60;
+        }
+
+        .badge-danger {
+            background-color: #c0392b;
+        }
+
+        .badge-info {
+            background-color: #2980b9;
+        }
+
+        .badge-warning {
+            background-color: #f39c12;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/admin/dashboard">
+                <i class="fas fa-graduation-cap me-2"></i>RMS Admin
+            </a>
+            <div class="ms-auto">
+                <a href="/admin/dashboard" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2><i class="fas fa-history text-info me-2"></i>System Activity Logs</h2>
+                    <span class="badge bg-secondary" th:text="${logs.size()} + ' Entries'">0 Entries</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="bg-dark text-white">
+                            <tr>
+                                <th class="ps-4 py-3">Timestamp</th>
+                                <th class="py-3">User</th>
+                                <th class="py-3">Action</th>
+                                <th class="py-3">Details</th>
+                                <th class="pe-4 py-3 text-end">IP Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="log : ${logs}">
+                                <td class="ps-4 text-muted"
+                                    th:text="${#temporals.format(log.timestamp, 'dd-MMM-yyyy HH:mm:ss')}">
+                                    01-Jan-2023 10:00:00
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2"
+                                            style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <span class="fw-bold" th:text="${log.username}">admin</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span th:if="${log.action == 'LOGIN_SUCCESS'}"
+                                        class="badge bg-success rounded-pill">Login Success</span>
+                                    <span th:if="${log.action == 'LOGIN_FAILURE'}"
+                                        class="badge bg-danger rounded-pill">Login Failed</span>
+                                    <span th:if="${log.action == 'LOGOUT'}"
+                                        class="badge bg-secondary rounded-pill">Logout</span>
+                                    <span th:if="${log.action.startsWith('ADD_')}"
+                                        class="badge bg-info rounded-pill text-dark"
+                                        th:text="${log.action}">ADD_USER</span>
+                                    <span
+                                        th:if="${!log.action.startsWith('ADD_') and !log.action.startsWith('LOGIN') and !log.action.equals('LOGOUT')}"
+                                        class="badge bg-warning text-dark rounded-pill"
+                                        th:text="${log.action}">ACTION</span>
+                                </td>
+                                <td th:text="${log.details}" class="text-light opacity-75">Details here...</td>
+                                <td class="pe-4 text-end text-muted font-monospace small" th:text="${log.ipAddress}">
+                                    192.168.1.1</td>
+                            </tr>
+                            <tr th:if="${logs.empty}">
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="fas fa-clipboard-list fa-3x mb-3 d-block opacity-25"></i>
+                                    No activity logs found.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
