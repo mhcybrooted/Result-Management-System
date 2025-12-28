@@ -100,7 +100,19 @@ public class DataInitializer implements CommandLineRunner {
         studentRepository.save(student3);
         studentRepository.save(student4);
         studentRepository.save(student5);
+        studentRepository.save(student3);
+        studentRepository.save(student4);
+        studentRepository.save(student5);
         studentRepository.save(student6);
+
+        // New Test Students (Verification)
+        Student student7 = new Student("Hidden Gem", "105", "Class 10", session2024); // High Total, Low GPA
+        Student student8 = new Student("Consistent A", "106", "Class 10", session2024); // Consistent A grades
+        Student student9 = new Student("Edge Pass", "107", "Class 10", session2024); // Edge Pass case
+
+        studentRepository.save(student7);
+        studentRepository.save(student8);
+        studentRepository.save(student9);
 
         // Create sample subjects
         Subject math10 = new Subject("Mathematics", class10, 100);
@@ -158,6 +170,24 @@ public class DataInitializer implements CommandLineRunner {
         marksRepository.save(new Marks(student6, science10, finalExam, 70, LocalDate.now()));
         marksRepository.save(new Marks(student6, compSci10, finalExam, 20, LocalDate.now())); // F (Ignored)
 
+        // 5. Hidden Gem (High Total, Low GPA)
+        // Opt: 98 (Bonus GPA), Comp: 55, 60, 50 (GPA ~3.0)
+        marksRepository.save(new Marks(student7, math10, finalExam, 55, LocalDate.now())); // GPA 3.0
+        marksRepository.save(new Marks(student7, english10, finalExam, 60, LocalDate.now())); // GPA 3.5
+        marksRepository.save(new Marks(student7, science10, finalExam, 50, LocalDate.now())); // GPA 3.0
+        marksRepository.save(new Marks(student7, compSci10, finalExam, 98, LocalDate.now())); // Bonus: 5.0 - 2.0 = 3.0
+
+        // 6. Consistent A (GPA 4.0 -> Grade A verification)
+        marksRepository.save(new Marks(student8, math10, finalExam, 75, LocalDate.now())); // GPA 4.0
+        marksRepository.save(new Marks(student8, english10, finalExam, 75, LocalDate.now())); // GPA 4.0
+        marksRepository.save(new Marks(student8, science10, finalExam, 75, LocalDate.now())); // GPA 4.0
+        // No Optional
+
+        // 7. Edge Pass (Marks 33 -> GPA 1.0 -> Grade D)
+        marksRepository.save(new Marks(student9, math10, finalExam, 33, LocalDate.now())); // GPA 1.0
+        marksRepository.save(new Marks(student9, english10, finalExam, 34, LocalDate.now())); // GPA 1.0
+        marksRepository.save(new Marks(student9, science10, finalExam, 33, LocalDate.now())); // GPA 1.0
+
         // Create sample teachers
         Teacher teacher1 = new Teacher("Dr. Sarah Johnson", "sarah.johnson@school.edu", "+1-555-0101");
         Teacher teacher2 = new Teacher("Prof. Michael Chen", "michael.chen@school.edu", "+1-555-0102");
@@ -173,9 +203,16 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("Sessions: 2024-25 (Active), 2025-26");
         System.out.println("Classes: Class 9, Class 10, Class 11, Class 12");
         System.out.println(
-                "Students: John Doe (101), Jane Smith (102), Mike Johnson (103), Sarah Wilson (201), David Brown (202), Emily (104)");
+                "Students: John Doe (101), Jane Smith (102), Mike Johnson (103), Sarah Wilson (201), David Brown (202), Emily (104), Hidden Gem (105), Consistent A (106), Edge Pass (107)");
         System.out.println("Subjects: Math, English, Science (Compulsory), Comp Sci (Optional)");
-        System.out.println("Marks initialized for various scenarios (Best, Avg, Fail, Opt-Fail)");
+        System.out.println("Marks initialized for various scenarios:\n" +
+                "- Best Performer (101)\n" +
+                "- Average (102)\n" +
+                "- Fail (103)\n" +
+                "- Optional Fail (104)\n" +
+                "- High Total/Low GPA (105)\n" +
+                "- Consistent A (106)\n" +
+                "- Edge Pass (107)");
     }
 
     private void createDefaultAdmin() {

@@ -97,10 +97,6 @@ public class ReportService {
 
         reportCard.setOverallPercentage(Math.round(overallPercentage * 100.0) / 100.0); // Round for display
 
-        // 2. Calculate Overall Grade
-        String overallGrade = gradeCalculatorService.calculateGrade(overallPercentage);
-        reportCard.setOverallGrade(overallGrade);
-
         // 3. GPA Calculation with Optional Logic
         double totalGP = 0.0;
         int compulsoryCount = 0;
@@ -145,6 +141,14 @@ public class ReportService {
             gpa = 0.00;
         }
         reportCard.setGpa(Math.round(gpa * 100.0) / 100.0);
+
+        // 5. Calculate Overall Grade from Final GPA (BD Standard)
+        // Previous logic used overallPercentage, which is incorrect for this system
+        String overallGrade = gradeCalculatorService.calculateOverallGradeFromGPA(gpa);
+        if (isFail) {
+            overallGrade = "F"; // Enforce F if failed
+        }
+        reportCard.setOverallGrade(overallGrade);
 
         // 5. Set Result Logic (PASS/FAIL)
         // If fail flag is set, it's FAIL.

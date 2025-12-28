@@ -112,10 +112,16 @@
         <div>Academic Session: <span th:text="${sessionName}">2024-2025</span></div>
     </div>
 
-    <div class="meta-info">
-        <div>Class: <span th:text="${className}">10</span></div>
-        <div>Date: <span th:text="${#temporals.format(reportDate, 'dd-MM-yyyy')}">01-01-2025</span></div>
-    </div>
+    <table style="width: 100%; border: none; margin-bottom: 20px;">
+        <tr style="border: none;">
+            <td style="text-align: left; border: none; font-weight: bold; font-size: 12px; width: 50%;">
+                Class: <span th:text="${className}">10</span>
+            </td>
+            <td style="text-align: right; border: none; font-weight: bold; font-size: 12px; width: 50%;">
+                Date: <span th:text="${#temporals.format(reportDate, 'dd-MM-yyyy')}">01-01-2025</span>
+            </td>
+        </tr>
+    </table>
 
     <table>
         <thead>

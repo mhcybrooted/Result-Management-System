@@ -142,6 +142,25 @@ public class GradeCalculatorService {
         return pointD;
     }
 
+    /**
+     * Calculate Overall Grade from GPA (BD Standard)
+     */
+    public String calculateOverallGradeFromGPA(double gpa) {
+        if (gpa >= pointAPlus)
+            return "A+";
+        if (gpa >= pointA)
+            return "A";
+        if (gpa >= pointAMinus)
+            return "A-";
+        if (gpa >= pointB)
+            return "B";
+        if (gpa >= pointC)
+            return "C";
+        if (gpa >= pointD)
+            return "D";
+        return "F";
+    }
+
     // --- Helper Methods ---
 
     public boolean isPass(double percentage) {
